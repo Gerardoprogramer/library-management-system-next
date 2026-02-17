@@ -1,26 +1,204 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap');
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 30 15% 96%;
+    --foreground: 0 0% 8%;
+
+    --card: 30 20% 93%;
+    --card-foreground: 0 0% 8%;
+
+    --popover: 30 20% 93%;
+    --popover-foreground: 0 0% 8%;
+
+    --primary: 35 85% 42%;
+    --primary-foreground: 30 15% 98%;
+
+    --secondary: 30 12% 88%;
+    --secondary-foreground: 0 0% 12%;
+
+    --muted: 30 10% 90%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 35 80% 48%;
+    --accent-foreground: 30 15% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 30 15% 82%;
+    --input: 30 15% 82%;
+    --ring: 35 85% 42%;
+
+    --radius: 0.5rem;
+
+    /* Obsidian Library colors */
+    --obsidian: 0 0% 8%;
+    --parchment: 30 15% 96%;
+    --gold: 40 90% 50%;
+    --bronze: 30 60% 35%;
+    --aged-paper: 35 30% 90%;
+
+    /* Fonts */
+    --font-display: 'Cinzel', serif;
+    --font-body: 'Cormorant Garamond', serif;
+  }
+
+  .dark {
+    --background: 0 0% 4%;
+    --foreground: 35 20% 92%;
+
+    --card: 0 0% 8%;
+    --card-foreground: 35 20% 92%;
+
+    --popover: 0 0% 8%;
+    --popover-foreground: 35 20% 92%;
+
+    --primary: 40 85% 55%;
+    --primary-foreground: 0 0% 4%;
+
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 35 20% 88%;
+
+    --muted: 0 0% 10%;
+    --muted-foreground: 35 10% 55%;
+
+    --accent: 40 80% 52%;
+    --accent-foreground: 0 0% 4%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 40 85% 55%;
+
+    /* Obsidian Library colors - dark */
+    --obsidian: 0 0% 4%;
+    --parchment: 35 20% 92%;
+    --gold: 40 90% 55%;
+    --bronze: 35 50% 45%;
+    --aged-paper: 30 15% 15%;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+/* ==========================================
+   View Transition API - Theme Toggle Animation
+   DeepWiki-style circular reveal
+   ========================================== */
+
+/* Disable default View Transition animations */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* The old page stays in place */
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+/* The new page reveals with a circular clip-path */
+::view-transition-new(root) {
+  z-index: 9999;
+  animation: reveal-theme 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes reveal-theme {
+  from {
+    clip-path: circle(0px at var(--toggle-x, 50%) var(--toggle-y, 50%));
+  }
+  to {
+    clip-path: circle(var(--toggle-radius, 100vmax) at var(--toggle-x, 50%) var(--toggle-y, 50%));
+  }
+}
+
+/* Reverse animation when switching back */
+.dark::view-transition-old(root) {
+  z-index: 9999;
+  animation: reveal-theme-reverse 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 1;
+  animation: none;
+}
+
+@keyframes reveal-theme-reverse {
+  from {
+    clip-path: circle(var(--toggle-radius, 100vmax) at var(--toggle-x, 50%) var(--toggle-y, 50%));
+  }
+  to {
+    clip-path: circle(0px at var(--toggle-x, 50%) var(--toggle-y, 50%));
+  }
+}
+
+/* ==========================================
+   Fallback Animation for browsers without 
+   View Transition API support
+   ========================================== */
+
+.theme-transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999;
+  pointer-events: none;
+  clip-path: circle(0px at var(--x, 50%) var(--y, 50%));
+  will-change: clip-path;
+}
+
+.theme-transition-overlay.expanding {
+  animation: fallback-reveal 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fallback-reveal {
+  from {
+    clip-path: circle(0px at var(--x, 50%) var(--y, 50%));
+  }
+  to {
+    clip-path: circle(var(--radius, 100vmax) at var(--x, 50%) var(--y, 50%));
+  }
+}
+
+/* ==========================================
+   Utility Classes
+   ========================================== */
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+  
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-md bg-background/80 border border-border/50;
+  }
 }
