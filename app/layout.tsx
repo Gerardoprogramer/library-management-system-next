@@ -3,6 +3,7 @@ import { cinzel, cormorant } from "@/app/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL('http://localhost:3000'),
   title: {
     template: '%s | Biblioteca Obsidian',
     default: 'Biblioteca Obsidian',
