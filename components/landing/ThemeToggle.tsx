@@ -1,7 +1,7 @@
 'use client';
 
 import { Moon, Sun } from "lucide-react";
-import { useTheme } from "@/components/hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 import { useRef, useCallback } from "react";
 
 const ThemeToggle = () => {

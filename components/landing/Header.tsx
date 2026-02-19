@@ -2,6 +2,7 @@
 import { Gem } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import ThemeToggle from "@/components/landing/ThemeToggle";
+import Link from "next/link";
 
 export const Header = () => {
   return (
@@ -22,19 +23,23 @@ export const Header = () => {
         {/* Right */}
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-sm"
-          >
-            Entrar
-          </Button>
-          <Button
-            size="sm"
-            className="tracking-wider uppercase text-xs"
-          >
-            Registro
-          </Button>
+          <Link href="/auth/login">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-sm"
+            >
+              Entrar
+            </Button>
+          </Link>
+          <Link href="/auth/register">
+            <Button
+              size="sm"
+              className="tracking-wider uppercase text-xs"
+            >
+              Registro
+            </Button>
+          </Link>
         </div>
       </div>
     </header>
