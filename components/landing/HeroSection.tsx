@@ -2,6 +2,7 @@ import { BookOpen, Scroll, Globe, Sparkles } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import heroImage from "@/public/library-hero.jpg";
 import Image from "next/image";
+import Link from "next/link";
 
 export const HeroSection = () => {
     return (
@@ -58,12 +59,16 @@ export const HeroSection = () => {
                         className="flex flex-wrap gap-4 mb-12 animate-fade-in"
                         style={{ animationDelay: "0.3s" }}
                     >
-                        <Button size="lg" className="px-8 font-display tracking-wider uppercase text-sm">
-                            Comenzar Ahora
-                        </Button>
-                        <Button size="lg" variant="outline" className="px-8 font-display tracking-wider uppercase text-sm">
-                            Ya tengo cuenta
-                        </Button>
+                        <Link href="/auth/register">
+                            <Button size="lg" className="px-8 font-display tracking-wider uppercase text-sm">
+                                Comenzar Ahora
+                            </Button>
+                        </Link>
+                        <Link href="/auth/login">
+                            <Button size="lg" variant="ghost" className="px-8 font-display tracking-wider uppercase text-sm">
+                                Ya tengo cuenta
+                            </Button>
+                        </Link>
                     </div>
 
                     {/* Stats */}
