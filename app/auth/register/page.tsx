@@ -7,30 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, User } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { authService } from "@/services/authService";
-import { useRouter } from "next/navigation";
+import { useRegister } from "@/hooks/useAuth";
 
 export default function RegisterPage() {
-  const router = useRouter();
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      await authService.register({ fullName, email, password });
-      router.push("/dashboard");
-    } catch (error: any) {
-      alert(error.message || "Error al registrar usuario");
-    } finally {
-      setLoading(false);
-    }
-  }
+  const { fullName, setFullName, email,
+    setEmail, password, setPassword,
+    loading, errors, handleSubmit } = useRegister();
 
   return (
     <>
@@ -49,6 +32,9 @@ export default function RegisterPage() {
                 onChange={(e) => setFullName(e.target.value)}
               />
             </div>
+            {errors.fullName && (
+              <p className="text-sm text-red-500">{errors.fullName}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -63,13 +49,18 @@ export default function RegisterPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email}</p>
+            )}
           </div>
 
           <PasswordInput
             value={password}
             onChange={setPassword}
           />
-
+          {errors.password && (
+            <p className="text-sm text-red-500">{errors.password}</p>
+          )}
           <Button
             type="submit"
             className="w-full font-display tracking-wider uppercase text-sm"

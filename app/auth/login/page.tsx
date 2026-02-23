@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Mail } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,28 +7,12 @@ import { Input } from "@/components/ui/input";
 import { AuthHeader } from "@/components/auth/AuthHeader";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { PasswordInput } from "@/components/auth/PasswordInput";
-import { authService } from "@/services/authService";
+import { useLogin } from "@/hooks/useAuth";
 
 export default function LoginPage() {
-  const router = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      await authService.login({ email, password });
-      router.push("/dashboard");
-    } catch (error: any) {
-      alert(error.message || "Error al iniciar sesión");
-    } finally {
-      setLoading(false);
-    }
-  }
+  const { email, setEmail, password,
+    setPassword, loading, errors, handleSubmit } = useLogin();
 
   return (
     <>
@@ -54,10 +36,11 @@ export default function LoginPage() {
                 required
               />
             </div>
+            {errors.email && (<p className="text-red-500 text-sm mt-1">{errors.email}</p>)}
           </div>
 
           <PasswordInput value={password} onChange={setPassword} />
-
+          {errors.password && (<p className="text-red-500 text-sm mt-1">{errors.password}</p>)}
           <Button
             type="submit"
             disabled={loading}

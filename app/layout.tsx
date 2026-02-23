@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import { Toaster } from "sonner";
 
 import { cinzel, cormorant } from "@/app/fonts";
 import "./globals.css";
@@ -37,6 +38,7 @@ export default async function RootLayout({
       >
         <ThemeProvider initialTheme={theme as "light" | "dark"}>
           {children}
+          <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>
     </html>
