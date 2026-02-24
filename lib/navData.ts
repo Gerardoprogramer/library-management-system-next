@@ -5,11 +5,11 @@ import { navLinkstype } from "./definitions";
 export const userNav: navLinkstype[] = [
   { label: "Catálogo", path: "/dashboard/catalog", icon: BookOpen },
   { label: "Mis Préstamos", path: "/dashboard/loans", icon: Clock },
-  { label: "Mis Reservas", path: "/dashboard/reservas", icon: Bookmark },
+  { label: "Mis Reservas", path: "/dashboard/reservation", icon: Bookmark },
   { label: "Mi Wishlist", path: "/dashboard/wishlist", icon: Heart },
-  { label: "Mis Reseñas", path: "/dashboard/resenas", icon: Star },
-  {label: "pagos y multas", path: "/dashboard/pagos-multas", icon: Gem},
-  {label: "Subscripciónes", path: "/dashboard/subscripcion", icon: Gem}
+  { label: "Mis Reseñas", path: "/dashboard/review", icon: Star },
+  {label: "pagos y multas", path: "/dashboard/pay", icon: Gem},
+  {label: "Subscripciónes", path: "/dashboard/subscription", icon: Gem}
 ];
 
 export const adminNav: navLinkstype[] = [
