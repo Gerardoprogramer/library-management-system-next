@@ -1,25 +1,19 @@
-import { apiClient } from './api';
-import { loginData, registerData } from '../lib/definitions';
+import { api } from "@/lib/axios";
+import { loginData, registerData } from "@/lib/definitions";
 
 export const authService = {
   login: async (credentials: loginData) => {
-    return apiClient('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(credentials),
-    });
+    const response = await api.post("/auth/login", credentials);
+    return response.data;
   },
 
   register: async (userData: registerData) => {
-    return apiClient('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-    });
+    const response = await api.post("/auth/register", userData);
+    return response.data;
   },
 
   logout: async () => {
-    console.log("Logout initiated 2");
-    return apiClient('/auth/logout', {
-      method: 'POST',
-    });
-  }
+    const response = await api.post("/auth/logout");
+    return response.data;
+  },
 };
