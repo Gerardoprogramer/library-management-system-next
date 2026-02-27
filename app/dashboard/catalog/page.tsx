@@ -7,11 +7,13 @@ import { BookCardSkeleton } from "@/components/custom/skeletons";
 import { BooksGrid } from "@/components/book/BooksGrid";
 import { useCatalogo } from "@/hooks/useCatalogo";
 import { SelectGenre } from "@/components/genre/SelectGenre";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export default function CatalogPage() {
 
   const { books, genres, selectedGenre, setSelectedGenre,
-     isLoading, isFetching, handleWishlistToggle } = useCatalogo();
+    isLoading, isFetching, handleWishlistToggle, availableOnly, toggleAvailableOnly } = useCatalogo();
 
   return (
     <div>
@@ -34,6 +36,14 @@ export default function CatalogPage() {
         </div>
         <div className="flex gap-2">
           <SelectGenre genres={genres} selectedGenre={selectedGenre} setSelectedGenre={setSelectedGenre} />
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="available"
+              checked={availableOnly}
+              onCheckedChange={toggleAvailableOnly}
+            />
+            <Label htmlFor="available">Solo disponibles</Label>
+          </div>
         </div>
       </div>
 
