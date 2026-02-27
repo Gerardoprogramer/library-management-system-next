@@ -5,13 +5,20 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { bookService } from "@/services/bookService";
 import { useQuery } from "@tanstack/react-query";
+import { WishListService } from "@/services/wishlistService";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
+import { CustomPagination } from "@/components/custom/CustomPagination";
+import { useSearchParams } from "next/navigation";
+
 
 export default function CatalogPage() {
-
+    const searchParams = useSearchParams();
+  const queryPage = searchParams.get("page") ?? "0";
   const filters = {
     searchTerm: "",
     availableOnly: false,
-    page: 0,
+    page: isNaN(+queryPage) ? 0 : +queryPage - 1,
     size: 8,
   };
 
@@ -20,9 +27,24 @@ export default function CatalogPage() {
     queryFn: () => bookService.search(filters),
   });
 
+  const queryClient = useQueryClient();
+
+  const toggleWishlistMutation = useMutation({
+    mutationFn: ({ bookId, isInWishlist }: { bookId: string; isInWishlist: boolean }) =>
+      isInWishlist
+        ? WishListService.remove(bookId)
+        : WishListService.add(bookId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["books"] });
+    },
+  });
+
+  const handleWishlistToggle = (bookId: string, isInWishlist: boolean) => {
+    toggleWishlistMutation.mutate({ bookId, isInWishlist });
+  };
+
   return (
     <div>
-      {/* Header */}
       <div className="mb-10">
         <h1 className="font-display text-3xl sm:text-4xl font-semibold text-foreground mb-2">
           Catálogo
@@ -32,7 +54,6 @@ export default function CatalogPage() {
         </p>
       </div>
 
-      {/* Search & Filters */}
       <div className="flex flex-col sm:flex-row gap-4 mb-8">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -53,22 +74,28 @@ export default function CatalogPage() {
             key={book.id}
             className="group cursor-pointer bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30 hover:shadow-lg transition-all duration-300"
           >
-            <div className="aspect-[3/4] relative overflow-hidden">
-              <img src={book.coverImageUrl} alt={book.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+            <div className="aspect-3/4 relative overflow-hidden">
+              <Image
+                src={book.coverImageUrl}
+                alt={book.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+                width={300}
+                height={400} />
               <div className="absolute top-3 right-3">
                 <Badge variant={book.availableCopies > 0 ? "default" : "destructive"} className="font-body text-xs">
                   {book.availableCopies > 0 ? `${book.availableCopies} disponible${book.availableCopies > 1 ? "s" : ""}` : "No disponible"}
                 </Badge>
               </div>
               <button
-                onClick={(e) => { e.stopPropagation(); }}
-                className="absolute top-3 left-3 w-8 h-8 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => handleWishlistToggle(book.id, book.isWishList)}
+                className="absolute top-3 left-3 w-8 h-8 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center  opacity-100 transition-opacity"
                 aria-label="Añadir a wishlist"
               >
                 <Heart
                   className={`w-4 h-4 transition-colors ${book.isWishList
-                      ? "text-red-500 fill-red-500"
-                      : "text-muted-foreground hover:text-red-500"
+                    ? "text-red-500 fill-red-500"
+                    : "text-muted-foreground hover:text-red-500"
                     }`}
                 />
               </button>
@@ -91,7 +118,13 @@ export default function CatalogPage() {
             </div>
           </div>
         ))}
+        {books?.totalPages && (
+          <div className="col-span-full mt-8">
+            <CustomPagination totalPages={books?.totalPages} />
+          </div>
+        )}
       </div>
+
 
       {books?.totalElements === 0 && (
         <div className="text-center py-20">

@@ -7,7 +7,6 @@ import Link from "next/link";
 export const HeroSection = () => {
     return (
         <section className="relative min-h-screen flex items-center pt-20">
-            {/* Background image with overlay */}
             <div className="absolute inset-0 z-0">
                 <Image
                     src={heroImage}
@@ -33,7 +32,6 @@ export const HeroSection = () => {
                         </span>
                     </div>
 
-                    {/* Title */}
                     <h1
                         className="font-display text-4xl sm:text-5xl lg:text-7xl font-semibold text-foreground leading-[1.1] mb-8 animate-fade-in tracking-wide"
                         style={{ animationDelay: "0.1s" }}
@@ -45,7 +43,6 @@ export const HeroSection = () => {
                         se Encuentra con lo Moderno
                     </h1>
 
-                    {/* Subtitle */}
                     <p
                         className="font-body text-xl sm:text-2xl text-muted-foreground mb-10 leading-relaxed max-w-xl animate-fade-in"
                         style={{ animationDelay: "0.2s" }}
@@ -54,7 +51,6 @@ export const HeroSection = () => {
                         tu viaje por la historia empieza aquí.
                     </p>
 
-                    {/* CTA Buttons */}
                     <div
                         className="flex flex-wrap gap-4 mb-12 animate-fade-in"
                         style={{ animationDelay: "0.3s" }}
@@ -71,7 +67,6 @@ export const HeroSection = () => {
                         </Link>
                     </div>
 
-                    {/* Stats */}
                     <div
                         className="flex flex-wrap gap-8 sm:gap-12 animate-fade-in"
                         style={{ animationDelay: "0.4s" }}
@@ -105,7 +100,6 @@ export const HeroSection = () => {
                         </div>
                     </div>
 
-                    {/* Quote */}
                     <div
                         className="mt-16 flex items-center gap-3 animate-fade-in"
                         style={{ animationDelay: "0.5s" }}

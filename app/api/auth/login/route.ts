@@ -4,7 +4,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    // Llamada al backend
     const backendResponse = await fetch(
       `${process.env.BACKEND_URL}/api/v1/auth/login`,
       {
@@ -16,15 +15,13 @@ export async function POST(req: NextRequest) {
       }
     );
 
-    // Obtener datos
     const data = await backendResponse.json();
 
-    // Crear respuesta hacia el cliente
+
     const response = NextResponse.json(data, {
       status: backendResponse.status,
     });
 
-    // Copiar cookies del backend (JWT HttpOnly)
     const setCookieHeader = backendResponse.headers.get("set-cookie");
 
     if (setCookieHeader) {
