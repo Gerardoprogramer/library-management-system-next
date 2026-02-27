@@ -8,7 +8,7 @@ import { BooksGrid } from "@/components/book/BooksGrid";
 import { useCatalogo } from "@/hooks/useCatalogo";
 
 export default function CatalogPage() {
- 
+
   const { books, isLoading, isFetching, handleWishlistToggle } = useCatalogo();
 
   return (
@@ -62,9 +62,9 @@ export default function CatalogPage() {
         )}
       </div>
 
-      {books?.totalPages && (
+      {books && books.totalPages > 1 && (
         <div className="col-span-full mt-8">
-          <CustomPagination totalPages={books?.totalPages} />
+          <CustomPagination totalPages={books.totalPages} />
         </div>
       )}
 
