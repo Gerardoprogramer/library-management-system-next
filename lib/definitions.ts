@@ -40,6 +40,16 @@ export type User = {
   lastLogin: string;
 };
 
+export type Genre = {
+  id: string;
+  code: string;
+  name: string;
+  description: string;
+  displayOrder: number;
+  active: boolean;
+  parentGenreId: string | null;
+};
+
 export type navLinkstype = {
   label: string;
   path: string;
@@ -55,6 +65,6 @@ export type BookSummary = {
   availableCopies: number;
   coverImageUrl: string;
   isWishList: boolean;
-  averageRating: number;  
+  averageRating: number;
   totalReviews: number;
 };

@@ -1,15 +1,17 @@
 'use client';
 
-import { Search, BookOpen } from "lucide-react";
+import { Search, BookOpen, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { CustomPagination } from "@/components/custom/CustomPagination";
 import { BookCardSkeleton } from "@/components/custom/skeletons";
 import { BooksGrid } from "@/components/book/BooksGrid";
 import { useCatalogo } from "@/hooks/useCatalogo";
+import { SelectGenre } from "@/components/genre/SelectGenre";
 
 export default function CatalogPage() {
 
-  const { books, isLoading, isFetching, handleWishlistToggle } = useCatalogo();
+  const { books, genres, selectedGenre, setSelectedGenre,
+     isLoading, isFetching, handleWishlistToggle } = useCatalogo();
 
   return (
     <div>
@@ -29,6 +31,9 @@ export default function CatalogPage() {
             placeholder="Buscar por título, autor o ISBN..."
             className="pl-10 font-body"
           />
+        </div>
+        <div className="flex gap-2">
+          <SelectGenre genres={genres} selectedGenre={selectedGenre} setSelectedGenre={setSelectedGenre} />
         </div>
       </div>
 
