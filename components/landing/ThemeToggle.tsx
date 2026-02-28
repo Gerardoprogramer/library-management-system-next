@@ -54,11 +54,11 @@ const ThemeToggle = () => {
 
       setTimeout(() => {
         toggleTheme();
-      }, 200);
+      }, 400);
 
       setTimeout(() => {
         overlay.remove();
-      }, 500);
+      }, 700);
     }
   }, [theme, toggleTheme]);
 
