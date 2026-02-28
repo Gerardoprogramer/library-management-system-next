@@ -68,3 +68,27 @@ export type BookSummary = {
   averageRating: number;
   totalReviews: number;
 };
+
+export interface BookDetail {
+  id: String;
+  isbn: string;
+  title: string;
+  author: string;
+
+  genreId: String;
+  genreName: string;
+
+  publisher: string;
+  publishedDate: String;
+  language: string;
+  pages: number;
+  description: string;
+
+  totalCopies: number;
+  availableCopies: number;
+  isWishList: boolean;
+
+  price: number;
+  coverImageUrl: string;
+  active: boolean;
+}

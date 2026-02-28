@@ -1,28 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
+export async function POST(
+  request: NextRequest,
+  context: { params: Promise<{ bookId: string }> }
+) {
+  const { bookId } = await context.params;
+
+  if (!bookId) {
+    return NextResponse.json(
+      { success: false, message: "bookId es requerido", data: null },
+      { status: 400 }
+    );
+  }
+
   try {
- 
     const cookie = request.headers.get("cookie");
-
-
-    const segments = request.nextUrl.pathname.split("/");
-    const bookId = segments[segments.length - 1];
-
-    if (!bookId) {
-      return NextResponse.json(
-        { success: false, message: "bookId es requerido", data: null },
-        { status: 400 }
-      );
-    }
-
     const notes = request.nextUrl.searchParams.get("notes") || null;
 
     const backendUrl = new URL(
       `${process.env.BACKEND_URL}/api/v1/wishlist/${bookId}`
     );
-    if (notes) backendUrl.searchParams.append("notes", notes);
 
+    if (notes) backendUrl.searchParams.append("notes", notes);
 
     const backendResponse = await fetch(backendUrl.toString(), {
       method: "POST",
@@ -53,34 +52,32 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
-  try {
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ bookId: string }> }
+) {
+  const { bookId } = await context.params;
 
+  if (!bookId) {
+    return NextResponse.json(
+      { success: false, message: "bookId es requerido", data: null },
+      { status: 400 }
+    );
+  }
+
+  try {
     const cookie = request.headers.get("cookie");
 
-
-    const segments = request.nextUrl.pathname.split("/");
-    const bookId = segments[segments.length - 1];
-
-    if (!bookId) {
-      return NextResponse.json(
-        { success: false, message: "bookId es requerido", data: null },
-        { status: 400 }
-      );
-    }
-
-
-    const backendUrl = new URL(
-      `${process.env.BACKEND_URL}/api/v1/wishlist/${bookId}`
+    const backendResponse = await fetch(
+      `${process.env.BACKEND_URL}/api/v1/wishlist/${bookId}`,
+      {
+        method: "DELETE",
+        headers: {
+          cookie: cookie || "",
+        },
+        cache: "no-store",
+      }
     );
-    
-    const backendResponse = await fetch(backendUrl.toString(), {
-      method: "DELETE",
-      headers: {
-        cookie: cookie || "",
-      },
-      cache: "no-store",
-    });
 
     if (!backendResponse.ok) {
       const errorData = await backendResponse.json();

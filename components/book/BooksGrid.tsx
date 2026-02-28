@@ -31,7 +31,11 @@ export const BooksGrid = (props: BookGridProps) => {
                     </Badge>
                 </div>
                 <button
-                    onClick={() => handleWishlistToggle(id, isWishList)}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        handleWishlistToggle(id, isWishList);
+                    }}
                     className="absolute top-3 left-3 w-8 h-8 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center  opacity-100 transition-opacity"
                     aria-label="Añadir a wishlist"
                 >

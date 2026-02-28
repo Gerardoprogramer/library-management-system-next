@@ -1,6 +1,7 @@
 'use client';
 
-import { Search, BookOpen, Filter } from "lucide-react";
+import { Search, BookOpen } from "lucide-react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { CustomPagination } from "@/components/custom/CustomPagination";
 import { BookCardSkeleton } from "@/components/custom/skeletons";
@@ -9,11 +10,28 @@ import { useCatalogo } from "@/hooks/useCatalogo";
 import { SelectGenre } from "@/components/genre/SelectGenre";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useDebounce } from "@/hooks/useDebounce";
+import Link from "next/link";
 
 export default function CatalogPage() {
 
   const { books, genres, selectedGenre, setSelectedGenre,
-    isLoading, isFetching, handleWishlistToggle, availableOnly, toggleAvailableOnly } = useCatalogo();
+    isLoading, handleWishlistToggle, availableOnly, toggleAvailableOnly,
+    setSearchTerm, searchTerm
+  } = useCatalogo();
+
+  const [localSearch, setLocalSearch] = useState(searchTerm);
+  const debouncedSearch = useDebounce(localSearch, 500);
+
+  useEffect(() => {
+    if (debouncedSearch !== searchTerm) {
+      setSearchTerm(debouncedSearch);
+    }
+  }, [debouncedSearch, searchTerm, setSearchTerm]);
+
+  useEffect(() => {
+    setLocalSearch(searchTerm);
+  }, [searchTerm]);
 
   return (
     <div>
@@ -30,6 +48,8 @@ export default function CatalogPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
             placeholder="Buscar por título, autor o ISBN..."
             className="pl-10 font-body"
           />
@@ -52,29 +72,21 @@ export default function CatalogPage() {
       </p>
 
       <div className="relative">
-        {isFetching && !isLoading && (
-          <div className="absolute -top-4 left-0 w-full h-1 bg-primary/20 overflow-hidden rounded">
-            <div className="h-full w-full bg-primary animate-pulse" />
-          </div>
-        )}
-
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {isLoading
+            ? Array.from({ length: 8 }).map((_, i) => (
               <BookCardSkeleton key={i} />
+            ))
+            : books?.content.map((book) => (
+              <Link key={book.id} href={`/dashboard/catalog/${book.id}`}>
+                <BooksGrid
+                  key={book.id}
+                  book={book}
+                  handleWishlistToggle={handleWishlistToggle}
+                />
+              </Link>
             ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {books?.content.map((book) => (
-              <BooksGrid
-                key={book.id}
-                book={book}
-                handleWishlistToggle={handleWishlistToggle}
-              />
-            ))}
-          </div>
-        )}
+        </div>
       </div>
 
       {books && books.totalPages > 1 && (

@@ -16,14 +16,7 @@ export const useCatalogo = () => {
   const queryPage = searchParams.get("page") ?? "1";
   const queryGenre = searchParams.get("genre") ?? "all";
   const queryAvailable = searchParams.get("availableOnly") === "true";
-
-  const filters = {
-    searchTerm: "",
-    genreId: queryGenre === "all" ? undefined : queryGenre,
-    availableOnly: queryAvailable,
-    page: isNaN(+queryPage) ? 0 : +queryPage - 1,
-    size: 8,
-  };
+  const querySearchTerm = searchParams.get("searchTerm") ?? "";
 
   const updateParams = (params: Record<string, string>) => {
     const newParams = new URLSearchParams(searchParams.toString());
@@ -36,12 +29,23 @@ export const useCatalogo = () => {
       }
     });
 
-    router.push(`?${newParams.toString()}`);
+    router.replace(`?${newParams.toString()}`);
   };
 
-  const { data: books, isLoading, isFetching } = useQuery({
-    queryKey: ["books", filters],
-    queryFn: () => bookService.search(filters),
+  const { data: books, isLoading } = useQuery({
+    queryKey: [
+      "books",
+      querySearchTerm,
+      queryGenre,
+      queryAvailable,
+      queryPage],
+    queryFn: () => bookService.search({
+      searchTerm: querySearchTerm,
+      genreId: queryGenre === "all" ? undefined : queryGenre,
+      availableOnly: queryAvailable,
+      page: isNaN(+queryPage) ? 0 : +queryPage - 1,
+      size: 8,
+    }),
     placeholderData: (prev) => prev,
   });
 
@@ -65,8 +69,8 @@ export const useCatalogo = () => {
     genres,
     selectedGenre: queryGenre,
     availableOnly: queryAvailable,
+    searchTerm: querySearchTerm,
     isLoading,
-    isFetching,
     setSelectedGenre: (genre: string) =>
       updateParams({ genre, page: "1" }),
     toggleAvailableOnly: () =>
@@ -74,6 +78,8 @@ export const useCatalogo = () => {
         availableOnly: (!queryAvailable).toString(),
         page: "1",
       }),
+    setSearchTerm: (term: string) =>
+      updateParams({ searchTerm: term, page: "1" }),
     handleWishlistToggle: (bookId: string, isInWishlist: boolean) =>
       toggleWishlistMutation.mutate({ bookId, isInWishlist }),
   };
