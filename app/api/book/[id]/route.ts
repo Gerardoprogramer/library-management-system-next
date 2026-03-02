@@ -6,8 +6,6 @@ export async function GET(
 ) {
   const { id } = await context.params;
 
-  console.log("ID:", id);
-
   try {
     const cookie = request.headers.get("cookie");
 

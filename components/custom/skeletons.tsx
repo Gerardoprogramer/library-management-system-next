@@ -37,3 +37,7 @@ export function BookCardSkeleton() {
     </div>
   );
 }
+
+export function BookDetailSkeleton() {
+  return ();
+}

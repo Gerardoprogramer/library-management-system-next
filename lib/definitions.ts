@@ -91,4 +91,16 @@ export interface BookDetail {
   price: number;
   coverImageUrl: string;
   active: boolean;
+  averageRating: number;
+  totalReviews: number;
+}
+
+export interface Review {
+  id: string;
+  userName: string;
+  rating: number;
+  reviewText: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
 }
