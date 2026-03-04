@@ -18,7 +18,7 @@ export const BookDetail = ({ id }: { id: string }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-
+    const queryPage = searchParams.get("ReviewPage") ?? "1";
   const { handleWishlistToggle, isLoading: isWishlistLoading } = useWishlist();
 
   const handleBack = () => {
@@ -37,11 +37,16 @@ export const BookDetail = ({ id }: { id: string }) => {
     enabled: !!id,
   });
 
-  const { data: reviews, isLoading } = useQuery({
-    queryKey: ["reviews", id],
-    queryFn: () => reviewService.getBookReviews(id),
-    enabled: !!id,
-  });
+const { data: reviews, isLoading } = useQuery({
+  queryKey: ["reviews", id, queryPage],
+  queryFn: () =>
+    reviewService.getBookReviews(
+      id,
+      isNaN(+queryPage) ? 0 : +queryPage -1
+    ),
+  placeholderData: (prev) => prev,
+  enabled: !!id,
+});
 
   if (isLoading) {
     return <BookDetailSkeleton />;
@@ -66,8 +71,8 @@ export const BookDetail = ({ id }: { id: string }) => {
       </Button>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Cover */}
-        <div className="lg:col-span-1 h-full"> {/* altura menos header */}
+
+        <div className="lg:col-span-1 h-full">
           <div className="sticky top-20 space-y-4">
             <div className="aspect-3/4 rounded-lg overflow-hidden border border-border shadow-xl">
               <Image
@@ -96,7 +101,6 @@ export const BookDetail = ({ id }: { id: string }) => {
           </div>
         </div>
 
-        {/* Info */}
         <div className="lg:col-span-2 space-y-8">
           <div>
             <Badge variant="outline" className="font-body mb-3">{book.genreName}</Badge>
