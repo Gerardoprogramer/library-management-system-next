@@ -12,13 +12,18 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useDebounce } from "@/hooks/useDebounce";
 import Link from "next/link";
+import { useWishlist } from "@/hooks/useWishlist";
+import { useSearchParams } from "next/navigation";
 
 export default function CatalogPage() {
-
+  const searchParams = useSearchParams();
+  
   const { books, genres, selectedGenre, setSelectedGenre,
-    isLoading, handleWishlistToggle, availableOnly, toggleAvailableOnly,
+    isLoading, availableOnly, toggleAvailableOnly,
     setSearchTerm, searchTerm
   } = useCatalogo();
+
+  const { handleWishlistToggle, isLoading: isWishlistLoading } = useWishlist();
 
   const [localSearch, setLocalSearch] = useState(searchTerm);
   const debouncedSearch = useDebounce(localSearch, 500);
@@ -78,11 +83,17 @@ export default function CatalogPage() {
               <BookCardSkeleton key={i} />
             ))
             : books?.content.map((book) => (
-              <Link key={book.id} href={`/dashboard/catalog/${book.id}`}>
+              <Link key={book.id}
+                href={{
+                  pathname: `/dashboard/catalog/${book.id}`,
+                  query: Object.fromEntries(searchParams.entries()),
+                }}
+              >
                 <BooksGrid
                   key={book.id}
                   book={book}
                   handleWishlistToggle={handleWishlistToggle}
+                  isWishlistLoading={isWishlistLoading}
                 />
               </Link>
             ))}
@@ -91,7 +102,9 @@ export default function CatalogPage() {
 
       {books && books.totalPages > 1 && (
         <div className="col-span-full mt-8">
-          <CustomPagination totalPages={books.totalPages} />
+          <CustomPagination 
+          totalPages={books.totalPages} 
+          paramName="CatalogPage"/>
         </div>
       )}
 

@@ -8,11 +8,28 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { reviewService } from "@/services/reviewService";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { BookDetailSkeleton } from "../custom/skeletons";
+import { useWishlist } from "@/hooks/useWishlist";
+import { CustomPagination } from "@/components/custom/CustomPagination";
 
 export const BookDetail = ({ id }: { id: string }) => {
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+
+  const { handleWishlistToggle, isLoading: isWishlistLoading } = useWishlist();
+
+  const handleBack = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("ReviewPage");
+    if (params) {
+      router.push(`/dashboard/catalog?${params}`);
+    } else {
+      router.push("/dashboard/catalog");
+    }
+  };
 
   const { data: book } = useQuery({
     queryKey: ["book", id],
@@ -20,13 +37,15 @@ export const BookDetail = ({ id }: { id: string }) => {
     enabled: !!id,
   });
 
-  const { data: reviews } = useQuery({
+  const { data: reviews, isLoading } = useQuery({
     queryKey: ["reviews", id],
     queryFn: () => reviewService.getBookReviews(id),
     enabled: !!id,
   });
 
-  console.log("Reseñas:", reviews);
+  if (isLoading) {
+    return <BookDetailSkeleton />;
+  }
 
   if (!book) {
     return (
@@ -42,26 +61,29 @@ export const BookDetail = ({ id }: { id: string }) => {
 
   return (
     <div>
-      <Button
-       onClick={() => router.back()}
-       variant="ghost" className="mb-6 font-body gap-2">
+      <Button variant="ghost" onClick={handleBack} className="mb-6 font-body gap-2">
         <ArrowLeft className="w-4 h-4" /> Volver
       </Button>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Cover */}
-        <div className="lg:col-span-1">
-          <div className="sticky top-28 space-y-4">
+        <div className="lg:col-span-1 h-full"> {/* altura menos header */}
+          <div className="sticky top-20 space-y-4">
             <div className="aspect-3/4 rounded-lg overflow-hidden border border-border shadow-xl">
-              <Image src={book?.coverImageUrl} alt={book?.title} width={300} height={400} className="w-full h-full object-cover" />
+              <Image
+                src={book.coverImageUrl}
+                alt={book.title} className="w-full h-full object-cover"
+                width={300}
+                height={400}
+              />
             </div>
             <div className="flex gap-2">
               <Button className="flex-1 font-display tracking-wider text-sm" disabled={book.availableCopies === 0}>
                 {book.availableCopies > 0 ? "Solicitar Préstamo" : "Reservar"}
               </Button>
-              <button
-                className="absolute top-3 left-3 w-8 h-8 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center  opacity-100 transition-opacity"
-                aria-label="Añadir a wishlist"
+              <Button variant="outline" size="icon" aria-label="Añadir a wishlist"
+                onClick={() => handleWishlistToggle(book.id, book.isWishList)}
+                disabled={isWishlistLoading}
               >
                 <Heart
                   className={`w-4 h-4 transition-colors ${book.isWishList
@@ -69,7 +91,7 @@ export const BookDetail = ({ id }: { id: string }) => {
                     : "text-muted-foreground hover:text-red-500"
                     }`}
                 />
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -83,7 +105,7 @@ export const BookDetail = ({ id }: { id: string }) => {
             <div className="flex items-center gap-4 flex-wrap">
               <div className="flex items-center gap-1">
                 <Star className="w-5 h-5 fill-primary text-primary" />
-                <span className="font-display text-lg font-semibold">{book.averageRating}</span>
+                <span className="font-display text-lg font-semibold">{book.averageRating.toFixed(1)}</span>
                 <span className="font-body text-sm text-muted-foreground">({book.totalReviews} reseñas)</span>
               </div>
               <Badge variant={book.availableCopies > 0 ? "default" : "destructive"}>
@@ -116,7 +138,7 @@ export const BookDetail = ({ id }: { id: string }) => {
             <h2 className="font-display text-lg font-semibold mb-4 text-foreground flex items-center gap-2">
               <Users className="w-5 h-5 text-primary" /> Reseñas
             </h2>
-            {reviews && reviews.totalElements > 0 ? (
+            {reviews && reviews?.totalElements > 0 ? (
               <div className="space-y-4">
                 {reviews.content.map((review) => (
                   <div key={review.id} className="bg-card border border-border rounded-lg p-5">
@@ -139,6 +161,13 @@ export const BookDetail = ({ id }: { id: string }) => {
               <p className="font-body text-muted-foreground text-sm">Aún no hay reseñas para este libro.</p>
             )}
           </div>
+          {reviews && reviews.totalPages > 1 && (
+            <div className="col-span-full mt-8">
+              <CustomPagination
+                totalPages={reviews.totalPages}
+                paramName="ReviewPage" />
+            </div>
+          )}
         </div>
       </div>
     </div>

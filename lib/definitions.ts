@@ -70,16 +70,16 @@ export type BookSummary = {
 };
 
 export interface BookDetail {
-  id: String;
+  id: string;
   isbn: string;
   title: string;
   author: string;
 
-  genreId: String;
+  genreId: string;
   genreName: string;
 
   publisher: string;
-  publishedDate: String;
+  publishedDate: string;
   language: string;
   pages: number;
   description: string;

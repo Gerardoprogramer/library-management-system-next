@@ -6,21 +6,26 @@ import { Button } from "../ui/button";
 
 interface Props {
   totalPages: number;
+  paramName?: string;
 }
 
-export const CustomPagination = ({ totalPages }: Props) => {
+export const CustomPagination = ({
+  totalPages,
+  paramName = "page"
+}: Props) => {
+
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
-  const queryPage = searchParams.get("page") ?? "1";
+  const queryPage = searchParams.get(paramName) ?? "1";
   const page = isNaN(+queryPage) ? 1 : +queryPage;
 
   const handlePageChange = (newPage: number) => {
     if (newPage < 1 || newPage > totalPages) return;
 
     const params = new URLSearchParams(searchParams.toString());
-    params.set("page", newPage.toString());
+    params.set(paramName, newPage.toString());
 
     router.push(`${pathname}?${params.toString()}`);
   };

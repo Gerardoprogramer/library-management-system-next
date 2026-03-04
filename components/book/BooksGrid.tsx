@@ -7,6 +7,7 @@ import { BookSummary } from "@/lib/definitions";
 interface BookGridProps {
     book: BookSummary;
     handleWishlistToggle: (bookId: string, isInWishlist: boolean) => void;
+    isWishlistLoading: boolean;
 }
 
 export const BooksGrid = (props: BookGridProps) => {
@@ -36,6 +37,7 @@ export const BooksGrid = (props: BookGridProps) => {
                         e.preventDefault();
                         handleWishlistToggle(id, isWishList);
                     }}
+                    disabled={props.isWishlistLoading}
                     className="absolute top-3 left-3 w-8 h-8 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center  opacity-100 transition-opacity"
                     aria-label="Añadir a wishlist"
                 >

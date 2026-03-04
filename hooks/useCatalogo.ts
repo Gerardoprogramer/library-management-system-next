@@ -1,8 +1,6 @@
 
 import { bookService } from "@/services/bookService";
 import { useQuery } from "@tanstack/react-query";
-import { WishListService } from "@/services/wishlistService";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { genreService } from "@/services/genreService";
 import type { Genre } from "@/lib/definitions";
@@ -11,9 +9,8 @@ import { useRouter } from "next/navigation";
 export const useCatalogo = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const queryClient = useQueryClient();
 
-  const queryPage = searchParams.get("page") ?? "1";
+  const queryPage = searchParams.get("CatalogPage") ?? "1";
   const queryGenre = searchParams.get("genre") ?? "all";
   const queryAvailable = searchParams.get("availableOnly") === "true";
   const querySearchTerm = searchParams.get("searchTerm") ?? "";
@@ -54,15 +51,6 @@ export const useCatalogo = () => {
     queryFn: genreService.genres,
   });
 
-  const toggleWishlistMutation = useMutation({
-    mutationFn: ({ bookId, isInWishlist }: { bookId: string; isInWishlist: boolean }) =>
-      isInWishlist
-        ? WishListService.remove(bookId)
-        : WishListService.add(bookId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["books"] });
-    },
-  });
 
   return {
     books,
@@ -80,7 +68,5 @@ export const useCatalogo = () => {
       }),
     setSearchTerm: (term: string) =>
       updateParams({ searchTerm: term, page: "1" }),
-    handleWishlistToggle: (bookId: string, isInWishlist: boolean) =>
-      toggleWishlistMutation.mutate({ bookId, isInWishlist }),
   };
 };
