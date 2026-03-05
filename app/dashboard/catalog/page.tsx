@@ -1,7 +1,6 @@
 'use client';
 
 import { Search, BookOpen } from "lucide-react";
-import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { CustomPagination } from "@/components/custom/CustomPagination";
 import { BookCardSkeleton } from "@/components/custom/skeletons";
@@ -10,33 +9,21 @@ import { useCatalogo } from "@/hooks/useCatalogo";
 import { SelectGenre } from "@/components/genre/SelectGenre";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { useDebounce } from "@/hooks/useDebounce";
 import Link from "next/link";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useSearchParams } from "next/navigation";
+import { useDebouncedSearchParam } from "@/hooks/useDebouncedSearchParam";
 
 export default function CatalogPage() {
   const searchParams = useSearchParams();
-  
-  const { books, genres, selectedGenre, setSelectedGenre,
-    isLoading, availableOnly, toggleAvailableOnly,
-    setSearchTerm, searchTerm
-  } = useCatalogo();
+
+  const { books, genres, genre, setGenre,
+    isLoading, availableOnly, toggleAvailableOnly } = useCatalogo();
 
   const { handleWishlistToggle, isLoading: isWishlistLoading } = useWishlist();
 
-  const [localSearch, setLocalSearch] = useState(searchTerm);
-  const debouncedSearch = useDebounce(localSearch, 500);
+  const { value: search, setValue: setSearch } = useDebouncedSearchParam("searchTerm", 500);
 
-  useEffect(() => {
-    if (debouncedSearch !== searchTerm) {
-      setSearchTerm(debouncedSearch);
-    }
-  }, [debouncedSearch, searchTerm, setSearchTerm]);
-
-  useEffect(() => {
-    setLocalSearch(searchTerm);
-  }, [searchTerm]);
 
   return (
     <div>
@@ -53,14 +40,14 @@ export default function CatalogPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            value={localSearch}
-            onChange={(e) => setLocalSearch(e.target.value)}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar por título, autor o ISBN..."
             className="pl-10 font-body"
           />
         </div>
         <div className="flex gap-2">
-          <SelectGenre genres={genres} selectedGenre={selectedGenre} setSelectedGenre={setSelectedGenre} />
+          <SelectGenre genres={genres} selectedGenre={genre} setSelectedGenre={setGenre} />
           <div className="flex items-center space-x-2">
             <Switch
               id="available"
@@ -102,9 +89,9 @@ export default function CatalogPage() {
 
       {books && books.totalPages > 1 && (
         <div className="col-span-full mt-8">
-          <CustomPagination 
-          totalPages={books.totalPages} 
-          paramName="CatalogPage"/>
+          <CustomPagination
+            totalPages={books.totalPages}
+            paramName="CatalogPage" />
         </div>
       )}
 
