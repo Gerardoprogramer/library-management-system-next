@@ -2,7 +2,7 @@
 
 import { LogOut, Gem, X } from "lucide-react";
 import { useLogout } from "@/hooks/useAuth";
-import { adminNav, userNav } from "@/lib/navData";
+import { adminNav, userNav } from "@/lib/data";
 import { userService } from "@/services/userService";
 import { useQuery } from "@tanstack/react-query";
 import { NavLinks } from "@/components/dashboard/NavLinks";
