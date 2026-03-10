@@ -104,3 +104,28 @@ export interface Review {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface meLoans {
+  id: string;
+  bookId: string;
+  bookTitle: string;
+  author: string;
+  bookCoverImageUrl: string;
+  userId: string;
+  userName: string;
+  type: typeLoans;
+  status: statusLoan;
+  checkoutDate: string;
+  dueDate: string;
+  remainingDays: number;
+  returnDate: string;
+  renewalCount: number;
+  maxRenewals: number;
+  notes: string;
+  overdue: boolean;
+  overdueDays: number;
+  fineAmount: number;
+}
+
+export type statusLoan = "CHECKED_OUT" | "OVERDUE" | "RETURNED" | "LOST" | "DAMAGED";
+export type typeLoans = "CHECKOUT" | "RENEWAL" | "RETURN";

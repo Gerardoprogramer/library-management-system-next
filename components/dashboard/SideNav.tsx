@@ -14,7 +14,7 @@ interface SideNavProps {
 }
 
 export const SideNav = ({ isOpen, setIsOpen }: SideNavProps) => {
-  const { handleLogout } = useLogout();
+  const { handleLogout, isLoading } = useLogout();
 
   const { data: user } = useQuery({
     queryKey: ["currentUser"],
@@ -78,11 +78,12 @@ export const SideNav = ({ isOpen, setIsOpen }: SideNavProps) => {
 
         <div className="p-3 border-t border-border">
           <button
+            disabled={isLoading}
             onClick={handleLogout}
             className="w-full flex items-center gap-3 text-sm px-3 py-2.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
           >
             <LogOut className="w-4 h-4 shrink-0" />
-            Cerrar Sesión
+            {isLoading ? "Cerrando sesión..." : "Cerrar sesión"}
           </button>
         </div>
       </aside>

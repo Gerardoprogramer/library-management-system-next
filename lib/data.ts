@@ -1,5 +1,7 @@
-import { BookOpen, Clock, Bookmark, Heart, Star, Shield, Users, BarChart3, Gem } from "lucide-react";
-import { navLinkstype } from "./definitions";
+import { BookOpen, Clock, Bookmark, Heart, 
+  Star, Shield, Users, BarChart3, Gem, CheckCircle, 
+  AlertTriangle, XCircle, PackageX } from "lucide-react";
+import type { navLinkstype, statusLoan } from "./definitions";
 
 
 export const userNav: navLinkstype[] = [
@@ -17,4 +19,39 @@ export const adminNav: navLinkstype[] = [
   { label: "Usuarios", path: "/dashboard/admin/usuarios", icon: Users },
   { label: "Estadísticas", path: "/dashboard/admin/stats", icon: BarChart3 },
 ];
+
+export const statusLoanConfig: Record<
+  statusLoan,
+  {
+    label: string;
+    icon: any;
+    variant: "default" | "secondary" | "destructive" | "outline";
+  }
+> = {
+  CHECKED_OUT: {
+    label: "Prestado",
+    icon: CheckCircle,
+    variant: "default",
+  },
+  OVERDUE: {
+    label: "Vencido",
+    icon: AlertTriangle,
+    variant: "destructive",
+  },
+  RETURNED: {
+    label: "Devuelto",
+    icon: CheckCircle,
+    variant: "secondary",
+  },
+  LOST: {
+    label: "Perdido",
+    icon: XCircle,
+    variant: "destructive",
+  },
+  DAMAGED: {
+    label: "Dañado",
+    icon: PackageX,
+    variant: "outline",
+  },
+};
 

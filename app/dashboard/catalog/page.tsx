@@ -32,7 +32,7 @@ export default function CatalogPage() {
           Catálogo
         </h1>
         <p className="font-body text-lg text-muted-foreground">
-          Explora nuestra colección de {books?.totalElements || 0} volúmenes
+          Explora nuestra colección de {books?.totalElements ?? 0} volúmenes
         </p>
       </div>
 

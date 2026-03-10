@@ -1,3 +1,5 @@
+
+import { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Genre } from "@/lib/definitions";
 import { Filter } from "lucide-react";
@@ -8,7 +10,19 @@ interface SelectGenreProps {
     setSelectedGenre: (genreId: string) => void;
 }
 
-export const SelectGenre = ({ genres, selectedGenre, setSelectedGenre }: SelectGenreProps) => {
+export const SelectGenre = ({
+    genres,
+    selectedGenre,
+    setSelectedGenre,
+}: SelectGenreProps) => {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return null;
+
     return (
         <Select
             value={selectedGenre}
@@ -18,6 +32,7 @@ export const SelectGenre = ({ genres, selectedGenre, setSelectedGenre }: SelectG
                 <Filter className="mr-2 h-4 w-4" />
                 <SelectValue placeholder="Category" />
             </SelectTrigger>
+
             <SelectContent>
                 <SelectItem value="all">Todos los Géneros</SelectItem>
 
@@ -28,5 +43,5 @@ export const SelectGenre = ({ genres, selectedGenre, setSelectedGenre }: SelectG
                 ))}
             </SelectContent>
         </Select>
-    )
-}
+    );
+};
