@@ -1,33 +1,16 @@
-import { bookService } from "@/services/bookService";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams, useRouter } from "next/navigation";
+import { bookService } from "@/services/bookService";
 import { genreService } from "@/services/genreService";
 import type { Genre } from "@/lib/definitions";
+import { useUrlFilters } from "@/hooks/useUrlFilters";
 
 export const useCatalogo = () => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const { get, set } = useUrlFilters();
 
-  const page = Number(searchParams.get("CatalogPage") ?? 1);
-  const genre = searchParams.get("genre") ?? "all";
-  const availableOnly = searchParams.get("availableOnly") === "true";
-  const searchTerm = searchParams.get("searchTerm") ?? "";
-
-  const updateParams = (params: Record<string, string>) => {
-    const newParams = new URLSearchParams(Array.from(searchParams.entries()));
-
-    newParams.delete("CatalogPage");
-
-    Object.entries(params).forEach(([key, value]) => {
-      if (!value || value === "all") {
-        newParams.delete(key);
-      } else {
-        newParams.set(key, value);
-      }
-    });
-
-    router.replace(`?${newParams.toString()}`);
-  };
+  const page = Number(get("CatalogPage", "1"));
+  const genre = get("genre", "all");
+  const availableOnly = get("availableOnly") === "true";
+  const searchTerm = get("searchTerm");
 
   const { data: books, isLoading } = useQuery({
     queryKey: ["books", searchTerm, genre, availableOnly, page],
@@ -54,8 +37,17 @@ export const useCatalogo = () => {
     availableOnly,
     searchTerm,
     isLoading,
-    setGenre: (g: string) => updateParams({ genre: g }),
+
+    setGenre: (g: string) =>
+      set({
+        genre: g,
+        CatalogPage: "1",
+      }),
+
     toggleAvailableOnly: () =>
-      updateParams({ availableOnly: String(!availableOnly) }),
+      set({
+        availableOnly: !availableOnly,
+        CatalogPage: "1",
+      }),
   };
 };

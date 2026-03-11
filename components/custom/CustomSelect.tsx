@@ -1,20 +1,26 @@
 
 import { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Genre } from "@/lib/definitions";
 import { Filter } from "lucide-react";
 
-interface SelectGenreProps {
-    genres: Genre[];
-    selectedGenre: string;
-    setSelectedGenre: (genreId: string) => void;
+type Option  = {
+    id: string
+    name: string
 }
 
-export const SelectGenre = ({
-    genres,
-    selectedGenre,
-    setSelectedGenre,
-}: SelectGenreProps) => {
+interface SelectItemProps {
+    options: Option [];
+    headline: string;
+    selectedItem: string;
+    setSelectedItem: (Item: string) => void;
+}
+
+export const CustomSelect = ({
+    options,
+    headline,
+    selectedItem,
+    setSelectedItem,
+}: SelectItemProps) => {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -25,8 +31,8 @@ export const SelectGenre = ({
 
     return (
         <Select
-            value={selectedGenre}
-            onValueChange={(value) => setSelectedGenre(value)}
+            value={selectedItem}
+            onValueChange={(value) => setSelectedItem(value)}
         >
             <SelectTrigger className="w-40 sm:w-auto">
                 <Filter className="mr-2 h-4 w-4" />
@@ -34,11 +40,11 @@ export const SelectGenre = ({
             </SelectTrigger>
 
             <SelectContent>
-                <SelectItem value="all">Todos los Géneros</SelectItem>
+                <SelectItem value="all">{headline}</SelectItem>
 
-                {genres.map((genre) => (
-                    <SelectItem key={genre.id} value={genre.id}>
-                        {genre.name}
+                {options.map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                        {item.name}
                     </SelectItem>
                 ))}
             </SelectContent>

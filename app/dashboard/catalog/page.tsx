@@ -6,13 +6,14 @@ import { CustomPagination } from "@/components/custom/CustomPagination";
 import { BookCardSkeleton } from "@/components/custom/skeletons";
 import { BooksGrid } from "@/components/book/BooksGrid";
 import { useCatalogo } from "@/hooks/useCatalogo";
-import { SelectGenre } from "@/components/genre/SelectGenre";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useSearchParams } from "next/navigation";
 import { useDebouncedSearchParam } from "@/hooks/useDebouncedSearchParam";
+import { CustomSelect } from "@/components/custom/CustomSelect";
+import { useMemo } from "react";
 
 export default function CatalogPage() {
   const searchParams = useSearchParams();
@@ -24,6 +25,10 @@ export default function CatalogPage() {
 
   const { value: search, setValue: setSearch } = useDebouncedSearchParam("searchTerm", 500);
 
+  const genreOptions = useMemo(
+  () => genres.map(g => ({ id: g.id, name: g.name })),
+  [genres]
+)
 
   return (
     <div>
@@ -47,7 +52,12 @@ export default function CatalogPage() {
           />
         </div>
         <div className="flex gap-2">
-          <SelectGenre genres={genres} selectedGenre={genre} setSelectedGenre={setGenre} />
+          <CustomSelect
+            options={genreOptions}
+            headline="Todos los Géneros"
+            selectedItem={genre}
+            setSelectedItem={setGenre}
+          />
           <div className="flex items-center space-x-2">
             <Switch
               id="available"
@@ -77,7 +87,6 @@ export default function CatalogPage() {
                 }}
               >
                 <BooksGrid
-                  key={book.id}
                   book={book}
                   handleWishlistToggle={handleWishlistToggle}
                   isWishlistLoading={isWishlistLoading}

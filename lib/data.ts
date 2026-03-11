@@ -1,7 +1,7 @@
 import { BookOpen, Clock, Bookmark, Heart, 
   Star, Shield, Users, BarChart3, Gem, CheckCircle, 
   AlertTriangle, XCircle, PackageX } from "lucide-react";
-import type { navLinkstype, statusLoan } from "./definitions";
+import type { navLinkstype, statusLoan, selectOptions } from "./definitions";
 
 
 export const userNav: navLinkstype[] = [
@@ -55,3 +55,10 @@ export const statusLoanConfig: Record<
   },
 };
 
+export const LoanOptions: selectOptions[] = [
+{id: "CHECKED_OUT", name: "CHECKED_OUT"},
+{id: "RETURNED", name: "RETURNED"},
+{id: "OVERDUE", name: "OVERDUE"},
+{id: "LOST", name: "LOST"},
+{id: "DAMAGED", name: "DAMAGED"}
+];

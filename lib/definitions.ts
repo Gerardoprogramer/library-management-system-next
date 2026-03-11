@@ -129,3 +129,8 @@ export interface meLoans {
 
 export type statusLoan = "CHECKED_OUT" | "OVERDUE" | "RETURNED" | "LOST" | "DAMAGED";
 export type typeLoans = "CHECKOUT" | "RENEWAL" | "RETURN";
+
+export interface selectOptions{
+  id: string;
+  name: string
+}
