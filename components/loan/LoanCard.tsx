@@ -5,6 +5,8 @@ import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { AlertTriangle, ArrowRight, Info, RefreshCw } from "lucide-react";
+import Link from "next/link";
+import { useSearchParams, usePathname } from "next/navigation";
 
 interface Props {
     loan: meLoans
@@ -12,16 +14,29 @@ interface Props {
 
 export const LoanCard = ({ loan }: Props) => {
     const config = statusLoanConfig[loan.status];
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const currentUrl = `${pathname}?${searchParams.toString()}`;
 
     return (
         <Card key={loan.id} className={`overflow-hidden transition-all ${loan.overdue ? "border-destructive/40 bg-destructive/5" : ""}`}>
             <CardContent className="p-0">
                 <div className="flex flex-col sm:flex-row">
-                    <img
-                        src={loan.bookCoverImageUrl}
-                        alt={loan.bookTitle}
-                        className="w-full sm:w-20 h-32 sm:h-auto rounded-t sm:rounded-l sm:rounded-tr-none object-cover cursor-pointer shrink-0"
-                    />
+                    <Link
+                        href={{
+                            pathname: `/dashboard/book/${loan.bookId}`,
+                            query: {
+                                ...Object.fromEntries(searchParams.entries()),
+                                from: currentUrl
+                            }
+                        }}>
+                        <img
+                            src={loan.bookCoverImageUrl}
+                            alt={loan.bookTitle}
+                            className="w-full sm:w-20 h-32 sm:h-auto rounded-t sm:rounded-l sm:rounded-tr-none object-cover cursor-pointer shrink-0"
+                        />
+                    </Link>
+
                     <div className="flex-1 p-4 sm:p-5 min-w-0">
                         <div className="flex items-start justify-between gap-2 mb-3">
                             <div className="min-w-0">
@@ -90,14 +105,23 @@ export const LoanCard = ({ loan }: Props) => {
                                     <RefreshCw className="w-3 h-3" /> Renovar
                                 </Button>
                             )}
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                className="font-body text-xs gap-1"
-                                
-                            >
-                                Ver libro <ArrowRight className="w-3 h-3" />
-                            </Button>
+                            <Link
+                                href={{
+                                    pathname: `/dashboard/book/${loan.bookId}`,
+                                    query: {
+                                        ...Object.fromEntries(searchParams.entries()),
+                                        from: currentUrl
+                                    }
+                                }}>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="font-body text-xs gap-1"
+
+                                >
+                                    Ver libro <ArrowRight className="w-3 h-3" />
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </div>

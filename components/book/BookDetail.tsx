@@ -24,10 +24,10 @@ export const BookDetail = ({ id }: { id: string }) => {
   const { handleWishlistToggle, isLoading: isWishlistLoading } = useWishlist();
 
   const handleBack = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("ReviewPage");
-    if (params) {
-      router.push(`/dashboard/catalog?${params}`);
+    const from = searchParams.get("from");
+
+    if (from) {
+      router.push(decodeURIComponent(from));
     } else {
       router.push("/dashboard/catalog");
     }

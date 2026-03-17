@@ -10,13 +10,15 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useWishlist } from "@/hooks/useWishlist";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import { useDebouncedSearchParam } from "@/hooks/useDebouncedSearchParam";
 import { CustomSelect } from "@/components/custom/CustomSelect";
 import { useMemo } from "react";
 
 export default function CatalogPage() {
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+  const currentUrl = `${pathname}?${searchParams.toString()}`;
 
   const { books, genres, genre, setGenre,
     isLoading, availableOnly, toggleAvailableOnly } = useCatalogo();
@@ -83,7 +85,10 @@ export default function CatalogPage() {
               <Link key={book.id}
                 href={{
                   pathname: `/dashboard/book/${book.id}`,
-                  query: Object.fromEntries(searchParams.entries()),
+                  query: {
+                    ...Object.fromEntries(searchParams.entries()),
+                    from: currentUrl
+                  }
                 }}
               >
                 <BooksGrid
