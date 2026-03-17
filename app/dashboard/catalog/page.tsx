@@ -26,9 +26,9 @@ export default function CatalogPage() {
   const { value: search, setValue: setSearch } = useDebouncedSearchParam("searchTerm", 500);
 
   const genreOptions = useMemo(
-  () => genres.map(g => ({ id: g.id, name: g.name })),
-  [genres]
-)
+    () => genres.map(g => ({ id: g.id, name: g.name })),
+    [genres]
+  )
 
   return (
     <div>
@@ -82,7 +82,7 @@ export default function CatalogPage() {
             : books?.content.map((book) => (
               <Link key={book.id}
                 href={{
-                  pathname: `/dashboard/catalog/${book.id}`,
+                  pathname: `/dashboard/book/${book.id}`,
                   query: Object.fromEntries(searchParams.entries()),
                 }}
               >
