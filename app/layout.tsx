@@ -8,19 +8,19 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('http://localhost:3000'),
+  metadataBase: new URL('https://obsidian-delta-kohl.vercel.app'),
   title: {
     template: '%s | Biblioteca Obsidian',
     default: 'Biblioteca Obsidian',
   },
   description: 'Biblioteca digital basada en el conocimiento y la organización de Obsidian.',
   icons: {
-    icon: '/vercel.svg',
+    icon: '/favicon.ico',
   },
   openGraph: {
     title: 'Biblioteca Obsidian',
     description: 'Biblioteca digital basada en el conocimiento y la organización de Obsidian.',
-    images: ['/vercel.svg'],
+    images: ['/favicon.ico'],
   },
 };
 
