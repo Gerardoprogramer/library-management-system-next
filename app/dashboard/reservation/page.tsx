@@ -10,7 +10,7 @@ const statusConfig = {
 export default function ReservationPage() {
   return (
     <>
-    <h1>Firts steps</h1>
+    <h1>Hola mundo</h1>
     </>
   )
 }
