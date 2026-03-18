@@ -6,7 +6,9 @@ import { Card, CardContent } from "../ui/card";
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { AlertTriangle, ArrowRight, Info, RefreshCw } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams, usePathname } from "next/navigation";
+import { useQueryParams } from "@/hooks/useQueryParams";
+import { useCurrentUrl } from "@/hooks/useCurrentUrl";
+
 
 interface Props {
     loan: meLoans
@@ -14,9 +16,9 @@ interface Props {
 
 export const LoanCard = ({ loan }: Props) => {
     const config = statusLoanConfig[loan.status];
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-    const currentUrl = `${pathname}?${searchParams.toString()}`;
+
+    const queryParams = useQueryParams();
+    const currentUrl = useCurrentUrl();
 
     return (
         <Card key={loan.id} className={`overflow-hidden transition-all ${loan.overdue ? "border-destructive/40 bg-destructive/5" : ""}`}>
@@ -26,7 +28,7 @@ export const LoanCard = ({ loan }: Props) => {
                         href={{
                             pathname: `/dashboard/book/${loan.bookId}`,
                             query: {
-                                ...Object.fromEntries(searchParams.entries()),
+                                ...queryParams,
                                 from: currentUrl
                             }
                         }}>
@@ -109,7 +111,7 @@ export const LoanCard = ({ loan }: Props) => {
                                 href={{
                                     pathname: `/dashboard/book/${loan.bookId}`,
                                     query: {
-                                        ...Object.fromEntries(searchParams.entries()),
+                                        ...queryParams,
                                         from: currentUrl
                                     }
                                 }}>
