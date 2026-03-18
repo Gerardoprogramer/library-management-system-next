@@ -1,55 +1,26 @@
 'use client';
 
-import { bookService } from "@/services/bookService";
-import { useQuery } from "@tanstack/react-query";
-
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { reviewService } from "@/services/reviewService";
-import { useRouter, useSearchParams } from "next/navigation";
 import { ReviewListSkeleton, BookSideSkeleton, BookMainInfoSkeleton } from "../custom/skeletons";
-import { useWishlist } from "@/hooks/useWishlist";
 import { CustomPagination } from "@/components/custom/CustomPagination";
-import type { BookDetail as Book } from "@/lib/definitions";
 import { BookSide } from "./BookSide";
 import { BookMain } from "./BookMain";
 import { ReviewList } from "./ReviewList";
+import { useBookDetail } from "@/hooks/useBookDetail";
 
 export const BookDetail = ({ id }: { id: string }) => {
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const {
+    handleBack,
+    handleWishlistToggle,
+    isWishlistLoading,
+    bookQuery,
+    reviewsQuery,
+  } = useBookDetail(id);
 
-  const queryPage = searchParams.get("ReviewPage") ?? "1";
-  const { handleWishlistToggle, isLoading: isWishlistLoading } = useWishlist();
-
-  const handleBack = () => {
-    const from = searchParams.get("from");
-
-    if (from) {
-      router.push(decodeURIComponent(from));
-    } else {
-      router.push("/dashboard/catalog");
-    }
-  };
-
-  const { data: book, isLoading: isBookLoading } = useQuery<Book>({
-    queryKey: ["book", id],
-    queryFn: () => bookService.book(id),
-    placeholderData: (prev) => prev,
-    enabled: !!id,
-  });
-
-  const { data: reviews, isLoading: isReviewsLoading } = useQuery({
-    queryKey: ["reviews", id, queryPage],
-    queryFn: () =>
-      reviewService.getBookReviews(
-        id,
-        isNaN(+queryPage) ? 0 : +queryPage - 1
-      ),
-    placeholderData: (prev) => prev,
-    enabled: !!id,
-  });
+  const { data: book, isLoading: isBookLoading } = bookQuery;
+  const { data: reviews, isLoading: isReviewsLoading } = reviewsQuery;
 
 
   return (
