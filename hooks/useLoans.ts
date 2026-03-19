@@ -10,7 +10,7 @@ export const useLoans = () => {
 
     const { data: loans, isLoading } = useQuery({
         queryKey: ["loans", status, page],
-        queryFn: () => loansService.getBookReviews(
+        queryFn: () => loansService.getBookLoans(
             status === "all" ? undefined : status,
             page - 1
         ),
