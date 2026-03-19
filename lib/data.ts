@@ -1,7 +1,9 @@
-import { BookOpen, Clock, Bookmark, Heart, 
-  Star, Shield, Users, BarChart3, Gem, CheckCircle, 
-  AlertTriangle, XCircle, PackageX } from "lucide-react";
-import type { navLinkstype, statusLoan, selectOptions } from "./definitions";
+import {
+  BookOpen, Clock, Bookmark, Heart,
+  Star, Shield, Users, BarChart3, Gem, CheckCircle,
+  AlertTriangle, XCircle, PackageX
+} from "lucide-react";
+import type { navLinkstype, statusLoan, selectOptions, typeLoans } from "./definitions";
 
 
 export const userNav: navLinkstype[] = [
@@ -19,6 +21,18 @@ export const adminNav: navLinkstype[] = [
   { label: "Usuarios", path: "/dashboard/admin/usuarios", icon: Users },
   { label: "Estadísticas", path: "/dashboard/admin/stats", icon: BarChart3 },
 ];
+
+export const typeLoanConfig: Record<typeLoans, { label: string }> = {
+  "CHECKOUT": {
+    label: "Prestado"
+  },
+  "RENEWAL": {
+    label: "Renovación"
+  },
+  "RETURN": {
+    label: "Devuelto"
+  }
+}
 
 export const statusLoanConfig: Record<
   statusLoan,
@@ -56,9 +70,9 @@ export const statusLoanConfig: Record<
 };
 
 export const LoanOptions: selectOptions[] = [
-{id: "CHECKED_OUT", name: "CHECKED_OUT"},
-{id: "RETURNED", name: "RETURNED"},
-{id: "OVERDUE", name: "OVERDUE"},
-{id: "LOST", name: "LOST"},
-{id: "DAMAGED", name: "DAMAGED"}
+  { id: "CHECKED_OUT", name: "Prestado" },
+  { id: "RETURNED", name: "Devuelto" },
+  { id: "OVERDUE", name: "Vencido" },
+  { id: "LOST", name: "Perdido" },
+  { id: "DAMAGED", name: "Dañado" }
 ];

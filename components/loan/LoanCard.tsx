@@ -1,6 +1,6 @@
 import { meLoans } from "@/lib/definitions"
 import { Badge } from "../ui/badge"
-import { statusLoanConfig } from "@/lib/data";
+import { statusLoanConfig, typeLoanConfig } from "@/lib/data";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -18,6 +18,7 @@ interface Props {
 
 export const LoanCard = ({ loan }: Props) => {
     const config = statusLoanConfig[loan.status];
+    const typeConfig = typeLoanConfig[loan.type];
 
     const queryParams = useQueryParams();
     const currentUrl = useCurrentUrl();
@@ -55,8 +56,8 @@ export const LoanCard = ({ loan }: Props) => {
                                     <p className="font-body text-sm text-muted-foreground/80 italic">{loan.author}</p>
                                 </div>
                                 <div className="flex items-center gap-2 shrink-0">
-                                    <Badge variant="outline" className="font-body text-[10px] border-white/10 uppercase tracking-tighter">
-                                        {loan.type}
+                                    <Badge variant="outline" className="font-body text-[10px] border-white/10 ">
+                                        {typeConfig.label}
                                     </Badge>
                                     <Badge variant={config.variant} className="font-body gap-1 shadow-sm">
                                         <config.icon className="w-3 h-3" /> {config.label}
@@ -87,7 +88,7 @@ export const LoanCard = ({ loan }: Props) => {
                                 </div>
                             </div>
 
-                            {loan.overdue && loan.overdueDays > 0 && (
+                            {loan.overdue && (
                                 <div className="flex items-center gap-2 text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2 mb-4">
                                     <AlertTriangle className="w-4 h-4 shrink-0" />
                                     <span className="font-body text-xs font-semibold">{loan.overdueDays} días de retraso</span>
