@@ -14,6 +14,7 @@ export const useLoans = () => {
             status === "all" ? undefined : status,
             page - 1
         ),
+        staleTime: 1000 * 60 * 5,
     });
 
     const setStatus = (s: string) => {

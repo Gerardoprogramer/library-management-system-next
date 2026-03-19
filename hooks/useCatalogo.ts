@@ -23,11 +23,13 @@ export const useCatalogo = () => {
         size: 8,
       }),
     placeholderData: (prev) => prev,
+    staleTime: 1000 * 60 * 5,
   });
 
   const { data: genres = [] } = useQuery<Genre[]>({
     queryKey: ["genres"],
     queryFn: genreService.genres,
+    staleTime: 1000 * 60 * 5,
   });
 
   return {

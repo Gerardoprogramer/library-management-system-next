@@ -4,7 +4,6 @@ import { authService } from "@/services/authService";
 import { useRouter } from "next/navigation";
 import { registerSchema, loginSchema } from "@/schemas/auth.schema";
 import { toast } from "sonner";
-import { is } from "zod/locales";
 
 export const useRegister = () => {
 
