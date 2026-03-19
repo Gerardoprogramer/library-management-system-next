@@ -15,6 +15,7 @@ import { CustomSelect } from "@/components/custom/CustomSelect";
 import { useMemo } from "react";
 import { useCurrentUrl } from "@/hooks/useCurrentUrl";
 import { useQueryParams } from "@/hooks/useQueryParams";
+import { createSlug } from "@/lib/slug-utils"
 
 export const CatalogClient = () => {
     const queryParams = useQueryParams();
@@ -84,7 +85,7 @@ export const CatalogClient = () => {
                         : books?.content.map((book) => (
                             <Link key={book.id}
                                 href={{
-                                    pathname: `/dashboard/book/${book.id}`,
+                                    pathname: `/dashboard/book/${createSlug(book.id, book.title)}`,
                                     query: {
                                         ...queryParams,
                                         from: currentUrl

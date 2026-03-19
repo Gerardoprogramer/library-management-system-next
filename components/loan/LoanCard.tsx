@@ -8,7 +8,7 @@ import { AlertTriangle, ArrowRight, Info, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { useCurrentUrl } from "@/hooks/useCurrentUrl";
-
+import { createSlug } from "@/lib/slug-utils";
 
 interface Props {
     loan: meLoans
@@ -26,7 +26,7 @@ export const LoanCard = ({ loan }: Props) => {
                 <div className="flex flex-col sm:flex-row">
                     <Link
                         href={{
-                            pathname: `/dashboard/book/${loan.bookId}`,
+                            pathname: `/dashboard/book/${createSlug(loan.bookId, loan.bookTitle)}`,
                             query: {
                                 ...queryParams,
                                 from: currentUrl
@@ -109,7 +109,7 @@ export const LoanCard = ({ loan }: Props) => {
                             )}
                             <Link
                                 href={{
-                                    pathname: `/dashboard/book/${loan.bookId}`,
+                                    pathname: `/dashboard/book/${createSlug(loan.bookId, loan.bookTitle)}`,
                                     query: {
                                         ...queryParams,
                                         from: currentUrl

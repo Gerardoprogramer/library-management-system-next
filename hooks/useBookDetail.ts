@@ -30,6 +30,7 @@ export function useBookDetail(id: string) {
         queryFn: () => bookService.book(id),
         placeholderData: (prev) => prev,
         enabled: !!id,
+        staleTime: 1000 * 60 * 5,
     });
 
     const reviewsQuery = useQuery({
@@ -41,6 +42,7 @@ export function useBookDetail(id: string) {
             ),
         placeholderData: (prev) => prev,
         enabled: !!id,
+        staleTime: 1000 * 60 * 5,
     });
 
     return {
