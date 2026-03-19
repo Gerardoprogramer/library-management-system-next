@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { useCurrentUrl } from "@/hooks/useCurrentUrl";
 import { createSlug } from "@/lib/slug-utils";
+import Image from "next/image";
 
 interface Props {
     loan: meLoans
@@ -32,10 +33,11 @@ export const LoanCard = ({ loan }: Props) => {
                                 from: currentUrl
                             }
                         }}>
-                        <img
+                        <Image
                             src={loan.bookCoverImageUrl}
                             alt={loan.bookTitle}
-                            className="w-full sm:w-20 h-32 sm:h-auto rounded-t sm:rounded-l sm:rounded-tr-none object-cover cursor-pointer shrink-0"
+                            width={100}
+                            height={200}
                         />
                     </Link>
 
