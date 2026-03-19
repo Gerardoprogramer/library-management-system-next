@@ -1,6 +1,7 @@
 
 import { Star, BookOpen, Calendar, Globe, Hash } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { formatDate } from "@/lib/date-utils"
 
 interface BookMainProps {
     book: {
@@ -45,7 +46,7 @@ export const BookMain = ({ book }: BookMainProps) => {
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {[
-                    { icon: Calendar, label: "Publicado", value: book.publishedDate.toString() },
+                    { icon: Calendar, label: "Publicado", value: formatDate(book.publishedDate) },
                     { icon: BookOpen, label: "Páginas", value: book.pages.toString() },
                     { icon: Globe, label: "Idioma", value: book.language },
                     { icon: Hash, label: "ISBN", value: book.isbn.slice(-8) },
