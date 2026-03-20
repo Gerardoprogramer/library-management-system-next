@@ -1,6 +1,7 @@
 'use client'
 
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
+import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
 
@@ -13,55 +14,100 @@ export const CustomPagination = ({
   totalPages,
   paramName = "page"
 }: Props) => {
-
   const searchParams = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
 
   const queryPage = searchParams.get(paramName) ?? "1";
   const page = isNaN(+queryPage) ? 1 : +queryPage;
 
-  const handlePageChange = (newPage: number) => {
-    if (newPage < 1 || newPage > totalPages) return;
+  if (totalPages <= 1) return null;
 
+  const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set(paramName, newPage.toString());
-
-    router.push(`${pathname}?${params.toString()}`);
+    params.set(paramName, pageNumber.toString());
+    return `${pathname}?${params.toString()}`;
   };
 
+  const getPages = () => {
+    const pages: (number | "...")[] = [];
+    const delta = 2;
+
+    const left = Math.max(2, page - delta);
+    const right = Math.min(totalPages - 1, page + delta);
+
+    pages.push(1);
+
+    if (left > 2) pages.push("...");
+
+    for (let i = left; i <= right; i++) {
+      pages.push(i);
+    }
+
+    if (right < totalPages - 1) pages.push("...");
+
+    pages.push(totalPages);
+
+    return pages;
+  };
+
+  const pages = getPages();
+
   return (
-    <div className="flex items-center justify-center space-x-2">
+    <nav aria-label="Navegación de páginas" className="flex items-center justify-center gap-2 flex-wrap">
+
       <Button
         variant="outline"
         size="sm"
         disabled={page === 1}
-        onClick={() => handlePageChange(page - 1)}
+        asChild={page !== 1}
       >
-        <ChevronLeft className="h-4 w-4" />
-        Anteriores
+        {page === 1 ? (
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+        ) : (
+          <Link href={createPageURL(page - 1)} aria-label="Página anterior">
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        )}
       </Button>
 
-      {Array.from({ length: totalPages }).map((_, index) => (
-        <Button
-          key={index}
-          variant={page === index + 1 ? "default" : "outline"}
-          size="sm"
-          onClick={() => handlePageChange(index + 1)}
-        >
-          {index + 1}
-        </Button>
-      ))}
+
+      {pages.map((p, i) =>
+        p === "..." ? (
+          <span key={i} className="px-2 text-muted-foreground" aria-hidden="true">
+            ...
+          </span>
+        ) : (
+          <Button
+            key={i}
+            variant={page === p ? "default" : "outline"}
+            size="sm"
+            asChild
+          >
+            <Link
+              href={createPageURL(p)}
+              aria-current={page === p ? "page" : undefined}
+            >
+              {p}
+            </Link>
+          </Button>
+        )
+      )}
 
       <Button
         variant="outline"
         size="sm"
         disabled={page === totalPages}
-        onClick={() => handlePageChange(page + 1)}
+        asChild={page !== totalPages}
       >
-        Siguientes
-        <ChevronRight className="h-4 w-4" />
+        {page === totalPages ? (
+          <ChevronRight className="h-4 w-4" aria-hidden="true" />
+        ) : (
+          <Link href={createPageURL(page + 1)} aria-label="Siguiente página">
+            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        )}
       </Button>
-    </div>
+
+    </nav>
   );
 };
