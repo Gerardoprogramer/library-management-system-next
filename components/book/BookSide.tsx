@@ -13,9 +13,8 @@ interface BookSideProps {
         isWishList: boolean;
     };
     handleWishlistToggle: (bookId: string, isWishList: boolean) => void;
-    isWishlistLoading: boolean;
 }
-export const BookSide = ({ book, handleWishlistToggle, isWishlistLoading }: BookSideProps) => {
+export const BookSide = ({ book, handleWishlistToggle }: BookSideProps) => {
 
     return (
         <div className="lg:col-span-1 h-full">
@@ -34,7 +33,6 @@ export const BookSide = ({ book, handleWishlistToggle, isWishlistLoading }: Book
                     </Button>
                     <Button variant="outline" size="icon" aria-label="Añadir a wishlist"
                         onClick={() => handleWishlistToggle(book.id, book.isWishList)}
-                        disabled={isWishlistLoading}
                     >
                         <Heart
                             className={`w-4 h-4 transition-colors ${book.isWishList

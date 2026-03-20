@@ -16,6 +16,7 @@ import { useMemo } from "react";
 import { useCurrentUrl } from "@/hooks/useCurrentUrl";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { createSlug } from "@/lib/slug-utils"
+import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 
 export const CatalogClient = () => {
     const queryParams = useQueryParams();
@@ -24,7 +25,7 @@ export const CatalogClient = () => {
     const { books, genres, genre, setGenre,
         isLoading, availableOnly, toggleAvailableOnly } = useCatalogo();
 
-    const { handleWishlistToggle, isLoading: isWishlistLoading } = useWishlist();
+    const { handleWishlistToggle } = useWishlist();
 
     const { value: search, setValue: setSearch } = useDebouncedSearchParam("searchTerm", 500);
 
@@ -32,6 +33,13 @@ export const CatalogClient = () => {
         () => genres.map(g => ({ id: g.id, name: g.name })),
         [genres]
     )
+
+    const debouncedToggle = useDebouncedCallback(
+        (bookId: string, isInWishlist: boolean) => {
+            handleWishlistToggle(bookId, isInWishlist);
+        },
+        300
+    );
 
     return (
         <div>
@@ -94,8 +102,7 @@ export const CatalogClient = () => {
                             >
                                 <BooksGrid
                                     book={book}
-                                    handleWishlistToggle={handleWishlistToggle}
-                                    isWishlistLoading={isWishlistLoading}
+                                    handleWishlistToggle={debouncedToggle}
                                 />
                             </Link>
                         ))}

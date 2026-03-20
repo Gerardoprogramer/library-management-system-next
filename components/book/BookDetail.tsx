@@ -8,13 +8,13 @@ import { BookSide } from "./BookSide";
 import { BookMain } from "./BookMain";
 import { ReviewList } from "./ReviewList";
 import { useBookDetail } from "@/hooks/useBookDetail";
+import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 
 export const BookDetail = ({ id }: { id: string }) => {
 
   const {
     handleBack,
     handleWishlistToggle,
-    isWishlistLoading,
     bookQuery,
     reviewsQuery,
   } = useBookDetail(id);
@@ -22,7 +22,12 @@ export const BookDetail = ({ id }: { id: string }) => {
   const { data: book, isLoading: isBookLoading } = bookQuery;
   const { data: reviews, isLoading: isReviewsLoading } = reviewsQuery;
 
-
+  const debouncedToggle = useDebouncedCallback(
+    (bookId: string, isInWishlist: boolean) => {
+      handleWishlistToggle(bookId, isInWishlist);
+    },
+    300
+  );
 
   return (
     <div>
@@ -37,8 +42,8 @@ export const BookDetail = ({ id }: { id: string }) => {
         ) : (
           <BookSide
             book={book}
-            handleWishlistToggle={handleWishlistToggle}
-            isWishlistLoading={isWishlistLoading} />
+            handleWishlistToggle={debouncedToggle}
+          />
         )}
 
         <div className="lg:col-span-2 space-y-8">

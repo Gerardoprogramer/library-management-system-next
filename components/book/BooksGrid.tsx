@@ -7,7 +7,6 @@ import { BookSummary } from "@/lib/definitions";
 interface BookGridProps {
     book: BookSummary;
     handleWishlistToggle: (bookId: string, isInWishlist: boolean) => void;
-    isWishlistLoading: boolean;
 }
 
 export const BooksGrid = (props: BookGridProps) => {
@@ -16,7 +15,7 @@ export const BooksGrid = (props: BookGridProps) => {
 
     return (
         <div
-            className="group cursor-pointer bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30 hover:shadow-lg transition-all duration-300"
+            className="group bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30 hover:shadow-lg transition-all duration-300"
         >
             <div className="aspect-3/4 relative overflow-hidden">
                 <Image
@@ -24,8 +23,7 @@ export const BooksGrid = (props: BookGridProps) => {
                     alt={title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
-                    width={300}
-                    height={400} />
+                    fill />
                 <div className="absolute top-3 right-3">
                     <Badge variant={availableCopies > 0 ? "default" : "destructive"} className="font-body text-xs">
                         {availableCopies > 0 ? `${availableCopies} disponible${availableCopies > 1 ? "s" : ""}` : "No disponible"}
@@ -37,7 +35,6 @@ export const BooksGrid = (props: BookGridProps) => {
                         e.preventDefault();
                         handleWishlistToggle(id, isWishList);
                     }}
-                    disabled={props.isWishlistLoading}
                     className="absolute top-3 left-3 w-8 h-8 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center  opacity-100 transition-opacity"
                     aria-label="Añadir a wishlist"
                 >

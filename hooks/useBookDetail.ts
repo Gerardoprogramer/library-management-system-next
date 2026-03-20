@@ -13,7 +13,7 @@ export function useBookDetail(id: string) {
 
     const queryPage = searchParams.get("ReviewPage") ?? "1";
 
-    const { handleWishlistToggle, isLoading: isWishlistLoading } = useWishlist();
+    const { handleWishlistToggle } = useWishlist();
 
     const handleBack = () => {
         const from = searchParams.get("from");
@@ -48,7 +48,6 @@ export function useBookDetail(id: string) {
     return {
         handleBack,
         handleWishlistToggle,
-        isWishlistLoading,
         queryPage,
         bookQuery,
         reviewsQuery,
