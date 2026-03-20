@@ -1,9 +1,9 @@
 import {
   BookOpen, Clock, Bookmark, Heart,
   Star, Shield, Users, BarChart3, Gem, CheckCircle,
-  AlertTriangle, XCircle, PackageX
+  AlertTriangle, XCircle, PackageX, Bell
 } from "lucide-react";
-import type { navLinkstype, statusLoan, selectOptions, typeLoans } from "./definitions";
+import type { navLinkstype, statusLoan, selectOptions, typeLoans, reservationStatus } from "./definitions";
 
 
 export const userNav: navLinkstype[] = [
@@ -76,3 +76,20 @@ export const LoanOptions: selectOptions[] = [
   { id: "LOST", name: "Perdido" },
   { id: "DAMAGED", name: "Dañado" }
 ];
+
+export const reservationOptions: selectOptions[] = [
+  { id: "PENDING", name: "Pendiente" },
+  { id: "AVAILABLE", name: "Disponible" },
+  { id: "FULFILLED", name: "Cumplido" },
+  { id: "CANCELLED", name: "Cancelado" },
+  { id: "EXPIRED", name: "Caducado" }
+];
+
+
+export const statusConfig: Record<reservationStatus, { label: string; icon: React.ElementType; variant: "default" | "secondary" | "destructive" | "outline" }> = {
+  PENDING: { label: "En espera", icon: Clock, variant: "secondary" },
+  AVAILABLE: { label: "¡Disponible!", icon: Bell, variant: "default" },
+  CANCELLED: { label: "Cancelada", icon: XCircle, variant: "outline" },
+  FULFILLED: { label: "Completada", icon: CheckCircle, variant: "secondary" },
+  EXPIRED: { label: "Expirada", icon: XCircle, variant: "destructive" },
+};

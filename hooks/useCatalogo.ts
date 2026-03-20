@@ -13,7 +13,7 @@ export const useCatalogo = () => {
   const searchTerm = get("searchTerm");
 
   const { data: books, isLoading } = useQuery({
-    queryKey: ["books", searchTerm, genre, availableOnly, page],
+    queryKey: ["books", { searchTerm, genre, availableOnly, page }],
     queryFn: () =>
       bookService.search({
         searchTerm,

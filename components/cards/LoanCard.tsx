@@ -126,7 +126,7 @@ export const LoanCard = ({ loan }: Props) => {
                                     }}
                                 >
                                     <Button variant="ghost" size="sm" className="font-body text-xs h-8 gap-1 hover:bg-white/5 text-muted-foreground hover:text-foreground">
-                                        Ver detalles <ArrowRight className="w-3 h-3" />
+                                        Ver libro <ArrowRight className="w-3 h-3" />
                                     </Button>
                                 </Link>
                             </div>

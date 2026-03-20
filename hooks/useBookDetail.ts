@@ -34,7 +34,7 @@ export function useBookDetail(id: string) {
     });
 
     const reviewsQuery = useQuery({
-        queryKey: ["reviews", id, queryPage],
+        queryKey: ["reviews", { id, queryPage }],
         queryFn: () =>
             reviewService.getBookReviews(
                 id,

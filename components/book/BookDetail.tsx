@@ -23,6 +23,7 @@ export const BookDetail = ({ id }: { id: string }) => {
   const { data: reviews, isLoading: isReviewsLoading } = reviewsQuery;
 
 
+
   return (
     <div>
       <Button variant="ghost" onClick={handleBack} className="mb-6 font-body gap-2">

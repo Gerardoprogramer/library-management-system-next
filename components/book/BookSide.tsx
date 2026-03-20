@@ -16,6 +16,7 @@ interface BookSideProps {
     isWishlistLoading: boolean;
 }
 export const BookSide = ({ book, handleWishlistToggle, isWishlistLoading }: BookSideProps) => {
+
     return (
         <div className="lg:col-span-1 h-full">
             <div className="sticky top-20 space-y-4">

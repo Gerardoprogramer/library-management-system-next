@@ -156,4 +156,4 @@ export interface reservationBook {
   updatedAt: string
 }
 
-type reservationStatus = "PENDING" | "AVAILABLE" | "FULFILLED" | "CANCELLED" | "EXPIRED";
+export type reservationStatus = "PENDING" | "AVAILABLE" | "FULFILLED" | "CANCELLED" | "EXPIRED";
