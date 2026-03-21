@@ -1,10 +1,22 @@
-import type { BookDetail, BookSummary, PageResponse } from "@/lib/definitions";
+import type { BookDetail, BookSummary, PageResponse, myWishlist } from "@/lib/definitions";
 import { WishListService } from "@/services/wishlistService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
+import { useUrlFilters } from "@/hooks/useUrlFilters";
 
 export const useWishlist = () => {
   const queryClient = useQueryClient();
+  const { get } = useUrlFilters();
+  const page = Number(get("wishlistPage", "1"));
+
+
+  const { data: wishlist } = useQuery<PageResponse<myWishlist>>({
+    queryKey: ["wishlist", page],
+    queryFn: () => WishListService.getMyWishlist(page - 1),
+    placeholderData: (prev) => prev,
+    staleTime: 1000 * 60 * 5,
+  });
 
   const toggleWishlistMutation = useMutation({
     mutationFn: ({ bookId, isInWishlist }: { bookId: string; isInWishlist: boolean }) =>
@@ -62,7 +74,9 @@ export const useWishlist = () => {
     },
   });
 
+
   return {
+    wishlist,
     handleWishlistToggle: (bookId: string, isInWishlist: boolean) =>
       toggleWishlistMutation.mutate({ bookId, isInWishlist }),
   };
