@@ -30,12 +30,12 @@ El proyecto implementa una arquitectura de **Proxy Inverso** en el cliente para 
 ├── proxy.ts              # Middleware de seguridad y Auth Refresh
 └── public/               # Assets estáticos
 ```
-##⚙️ Configuración del Entorno
+## ⚙️ Configuración del Entorno
 Crea un archivo .env.local en la raíz del proyecto:
 ```text
 BACKEND_URL=https://library-management-system-i1y4.onrender.com
 ```
-##📦 Instalación y Desarrollo
+## 📦 Instalación y Desarrollo
 1. Clonar el repositorio:
 ```text
 git clone https://github.com/Gerardoprogramer/library-management-system-next
