@@ -8,7 +8,7 @@ export const WishListService = {
   remove: async (bookId: string): Promise<void> => {
     await api.delete(`/wishlist/${bookId}`);
   },
-  getMyWishlist: async (page?: string): Promise<PageResponse<myWishlist>> => {
+  getMyWishlist: async (page?: number): Promise<PageResponse<myWishlist>> => {
     const response = await api.get<ApiResponse<PageResponse<myWishlist>>>(`/wishlist`, {
       params: { page }
     });

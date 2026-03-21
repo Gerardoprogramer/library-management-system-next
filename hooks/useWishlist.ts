@@ -48,15 +48,17 @@ export const useWishlist = () => {
       if (context?.previousBookDetail) {
         queryClient.setQueryData(["book", variables.bookId], context.previousBookDetail);
       }
-      
+
       toast.error("No se pudo actualizar la wishlist. Inténtalo de nuevo.", {
-        id: "wishlist-error", 
+        id: "wishlist-error",
       });
     },
 
     onSettled: (data, error, variables) => {
       queryClient.invalidateQueries({ queryKey: ["books"] });
       queryClient.invalidateQueries({ queryKey: ["book", variables.bookId] });
+
+      queryClient.invalidateQueries({ queryKey: ["wishlist"] });
     },
   });
 
