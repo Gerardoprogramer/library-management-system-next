@@ -5,7 +5,7 @@ import { bookService } from "@/services/bookService";
 import { reviewService } from "@/services/reviewService";
 import { useWishlist } from "@/hooks/useWishlist";
 
-import type { BookDetail as Book } from "@/lib/definitions";
+import type { BookDetail as Book, PageResponse, Review } from "@/lib/definitions";
 
 export function useBookDetail(id: string) {
     const router = useRouter();
@@ -33,7 +33,7 @@ export function useBookDetail(id: string) {
         staleTime: 1000 * 60 * 5,
     });
 
-    const reviewsQuery = useQuery({
+    const reviewsQuery = useQuery<PageResponse<Review>>({
         queryKey: ["reviews", { id, queryPage }],
         queryFn: () =>
             reviewService.getBookReviews(

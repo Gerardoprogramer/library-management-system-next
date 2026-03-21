@@ -3,6 +3,7 @@ import { bookService } from "@/services/bookService";
 import { genreService } from "@/services/genreService";
 import type { Genre } from "@/lib/definitions";
 import { useUrlFilters } from "@/hooks/useUrlFilters";
+import { PageResponse, BookSummary } from "@/lib/definitions";
 
 export const useCatalogo = () => {
   const { get, set } = useUrlFilters();
@@ -12,7 +13,7 @@ export const useCatalogo = () => {
   const availableOnly = get("availableOnly") === "true";
   const searchTerm = get("searchTerm");
 
-  const { data: books, isLoading } = useQuery({
+  const { data: books, isLoading } = useQuery<PageResponse<BookSummary>>({
     queryKey: ["books", { searchTerm, genre, availableOnly, page }],
     queryFn: () =>
       bookService.search({

@@ -2,6 +2,7 @@ import { api } from "@/lib/axios";
 import type { BookSummary, ApiResponse, PageResponse, BookDetail } from "@/lib/definitions";
 
 export const bookService = {
+
   search: async (params?: {
     searchTerm?: string;
     genreId?: string;
@@ -12,20 +13,26 @@ export const bookService = {
 
     const response = await api.get<ApiResponse<PageResponse<BookSummary>>>(
       "/book/search",
-      { params }
+      { params: { ...params, page: params?.page ?? 0 } }
     );
 
-    if (!response.data.success || !response.data.data) {
-      throw new Error(response.data.message);
-    }
-
-    return response.data.data;
+    return response.data.data ?? {
+      content: [],
+      number: 0,
+      size: 10,
+      totalElements: 0,
+      totalPages: 0,
+      last: true,
+      first: true,
+      empty: true
+    };
   },
+
   book: async (id: string): Promise<BookDetail> => {
     const response = await api.get<ApiResponse<BookDetail>>(`/book/${id}`);
 
-    if (!response.data.success || !response.data.data) {
-      throw new Error(response.data.message);
+    if (!response.data.data) {
+      throw new Error(response.data.message || "Libro no encontrado");
     }
 
     return response.data.data;
