@@ -12,7 +12,7 @@ export default function WishlistPage() {
     staleTime: 1000 * 60 * 5,
   });
 
-  console.log("YHolaaaaaaaaaaaaaaaaaaaaaaaaaa  "+data)
+  console.log("YHolaaaaaaaaaaaaaaaaaaaaaaaaaa  " + data?.totalElements)
 
   return <div>Lista de Deseos</div>;
 }

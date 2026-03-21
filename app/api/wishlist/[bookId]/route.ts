@@ -1,10 +1,6 @@
 import { NextRequest } from "next/server";
 import { backendProxy } from "@/lib/api-proxy";
 
-export async function GET(request: NextRequest) {
-  return backendProxy(request, "/wishlist");
-}
-
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ bookId: string }> }
