@@ -1,35 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import { backendProxy } from "@/lib/api-proxy";
 
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await context.params;
+  const { id } = await params;
 
-  try {
-    const cookie = request.headers.get("cookie");
-
-    const backendResponse = await fetch(
-      `${process.env.BACKEND_URL}/api/v1/books/${id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          cookie: cookie || "",
-        },
-        cache: "no-store",
-      }
-    );
-
-    const data = await backendResponse.json();
-
-    return NextResponse.json(data, {
-      status: backendResponse.status,
-    });
-  } catch (error) {
-    return NextResponse.json(
-      { message: "Error interno del servidor" },
-      { status: 500 }
-    );
-  }
+  return backendProxy(request, `/books/${id}`);
 }

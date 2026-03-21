@@ -5,37 +5,37 @@ export async function proxy(request: NextRequest) {
   const refreshToken = request.cookies.get("refresh_token")?.value;
   const { pathname } = request.nextUrl;
 
-  const isAuthPage =
-    pathname === "/" ||
-    pathname.startsWith("/auth/login") ||
-    pathname.startsWith("/auth/register");
-
+  const isAuthPage = pathname === "/" || pathname.startsWith("/auth");
   const isDashboard = pathname.startsWith("/dashboard");
 
   if (isDashboard && !accessToken) {
     if (refreshToken) {
       try {
-        const refreshResponse = await fetch(new URL("/api/auth/refresh", request.url), {
+        const refreshResponse = await fetch(`${process.env.BACKEND_URL}/api/v1/auth/refresh`, {
           method: "POST",
-          headers: { Cookie: request.headers.get("cookie") || "" },
+          headers: {
+            "Cookie": `refresh_token=${refreshToken}`,
+            "Content-Type": "application/json",
+          },
         });
 
         if (refreshResponse.ok) {
           const response = NextResponse.next();
-
-          const setCookie = refreshResponse.headers.get("set-cookie");
-          if (setCookie) {
-            response.headers.set("set-cookie", setCookie);
+          const newCookies = refreshResponse.headers.get("set-cookie");
+          
+          if (newCookies) {
+            response.headers.set("set-cookie", newCookies);
           }
-
           return response;
         }
       } catch (error) {
-        console.error("Error en el auto-refresh del proxy:", error);
+        console.error("Fallo crítico en el Refresh del Proxy:", error);
       }
     }
 
-    return NextResponse.redirect(new URL("/auth/login", request.url));
+    const loginUrl = new URL("/auth/login", request.url);
+    loginUrl.searchParams.set("reason", "session_expired");
+    return NextResponse.redirect(loginUrl);
   }
 
   if (isAuthPage && accessToken) {
@@ -47,6 +47,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api/|_next/static|_next/image|images|favicon.ico|robots.txt).*)',
   ],
 };

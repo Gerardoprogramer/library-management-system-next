@@ -1,6 +1,6 @@
 import { LucideProps } from "lucide-react";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
-import { string } from "zod";
+import { number, string } from "zod";
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -157,3 +157,15 @@ export interface reservationBook {
 }
 
 export type reservationStatus = "PENDING" | "AVAILABLE" | "FULFILLED" | "CANCELLED" | "EXPIRED";
+
+
+export interface myWishlist {
+  id: string,
+  bookId: string,
+  bookTitle: string,
+  bookAuthor: string,
+  bookCoverImageUrl: string,
+  availableCopies: number,
+  notes: string,
+  addedAt: string
+}

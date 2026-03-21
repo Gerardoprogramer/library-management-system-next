@@ -1,39 +1,14 @@
-import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
+import { backendProxy } from "@/lib/api-proxy";
 
-export async function POST() {
-    try {
-        const cookieStore = await cookies();
-        const cookieHeader = cookieStore.toString();
+export async function POST(request: NextRequest) {
+  // Opcional: Esto consume el stream del request para cerrarlo limpiamente en Next 16
+  // aunque el logout no lleve body, previene conflictos de red.
+  try { await request.text(); } catch(e) {} 
 
-        const backendResponse = await fetch(
-            `${process.env.BACKEND_URL}/api/v1/auth/logout`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Cookie: cookieHeader,
-                },
-            }
-        );
-
-        const data = await backendResponse.json();
-
-        const response = NextResponse.json(data, {
-            status: backendResponse.status,
-        });
-
-        const setCookie = backendResponse.headers.get("set-cookie");
-        if (setCookie) {
-            response.headers.set("set-cookie", setCookie);
-        }
-
-        return response;
-
-    } catch (error) {
-        return NextResponse.json(
-            { message: "Error interno del servidor" },
-            { status: 500 }
-        );
-    }
+  return backendProxy(request, "/auth/logout", { 
+    method: "POST" 
+    // NOTA: NO mandamos 'body: {}', lo dejamos vacío para que el proxy 
+    // no genere la propiedad 'body' en el fetch, tal cual tu versión manual.
+  });
 }
