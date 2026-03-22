@@ -3,10 +3,9 @@
 import { LogOut, Gem, X } from "lucide-react";
 import { useLogout } from "@/hooks/useAuth";
 import { adminNav, userNav } from "@/lib/data";
-import { userService } from "@/services/userService";
-import { useQuery } from "@tanstack/react-query";
 import { NavLinks } from "@/components/dashboard/NavLinks";
 import { cn } from "@/lib/utils";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 interface SideNavProps {
   isOpen: boolean;
@@ -16,10 +15,7 @@ interface SideNavProps {
 export const SideNav = ({ isOpen, setIsOpen }: SideNavProps) => {
   const { handleLogout, isLoading } = useLogout();
 
-  const { data: user } = useQuery({
-    queryKey: ["currentUser"],
-    queryFn: userService.me,
-  });
+    const { data: user } = useCurrentUser();
 
   return (
     <>

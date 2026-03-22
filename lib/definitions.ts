@@ -96,6 +96,7 @@ export interface BookDetail {
 
 export interface Review {
   id: string;
+  userId: string;
   userName: string;
   rating: number;
   reviewText: string;

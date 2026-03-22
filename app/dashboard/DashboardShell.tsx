@@ -5,8 +5,7 @@ import { SideNav } from "@/components/dashboard/SideNav";
 import { Menu } from "lucide-react";
 import ThemeToggle from "@/components/landing/ThemeToggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { userService } from "@/services/userService";
-import { useQuery } from "@tanstack/react-query";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export default function DashboardShell({
     children,
@@ -14,10 +13,8 @@ export default function DashboardShell({
     children: React.ReactNode;
 }) {
     const [isOpen, setIsOpen] = useState(false);
-    const { data: user } = useQuery({
-        queryKey: ["currentUser"],
-        queryFn: userService.me,
-    });
+
+    const { data: user } = useCurrentUser();
 
     return (
         <div className="h-screen bg-background flex">
@@ -49,7 +46,7 @@ export default function DashboardShell({
                     </div>
                 </header>
                 <main className="flex-1 overflow-y-auto">
-                    <div className="p-6"> 
+                    <div className="p-6">
                         {children}
                     </div>
                 </main>
