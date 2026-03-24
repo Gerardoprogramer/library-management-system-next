@@ -28,4 +28,11 @@ export const reservationService = {
             empty: true
         };
     },
+
+    getQueue: async (bookId?: string): Promise<number> => {
+        const response = await api.get<ApiResponse<number>>(
+            `/reservation/${bookId}`
+        );
+        return response.data.data ?? 0;
+    }
 };

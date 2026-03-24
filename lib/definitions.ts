@@ -1,6 +1,7 @@
 import { LucideProps } from "lucide-react";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
-import { number, string } from "zod";
+import { Dispatch, SetStateAction } from "react"
+
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -167,4 +168,50 @@ export interface myWishlist {
   availableCopies: number,
   notes: string,
   addedAt: string
+}
+
+export interface Subscription {
+  id: string,
+  userId: string,
+  subscriptionPlanId: string,
+  planName: string,
+  planCode: string,
+  price: number,
+  maxBooksAllowed: number,
+  maxDaysPerBook: number,
+  active: number,
+  autoRenew: boolean,
+  startDate: string,
+  endDate: string,
+  daysRemaining: number,
+  expired: boolean,
+  cancelledAt: string,
+  cancellationReason: string,
+  notes: string,
+  createdAt: string,
+  updatedAt: string
+}
+
+export interface checkoutLoan {
+  bookId?: string,
+  checkoutDays?: number,
+  notes?: string
+}
+
+export interface checkoutProps {
+    title?: string,
+    maxDaysPerBook?: number,
+    checkoutDays?: number,
+    setCheckoutDays: Dispatch<SetStateAction<number>>,
+    actionNotes: string,
+    setActionNotes: Dispatch<SetStateAction<string>>,
+    handleCheckout: () => void
+}
+
+export interface reserveBook{
+    bookId?: string
+    title?: string,
+    actionNotes: string,
+    setActionNotes: Dispatch<SetStateAction<string>>,
+    handleReserve: () => void
 }

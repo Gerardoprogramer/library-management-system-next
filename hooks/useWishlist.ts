@@ -1,7 +1,7 @@
 import type { BookDetail, BookSummary, PageResponse, myWishlist } from "@/lib/definitions";
 import { WishListService } from "@/services/wishlistService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { showToast } from "@/lib/toast-utils";
 import { useQuery } from "@tanstack/react-query";
 import { useUrlFilters } from "@/hooks/useUrlFilters";
 
@@ -61,9 +61,7 @@ export const useWishlist = () => {
         queryClient.setQueryData(["book", variables.bookId], context.previousBookDetail);
       }
 
-      toast.error("No se pudo actualizar la wishlist. Inténtalo de nuevo.", {
-        id: "wishlist-error",
-      });
+      showToast.apiError(err);
     },
 
     onSettled: (data, error, variables) => {

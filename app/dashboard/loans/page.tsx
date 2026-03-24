@@ -21,8 +21,13 @@ export default function LoanPage() {
         <CustomSelect headline="Todos los Status" options={LoanOptions} selectedItem={status} setSelectedItem={setStatus} />
       </div>
       <div className="space-y-4">
-        {loans && loans?.content.map((loan) =>
-          <LoanCard key={loan.id} loan={loan} />
+
+        {loans?.totalElements === 0 ? (
+          <p className="font-body text-muted-foreground text-center py-12">No tienes préstamos activos.</p>
+        ) : (
+          loans?.content.map((loan) =>
+            <LoanCard key={loan.id} loan={loan} />
+          )
         )}
       </div>
       {loans && loans?.totalPages > 1 && (

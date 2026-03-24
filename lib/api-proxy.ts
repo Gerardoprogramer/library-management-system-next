@@ -9,13 +9,13 @@ export async function backendProxy(
   try {
     const cookieStore = await cookies();
     const cookieHeader = cookieStore.toString();
-    
+
     const { searchParams } = new URL(request.url);
     const backendUrl = new URL(`${process.env.BACKEND_URL}/api/v1${endpoint}`);
     searchParams.forEach((v, k) => backendUrl.searchParams.append(k, v));
 
     const fetchOptions: RequestInit = {
-      method: options.method || "GET",
+      method: options.method || request.method,
       headers: {
         "Content-Type": "application/json",
         "Cookie": cookieHeader,
@@ -23,14 +23,17 @@ export async function backendProxy(
       cache: "no-store",
     };
 
-    if (options.body && Object.keys(options.body).length > 0) {
+    if (options.body) {
       fetchOptions.body = JSON.stringify(options.body);
+    } else if (request.method !== "GET" && request.method !== "HEAD") {
+      const body = await request.json().catch(() => null);
+      if (body) fetchOptions.body = JSON.stringify(body);
     }
 
     const backendResponse = await fetch(backendUrl.toString(), fetchOptions);
 
-    const data = backendResponse.status !== 204 
-      ? await backendResponse.json().catch(() => null) 
+    const data = backendResponse.status !== 204
+      ? await backendResponse.json().catch(() => null)
       : null;
 
     const response = NextResponse.json(data, { status: backendResponse.status });

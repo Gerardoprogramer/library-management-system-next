@@ -1,8 +1,8 @@
 
 import Image from "next/image";
-
+import { Alert, AlertDescription } from "../ui/alert";
 import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
+import { Heart, CalendarClock, BookMarked, AlertCircle } from "lucide-react";
 
 interface BookSideProps {
     book: {
@@ -13,8 +13,15 @@ interface BookSideProps {
         isWishList: boolean;
     };
     handleWishlistToggle: (bookId: string, isWishList: boolean) => void;
+    setCheckoutDialogOpen: (Open: boolean) => void;
+    setReserveDialogOpen: (Open: boolean) => void;
+    hasSub: boolean;
+    hasRes: boolean;
+    hasLoan: boolean;
 }
-export const BookSide = ({ book, handleWishlistToggle }: BookSideProps) => {
+export const BookSide = ({ book, handleWishlistToggle, setCheckoutDialogOpen, setReserveDialogOpen,
+    hasRes, hasSub, hasLoan
+}: BookSideProps) => {
 
     return (
         <div className="lg:col-span-1 h-full">
@@ -28,9 +35,24 @@ export const BookSide = ({ book, handleWishlistToggle }: BookSideProps) => {
                     />
                 </div>
                 <div className="flex gap-2">
-                    <Button className="flex-1 font-display tracking-wider text-sm" disabled={book.availableCopies === 0}>
-                        {book.availableCopies > 0 ? "Solicitar Préstamo" : "Reservar"}
-                    </Button>
+                    {book.availableCopies > 0 ? (
+                        <Button
+                            className="flex-1 font-display tracking-wider text-sm gap-2"
+                            disabled={!hasSub || hasLoan}
+                            onClick={() => setCheckoutDialogOpen(true)}
+                        >
+                            <BookMarked className="w-4 h-4" /> Solicitar Préstamo
+                        </Button>
+                    ) : (
+                        <Button
+                            className="flex-1 font-display tracking-wider text-sm gap-2"
+                            variant="secondary"
+                            disabled={!hasSub || hasRes}
+                            onClick={() => setReserveDialogOpen(true)}
+                        >
+                            <CalendarClock className="w-4 h-4" /> Reservar
+                        </Button>
+                    )}
                     <Button variant="outline" size="icon" aria-label="Añadir a wishlist"
                         onClick={() => handleWishlistToggle(book.id, book.isWishList)}
                     >
@@ -42,6 +64,20 @@ export const BookSide = ({ book, handleWishlistToggle }: BookSideProps) => {
                         />
                     </Button>
                 </div>
+                {!hasSub && (
+                    <Alert className="py-2 px-3">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription className="font-body text-xs">
+                            Necesitas una suscripción activa para solicitar préstamos o reservas.
+                        </AlertDescription>
+                    </Alert>
+                )}
+                {hasLoan && (
+                    <p className="font-body text-xs text-muted-foreground text-center">Ya tienes un préstamo activo de este libro.</p>
+                )}
+                {hasRes && book.availableCopies === 0 && (
+                    <p className="font-body text-xs text-muted-foreground text-center">Ya tienes una reserva activa para este libro.</p>
+                )}
             </div>
         </div>
     )

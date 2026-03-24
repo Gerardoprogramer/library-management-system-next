@@ -3,7 +3,7 @@ import { useState } from "react";
 import { authService } from "@/services/authService";
 import { useRouter } from "next/navigation";
 import { registerSchema, loginSchema } from "@/schemas/auth.schema";
-import { toast } from "sonner";
+import { showToast } from "@/lib/toast-utils";
 
 export const useRegister = () => {
 
@@ -44,10 +44,10 @@ export const useRegister = () => {
 
     try {
       await authService.register(result.data);
+      showToast.success("¡Cuenta creada!", "Bienvenido a Obsidian Library.");
       router.push("/dashboard");
-      toast.success("Bienvenido a Obsidian Library");
     } catch (error: any) {
-      toast.error(error.message || "Error al registrarse");
+      showToast.apiError(error);
     } finally {
       setLoading(false);
     }
@@ -106,10 +106,10 @@ export const useLogin = () => {
 
     try {
       await authService.login({ email, password });
+      showToast.success("Sesión iniciada", "Es bueno verte de nuevo.");
       router.push("/dashboard");
-      toast.success("Bienvenido de nuevo");
     } catch (error: any) {
-      toast.error(error.message || "Error al iniciar sesión");
+      showToast.apiError(error);
     } finally {
       setLoading(false);
     }
@@ -137,11 +137,11 @@ export const useLogout = () => {
 
     try {
       await authService.logout();
-      toast.success("Sesión cerrada");
+      showToast.info("Sesión cerrada", "Esperamos verte pronto por aquí.");
       router.push("/");
       router.refresh();
     } catch (error: any) {
-      toast.error(error.message || "Error al cerrar sesión");
+      showToast.error("Error al salir", "No se pudo cerrar la sesión correctamente.");
     } finally {
       setIsLoading(false);
     }

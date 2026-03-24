@@ -19,7 +19,7 @@ export default function ReservationPage() {
   return (
     <div>
       <h1 className="font-display text-3xl sm:text-4xl font-semibold text-foreground mb-2">
-        Mis Préstamos
+        Mis Reservas
       </h1>
       <div className="flex justify-end py-4 gap-4">
         <CustomSelect headline="Todos los Status" options={reservationOptions} selectedItem={status} setSelectedItem={setStatus} />

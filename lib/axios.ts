@@ -1,5 +1,5 @@
 import axios from "axios";
-import { toast } from "sonner";
+import { showToast } from "@/lib/toast-utils";
 
 export const api = axios.create({
   baseURL: "/api",
@@ -23,8 +23,13 @@ api.interceptors.response.use(
 
         return api(originalRequest);
       } catch (refreshError) {
-        toast.error("Sesión expirada");
-        window.location.href = "/auth/login";
+        showToast.error(
+          "Sesión expirada",
+          "Por seguridad, ingresa tus credenciales de nuevo."
+        );
+        setTimeout(() => {
+          window.location.href = "/auth/login";
+        }, 1500);
         return Promise.reject(refreshError);
       }
     }
