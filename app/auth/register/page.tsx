@@ -7,13 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, User } from "lucide-react";
 import Link from "next/link";
-import { useRegister } from "@/hooks/useAuth";
+import { useRegister } from "@/hooks/auth/useRegister"
 
 export default function RegisterPage() {
 
-  const { fullName, setFullName, email,
-    setEmail, password, setPassword,
-    loading, errors, handleSubmit } = useRegister();
+  const { email, errors, fullName,
+    handleSubmit, loading, password,
+    setEmail, setFullName, setPassword } = useRegister();
+
 
   return (
     <>

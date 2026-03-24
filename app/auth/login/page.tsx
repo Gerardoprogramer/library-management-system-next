@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { AuthHeader } from "@/components/auth/AuthHeader";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { PasswordInput } from "@/components/auth/PasswordInput";
-import { useLogin } from "@/hooks/useAuth";
+import { useLogin } from "@/hooks/auth/useLogin";
 
 export default function LoginPage() {
 

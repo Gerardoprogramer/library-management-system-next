@@ -1,7 +1,7 @@
 'use client';
 
 import { LogOut, Gem, X } from "lucide-react";
-import { useLogout } from "@/hooks/useAuth";
+import { useLogout } from "@/hooks/auth/useLogout";
 import { adminNav, userNav } from "@/lib/data";
 import { NavLinks } from "@/components/dashboard/NavLinks";
 import { cn } from "@/lib/utils";
