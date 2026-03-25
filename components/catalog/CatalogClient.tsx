@@ -5,11 +5,9 @@ import { Input } from "@/components/ui/input";
 import { CustomPagination } from "@/components/custom/CustomPagination";
 import { BookCardSkeleton } from "@/components/custom/skeletons";
 import { BooksGrid } from "@/components/book/BooksGrid";
-import { useCatalogo } from "@/hooks/useCatalogo";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useWishlist } from "@/hooks/useWishlist";
 import { useDebouncedSearchParam } from "@/hooks/Utilidades/useDebouncedSearchParam";
 import { CustomSelect } from "@/components/custom/CustomSelect";
 import { useMemo } from "react";
@@ -17,15 +15,18 @@ import { useCurrentUrl } from "@/hooks/Utilidades/useCurrentUrl";
 import { useQueryParams } from "@/hooks/Utilidades/useQueryParams";
 import { createSlug } from "@/lib/slug-utils"
 import { useDebouncedCallback } from "@/hooks/Utilidades/useDebouncedCallback";
+import { useWishlistActions } from "@/hooks/mutations/useWishlistActions";
+import { useBook } from "@/hooks/queries/useBook";
+import { useCatalogo } from "@/hooks/queries/useCatalogo";
 
 export const CatalogClient = () => {
     const queryParams = useQueryParams();
     const currentUrl = useCurrentUrl();
 
-    const { books, genres, genre, setGenre,
-        isLoading, availableOnly, toggleAvailableOnly } = useCatalogo();
+    const { books, filters, genres, isLoading, setGenre, toggleAvailableOnly } = useCatalogo();
 
-    const { handleWishlistToggle } = useWishlist();
+
+    const { mutate: handleWishlistToggle } = useWishlistActions();
 
     const { value: search, setValue: setSearch } = useDebouncedSearchParam("searchTerm", 500);
 
@@ -36,7 +37,7 @@ export const CatalogClient = () => {
 
     const debouncedToggle = useDebouncedCallback(
         (bookId: string, isInWishlist: boolean) => {
-            handleWishlistToggle(bookId, isInWishlist);
+            handleWishlistToggle({ bookId, isInWishlist });
         },
         300
     );
@@ -66,13 +67,13 @@ export const CatalogClient = () => {
                     <CustomSelect
                         options={genreOptions}
                         headline="Todos los Géneros"
-                        selectedItem={genre}
+                        selectedItem={filters.genre}
                         setSelectedItem={setGenre}
                     />
                     <div className="flex items-center space-x-2">
                         <Switch
                             id="available"
-                            checked={availableOnly}
+                            checked={filters.availableOnly}
                             onCheckedChange={toggleAvailableOnly}
                         />
                         <Label htmlFor="available">Solo disponibles</Label>

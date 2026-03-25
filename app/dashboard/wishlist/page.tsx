@@ -3,12 +3,21 @@
 import { Heart } from "lucide-react";
 import { WishlistCard } from "@/components/cards/WishlistCard";
 import { CustomPagination } from "@/components/custom/CustomPagination";
-import { useWishlist } from "@/hooks/useWishlist";
+import { useWishlist } from "@/hooks/queries/useWishlist";
+import { useWishlistActions } from "@/hooks/mutations/useWishlistActions";
+import { useDebouncedCallback } from "@/hooks/Utilidades/useDebouncedCallback";
 
 export default function WishlistPage() {
 
-  const { wishlist, handleWishlistToggle } = useWishlist();
+  const { data: wishlist } = useWishlist();
+  const { mutate: handleWishlistToggle } = useWishlistActions();
 
+  const debouncedToggle = useDebouncedCallback(
+    (bookId: string, isInWishlist: boolean) => {
+      handleWishlistToggle({ bookId, isInWishlist });
+    },
+    300
+  );
 
   return (
     <div>
@@ -20,7 +29,7 @@ export default function WishlistPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {wishlist?.content.map((wish) => (
-          <WishlistCard key={wish.id} data={wish} handleWishlistToggle={handleWishlistToggle} />
+          <WishlistCard key={wish.id} data={wish} handleWishlistToggle={debouncedToggle} />
         ))}
       </div>
       {wishlist && wishlist?.totalPages > 1 && (

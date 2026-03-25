@@ -12,7 +12,7 @@ import { CheckoutBook } from "./CheckoutBook";
 import { ReserveDialog } from "./ReserveDialog";
 import { isBookInList } from "@/lib/booking-utils";
 import { useReservation } from "@/hooks/queries/useReservation";
-import { useLoans } from "@/hooks/useLoans";
+import { useLoans } from "@/hooks/queries/useLoans";
 import { useBook } from "@/hooks/queries/useBook";
 import { useLoanActions } from "@/hooks/mutations/useLoanActions";
 import { useSubscription } from "@/hooks/queries/useSubscription";

@@ -2,7 +2,7 @@
 import { Clock, Star, Users, Pencil, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useCurrentUser } from "@/hooks/queries/useCurrentUser";
 import { formatDate } from "@/lib/date-utils"
 import { useReviews } from "@/hooks/queries/useReviews";
 import { ReviewListSkeleton } from "../custom/skeletons";

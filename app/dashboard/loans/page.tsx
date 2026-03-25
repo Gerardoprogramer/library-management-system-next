@@ -3,11 +3,11 @@
 import { LoanOptions } from "@/lib/data";
 import { CustomPagination } from "@/components/custom/CustomPagination";
 import { CustomSelect } from "@/components/custom/CustomSelect";
-import { useLoans } from "@/hooks/useLoans";
+import { useLoans } from "@/hooks/queries/useLoans";
 import { LoanCard } from "@/components/cards/LoanCard";
 
 export default function LoanPage() {
-  const { isLoading, loans, status, setStatus } = useLoans();
+  const { loans, status, setStatus } = useLoans();
 
   return (
     <div>

@@ -5,7 +5,7 @@ import { SideNav } from "@/components/dashboard/SideNav";
 import { Menu } from "lucide-react";
 import ThemeToggle from "@/components/landing/ThemeToggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useCurrentUser } from "@/hooks/queries/useCurrentUser";
 
 export default function DashboardShell({
     children,

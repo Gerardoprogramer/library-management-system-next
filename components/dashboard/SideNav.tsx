@@ -5,7 +5,7 @@ import { useLogout } from "@/hooks/auth/useLogout";
 import { adminNav, userNav } from "@/lib/data";
 import { NavLinks } from "@/components/dashboard/NavLinks";
 import { cn } from "@/lib/utils";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useCurrentUser } from "@/hooks/queries/useCurrentUser";
 
 interface SideNavProps {
   isOpen: boolean;
@@ -15,7 +15,7 @@ interface SideNavProps {
 export const SideNav = ({ isOpen, setIsOpen }: SideNavProps) => {
   const { handleLogout, isLoading } = useLogout();
 
-    const { data: user } = useCurrentUser();
+  const { data: user } = useCurrentUser();
 
   return (
     <>
