@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authService } from "@/services/authService";
 import { showToast } from "@/lib/toast-utils";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useLogout = () => {
     const router = useRouter();
+    const queryClient = useQueryClient();
     const [isLoading, setIsLoading] = useState(false);
 
     const handleLogout = async () => {
@@ -13,6 +15,9 @@ export const useLogout = () => {
 
         try {
             await authService.logout();
+
+            queryClient.clear();
+
             showToast.info("Sesión cerrada", "Esperamos verte pronto por aquí.");
 
             router.push("/");

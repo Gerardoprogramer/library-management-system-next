@@ -11,7 +11,7 @@ export const useReservation = () => {
     const availableOnly = get("availableOnly") === "true";
     const page = Number(get("ReservationPage", "1"));
 
-    const { data: reservations } = useQuery<PageResponse<reservationBook>>({
+    const { data: reservations, isLoading } = useQuery<PageResponse<reservationBook>>({
         queryKey: ["reservations", { status, availableOnly, page }],
         queryFn: () =>
             reservationService.getReservations(
@@ -42,6 +42,7 @@ export const useReservation = () => {
         setStatus,
         status,
         toggleAvailableOnly,
-        availableOnly
+        availableOnly,
+        isLoading
     }
 }

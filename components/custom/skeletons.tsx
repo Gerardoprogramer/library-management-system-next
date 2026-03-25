@@ -1,4 +1,5 @@
 import { Skeleton } from "../ui/skeleton";
+import { Card, CardContent } from "../ui/card";
 
 export function BookCardSkeleton() {
   return (
@@ -85,7 +86,7 @@ export function BookInfoSkeleton() {
 export const ReviewListSkeleton = ({ count = 3 }: { count?: number }) => {
   return (
     <div className="space-y-4 animate-pulse">
-      
+
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
@@ -181,6 +182,177 @@ export const BookMainInfoSkeleton = () => {
         ))}
       </div>
 
+    </div>
+  );
+};
+
+
+export const WishlistCardSkeleton = () => {
+  return (
+    <div className="bg-card border border-border rounded-lg p-4 flex gap-4">
+      <div className="relative w-16 h-24 shrink-0 overflow-hidden rounded bg-muted animate-pulse" />
+
+      <div className="flex-1 flex flex-col gap-2">
+        <div className="h-4 w-3/4 bg-muted animate-pulse rounded" />
+        <div className="h-3 w-1/2 bg-muted animate-pulse rounded" />
+        <div className="h-5 w-20 bg-muted animate-pulse rounded-full" />
+
+        <div className="h-3 w-full bg-muted animate-pulse rounded mt-1" />
+
+        <div className="flex gap-2 mt-auto pt-2">
+          <div className="h-8 flex-1 bg-muted animate-pulse rounded" />
+          <div className="h-8 w-10 bg-muted animate-pulse rounded" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const WishlistPageSkeleton = () => {
+  return (
+    <div>
+      <div className="flex items-center gap-3 mb-2">
+        <div className="w-7 h-7 bg-muted animate-pulse rounded-full" />
+        <div className="h-10 w-64 bg-muted animate-pulse rounded-md" />
+      </div>
+
+      <div className="h-6 w-40 bg-muted animate-pulse rounded-md mb-8" />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Array.from({ length: 9 }).map((_, i) => (
+          <WishlistCardSkeleton key={i} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+
+export const ReservationCardSkeleton = () => {
+  return (
+    <Card className="overflow-hidden border-border">
+      <CardContent className="p-0">
+        <div className="flex flex-col sm:flex-row">
+          {/* Skeleton de Imagen - Proporción 2/3 */}
+          <div className="w-full sm:w-32 md:w-40 aspect-2/3 sm:h-auto bg-muted animate-pulse shrink-0" />
+
+          <div className="flex-1 p-4 sm:p-5">
+            <div className="flex items-start justify-between gap-2 mb-4">
+              <div className="space-y-2 flex-1">
+
+                <div className="h-5 w-2/3 bg-muted animate-pulse rounded" />
+                <div className="h-4 w-1/3 bg-muted animate-pulse rounded" />
+              </div>
+              <div className="h-6 w-24 bg-muted animate-pulse rounded-full" />
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="space-y-1">
+                  <div className="h-3 w-12 bg-muted animate-pulse rounded" />
+                  <div className="h-4 w-20 bg-muted animate-pulse rounded" />
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="h-9 w-28 bg-muted animate-pulse rounded-md" />
+              <div className="h-9 w-28 bg-muted animate-pulse rounded-md" />
+              <div className="h-8 w-20 bg-muted animate-pulse rounded-md ml-auto" />
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+
+
+export const ReservationPageSkeleton = () => {
+  return (
+    <div className="space-y-6">
+      <div className="h-10 w-48 bg-muted animate-pulse rounded-md mb-2" />
+
+      <div className="flex justify-end py-4 gap-4 items-center">
+        <div className="h-10 w-44 bg-muted animate-pulse rounded-md" />
+        <div className="flex items-center gap-2">
+          <div className="h-5 w-9 bg-muted animate-pulse rounded-full" />
+          <div className="h-4 w-24 bg-muted animate-pulse rounded" />
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <ReservationCardSkeleton key={i} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+export const LoanCardSkeleton = () => {
+  return (
+    <Card className="overflow-hidden border-white/5 bg-card">
+      <CardContent className="p-0">
+        <div className="flex flex-col sm:flex-row">
+          <div className="w-full sm:w-32 md:w-40 aspect-2/3 sm:h-auto bg-muted animate-pulse shrink-0" />
+
+          <div className="flex-1 p-5 sm:p-6 flex flex-col justify-between">
+            <div>
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <div className="space-y-2 flex-1">
+                  <div className="h-6 w-3/4 bg-muted animate-pulse rounded" />
+                  <div className="h-4 w-1/4 bg-muted animate-pulse rounded" />
+                </div>
+                <div className="flex gap-2 shrink-0">
+                  <div className="h-5 w-16 bg-muted animate-pulse rounded-md" />
+                  <div className="h-5 w-24 bg-muted animate-pulse rounded-full" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="space-y-1">
+                    <div className="h-2.5 w-12 bg-muted animate-pulse rounded" />
+                    <div className="h-4 w-20 bg-muted animate-pulse rounded" />
+                  </div>
+                ))}
+              </div>
+
+              <div className="h-4 w-1/2 bg-muted/50 animate-pulse rounded mb-4" />
+            </div>
+
+            <div className="flex items-center justify-between pt-4 border-t border-white/5">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-24 bg-muted animate-pulse rounded-md" />
+                <div className="h-8 w-24 bg-muted animate-pulse rounded-md" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export const LoanPageSkeleton = () => {
+  return (
+    <div className="space-y-6">
+      <div className="h-10 w-56 bg-muted animate-pulse rounded-md mb-2" />
+
+      <div className="flex justify-between items-center mb-8">
+        <div className="h-6 w-48 bg-muted animate-pulse rounded-md" />
+        <div className="h-10 w-44 bg-muted animate-pulse rounded-md" />
+      </div>
+
+      <div className="space-y-4">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <LoanCardSkeleton key={i} />
+        ))}
+      </div>
     </div>
   );
 };

@@ -7,11 +7,15 @@ import { ReservationCard } from "@/components/cards/ReservationCard";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useReservation } from "@/hooks/queries/useReservation";
+import { ReservationPageSkeleton } from "@/components/custom/skeletons";
 
 
 export default function ReservationPage() {
 
-  const { reservations, setStatus, status, toggleAvailableOnly, availableOnly } = useReservation();
+  const { reservations, setStatus, status, toggleAvailableOnly, availableOnly, isLoading } = useReservation();
+
+
+  if (isLoading) return <ReservationPageSkeleton />
 
   return (
     <div>
