@@ -8,8 +8,8 @@ import { statusConfig } from "@/lib/data";
 import { formatDate } from "@/lib/date-utils";
 import Image from "next/image";
 import Link from "next/link";
-import { useQueryParams } from "@/hooks/useQueryParams";
-import { useCurrentUrl } from "@/hooks/useCurrentUrl";
+import { useQueryParams } from "@/hooks/Utilidades/useQueryParams";
+import { useCurrentUrl } from "@/hooks/Utilidades/useCurrentUrl";
 import { createSlug } from "@/lib/slug-utils";
 
 interface Props {

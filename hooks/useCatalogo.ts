@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { bookService } from "@/services/bookService";
 import { genreService } from "@/services/genreService";
 import type { Genre } from "@/lib/definitions";
-import { useUrlFilters } from "@/hooks/useUrlFilters";
+import { useUrlFilters } from "@/hooks/Utilidades/useUrlFilters";
 import { PageResponse, BookSummary } from "@/lib/definitions";
 
 export const useCatalogo = () => {

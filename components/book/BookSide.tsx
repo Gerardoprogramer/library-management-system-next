@@ -3,6 +3,8 @@ import Image from "next/image";
 import { Alert, AlertDescription } from "../ui/alert";
 import { Button } from "@/components/ui/button";
 import { Heart, CalendarClock, BookMarked, AlertCircle } from "lucide-react";
+import { useWishlistActions } from "@/hooks/mutations/useWishlistActions";
+import { useDebouncedCallback } from "@/hooks/Utilidades/useDebouncedCallback";
 
 interface BookSideProps {
     book: {
@@ -12,16 +14,24 @@ interface BookSideProps {
         availableCopies: number;
         isWishList: boolean;
     };
-    handleWishlistToggle: (bookId: string, isWishList: boolean) => void;
     setCheckoutDialogOpen: (Open: boolean) => void;
     setReserveDialogOpen: (Open: boolean) => void;
     hasSub: boolean;
     hasRes: boolean;
     hasLoan: boolean;
 }
-export const BookSide = ({ book, handleWishlistToggle, setCheckoutDialogOpen, setReserveDialogOpen,
+export const BookSide = ({ book, setCheckoutDialogOpen, setReserveDialogOpen,
     hasRes, hasSub, hasLoan
 }: BookSideProps) => {
+
+    const { mutate: toggleWishlist } = useWishlistActions();
+
+    const debouncedToggle = useDebouncedCallback(
+        (bookId: string, isInWishlist: boolean) => {
+            toggleWishlist({ bookId, isInWishlist });
+        },
+        300
+    );
 
     return (
         <div className="lg:col-span-1 h-full">
@@ -35,7 +45,7 @@ export const BookSide = ({ book, handleWishlistToggle, setCheckoutDialogOpen, se
                     />
                 </div>
                 <div className="flex gap-2">
-                    {book.availableCopies > 0 ? (
+                    {book.availableCopies > 0 || hasLoan ? (
                         <Button
                             className="flex-1 font-display tracking-wider text-sm gap-2"
                             disabled={!hasSub || hasLoan}
@@ -54,7 +64,7 @@ export const BookSide = ({ book, handleWishlistToggle, setCheckoutDialogOpen, se
                         </Button>
                     )}
                     <Button variant="outline" size="icon" aria-label="Añadir a wishlist"
-                        onClick={() => handleWishlistToggle(book.id, book.isWishList)}
+                        onClick={() => debouncedToggle(book.id, book.isWishList)}
                     >
                         <Heart
                             className={`w-4 h-4 transition-colors ${book.isWishList

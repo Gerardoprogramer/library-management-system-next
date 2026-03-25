@@ -1,5 +1,5 @@
 import { api } from "@/lib/axios";
-import { ApiResponse, PageResponse, reservationBook } from "@/lib/definitions";
+import { ApiResponse, PageResponse, reservationBook, reserve } from "@/lib/definitions";
 
 export const reservationService = {
 
@@ -34,5 +34,10 @@ export const reservationService = {
             `/reservation/${bookId}`
         );
         return response.data.data ?? 0;
+    },
+
+    create: async (reserveData: reserve): Promise<ApiResponse<void>> => {
+        const response = await api.post<ApiResponse<void>>('/reservation', reserveData);
+        return response.data;
     }
 };

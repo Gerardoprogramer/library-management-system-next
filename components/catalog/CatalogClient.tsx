@@ -10,13 +10,13 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useWishlist } from "@/hooks/useWishlist";
-import { useDebouncedSearchParam } from "@/hooks/useDebouncedSearchParam";
+import { useDebouncedSearchParam } from "@/hooks/Utilidades/useDebouncedSearchParam";
 import { CustomSelect } from "@/components/custom/CustomSelect";
 import { useMemo } from "react";
-import { useCurrentUrl } from "@/hooks/useCurrentUrl";
-import { useQueryParams } from "@/hooks/useQueryParams";
+import { useCurrentUrl } from "@/hooks/Utilidades/useCurrentUrl";
+import { useQueryParams } from "@/hooks/Utilidades/useQueryParams";
 import { createSlug } from "@/lib/slug-utils"
-import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
+import { useDebouncedCallback } from "@/hooks/Utilidades/useDebouncedCallback";
 
 export const CatalogClient = () => {
     const queryParams = useQueryParams();

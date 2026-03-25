@@ -198,6 +198,11 @@ export interface checkoutLoan {
   notes?: string
 }
 
+export interface reserve {
+  bookId?: string,
+  notes?: string
+}
+
 export interface checkoutProps {
     title?: string,
     maxDaysPerBook?: number,

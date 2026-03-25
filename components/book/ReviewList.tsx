@@ -2,17 +2,24 @@
 import { Clock, Star, Users, Pencil, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { Review } from "@/lib/definitions";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { formatDate } from "@/lib/date-utils"
+import { useReviews } from "@/hooks/queries/useReviews";
+import { ReviewListSkeleton } from "../custom/skeletons";
+import { CustomPagination } from "../custom/CustomPagination";
 interface ReviewListProps {
-    reviews: Review[];
-    totalElements: number;
+    bookId: string;
 }
 
-export const ReviewList = ({ reviews, totalElements }: ReviewListProps) => {
+export const ReviewList = ({ bookId }: ReviewListProps) => {
 
     const { data: user } = useCurrentUser();
+    const { data: reviews, isLoading } = useReviews({ type: "book", id: bookId });
+
+    if (isLoading) return <ReviewListSkeleton />
+
+    const totalElements = reviews?.totalElements ?? 0;
+    const content = reviews?.content ?? [];
 
     return (
         <div>
@@ -21,7 +28,7 @@ export const ReviewList = ({ reviews, totalElements }: ReviewListProps) => {
             </h2>
             {totalElements > 0 ? (
                 <div className="space-y-4">
-                    {reviews.map((review) => {
+                    {content.map((review) => {
                         const isOwn = user?.id === review.userId;
                         return (
                             <div key={review.id} className="bg-card border border-border rounded-lg p-5">
@@ -61,6 +68,15 @@ export const ReviewList = ({ reviews, totalElements }: ReviewListProps) => {
                 </div>
             ) : (
                 <p className="font-body text-muted-foreground text-sm">Aún no hay reseñas para este libro.</p>
+            )}
+
+
+            {reviews && reviews.totalPages > 1 && (
+                <div className="col-span-full mt-8">
+                    <CustomPagination
+                        totalPages={reviews.totalPages}
+                        paramName="ReviewPage" />
+                </div>
             )}
         </div>
     )

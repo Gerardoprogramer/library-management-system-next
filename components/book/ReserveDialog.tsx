@@ -8,11 +8,12 @@ import { reservationService } from "@/services/reservationService"
 
 interface Props {
     reserveDialogOpen: boolean,
-    setReserveDialogOpen: (open: boolean) => void
-    reserve: reserveBook
+    setReserveDialogOpen: (open: boolean) => void,
+    reserve: reserveBook,
+    isPending: boolean
 }
 
-export const ReserveDialog = ({ reserve, reserveDialogOpen, setReserveDialogOpen }: Props) => {
+export const ReserveDialog = ({ reserve, reserveDialogOpen, setReserveDialogOpen, isPending }: Props) => {
 
     const { data: Queue } = useQuery<number>({
         queryKey: ["Queue", reserve.bookId],
@@ -39,7 +40,7 @@ export const ReserveDialog = ({ reserve, reserveDialogOpen, setReserveDialogOpen
                 <div className="space-y-4 py-2">
                     <div className="bg-muted/50 border border-border rounded-lg p-3">
                         <p className="font-body text-sm text-foreground">
-                            Posición estimada en cola: <span className="font-display font-semibold">{Queue ?? 0 + 1}</span>
+                            Posición estimada en cola: <span className="font-display font-semibold">{(Queue ?? 0) + 1}</span>
                         </p>
                     </div>
                     <div>
@@ -55,8 +56,14 @@ export const ReserveDialog = ({ reserve, reserveDialogOpen, setReserveDialogOpen
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => setReserveDialogOpen(false)} className="font-body">Cancelar</Button>
-                    <Button onClick={reserve.handleReserve} className="font-display gap-2">
+                    <Button variant="outline" onClick={() => {
+                        setReserveDialogOpen(false);
+                        reserve.setActionNotes("");
+                    }} className="font-body">Cancelar</Button>
+                    <Button
+                        onClick={reserve.handleReserve}
+                        disabled={isPending}
+                        className="font-display gap-2">
                         <CalendarClock className="w-4 h-4" /> Confirmar Reserva
                     </Button>
                 </DialogFooter>

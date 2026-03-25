@@ -1,7 +1,7 @@
 
 import { reservationService } from "@/services/reservationService";
 import { useQuery } from "@tanstack/react-query";
-import { useUrlFilters } from "@/hooks/useUrlFilters";
+import { useUrlFilters } from "@/hooks/Utilidades/useUrlFilters";
 import { PageResponse, reservationBook } from "@/lib/definitions";
 
 export const useReservation = () => {

@@ -6,8 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import type { myWishlist } from "@/lib/definitions";
 import Link from "next/link";
-import { useQueryParams } from "@/hooks/useQueryParams";
-import { useCurrentUrl } from "@/hooks/useCurrentUrl";
+import { useQueryParams } from "@/hooks/Utilidades/useQueryParams";
+import { useCurrentUrl } from "@/hooks/Utilidades/useCurrentUrl";
 import { createSlug } from "@/lib/slug-utils";
 interface Porps {
     data: myWishlist;

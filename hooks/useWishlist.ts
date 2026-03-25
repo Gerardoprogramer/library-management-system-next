@@ -3,7 +3,7 @@ import { WishListService } from "@/services/wishlistService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { showToast } from "@/lib/toast-utils";
 import { useQuery } from "@tanstack/react-query";
-import { useUrlFilters } from "@/hooks/useUrlFilters";
+import { useUrlFilters } from "@/hooks/Utilidades/useUrlFilters";
 
 export const useWishlist = () => {
   const queryClient = useQueryClient();

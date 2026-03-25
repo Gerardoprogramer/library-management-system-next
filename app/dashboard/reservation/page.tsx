@@ -1,15 +1,12 @@
 'use client'
 
-import { reservationService } from "@/services/reservationService";
-import { useQuery } from "@tanstack/react-query";
-import { useUrlFilters } from "@/hooks/useUrlFilters";
 import { reservationOptions } from "@/lib/data";
 import { CustomSelect } from "@/components/custom/CustomSelect";
 import { CustomPagination } from "@/components/custom/CustomPagination";
 import { ReservationCard } from "@/components/cards/ReservationCard";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { useReservation } from "@/hooks/useReservation";
+import { useReservation } from "@/hooks/queries/useReservation";
 
 
 export default function ReservationPage() {
@@ -33,8 +30,13 @@ export default function ReservationPage() {
         </div>
       </div>
       <div className="space-y-4">
-        {reservations && reservations?.content.map((reservation) =>
-          <ReservationCard key={reservation.id} data={reservation} />
+
+        {reservations?.totalElements === 0 ? (
+          <p className="font-body text-muted-foreground text-center py-12">No tienes reservas activas.</p>
+        ) : (
+          reservations?.content.map((reservation) =>
+            <ReservationCard key={reservation.id} data={reservation} />
+          )
         )}
       </div>
       {reservations && reservations?.totalPages > 1 && (
