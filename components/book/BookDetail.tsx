@@ -8,8 +8,8 @@ import { BookMain } from "./BookMain";
 import { ReviewList } from "./ReviewList";
 import type { checkoutProps, reserveBook, checkoutLoan, reserve } from "@/lib/definitions";
 import { useState } from "react";
-import { CheckoutBook } from "./CheckoutBook";
-import { ReserveDialog } from "./ReserveDialog";
+import { CheckoutBook } from "../dialog/CheckoutBook";
+import { ReserveDialog } from "../dialog/ReserveDialog";
 import { isBookInList } from "@/lib/booking-utils";
 import { useReservation } from "@/hooks/queries/useReservation";
 import { useLoans } from "@/hooks/queries/useLoans";
@@ -128,6 +128,8 @@ export const BookDetail = ({ id }: { id: string }) => {
 
           <ReviewList
             bookId={book.id}
+            bookTitle={book.title}
+            oldRating={book.averageRating}
           />
 
         </div>

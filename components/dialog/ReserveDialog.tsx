@@ -50,7 +50,7 @@ export const ReserveDialog = ({ reserve, reserveDialogOpen, setReserveDialogOpen
                             onChange={(e) => reserve.setActionNotes(e.target.value.slice(0, 500))}
                             placeholder="Notas adicionales..."
                             rows={2}
-                            className="font-body resize-none"
+                            className="font-body resize-none w-full min-w-0 break-all"
                         />
                         <p className="font-body text-xs text-muted-foreground mt-1 text-right">{reserve.actionNotes.length}/500</p>
                     </div>

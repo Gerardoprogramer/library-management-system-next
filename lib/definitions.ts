@@ -203,20 +203,37 @@ export interface reserve {
   notes?: string
 }
 
-export interface checkoutProps {
-    title?: string,
-    maxDaysPerBook?: number,
-    checkoutDays?: number,
-    setCheckoutDays: Dispatch<SetStateAction<number>>,
-    actionNotes: string,
-    setActionNotes: Dispatch<SetStateAction<string>>,
-    handleCheckout: () => void
+export interface editReviewProps {
+  formRating: number;
+  setFormRating: Dispatch<SetStateAction<number>>;
+  formTitle: string;
+  setFormTitle: Dispatch<SetStateAction<string>>;
+  formText: string;
+  setFormText: Dispatch<SetStateAction<string>>;
 }
 
-export interface reserveBook{
-    bookId?: string
-    title?: string,
-    actionNotes: string,
-    setActionNotes: Dispatch<SetStateAction<string>>,
-    handleReserve: () => void
+export interface editReview {
+  rating: number,
+  reviewText: string,
+  title: string
 }
+
+export interface checkoutProps {
+  title?: string,
+  maxDaysPerBook?: number,
+  checkoutDays?: number,
+  setCheckoutDays: Dispatch<SetStateAction<number>>,
+  actionNotes: string,
+  setActionNotes: Dispatch<SetStateAction<string>>,
+  handleCheckout: () => void
+}
+
+export interface reserveBook {
+  bookId?: string
+  title?: string,
+  actionNotes: string,
+  setActionNotes: Dispatch<SetStateAction<string>>,
+  handleReserve: () => void
+}
+
+export type ReviewType = { type: "book"; id: string } | { type: "mine" };

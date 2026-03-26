@@ -38,7 +38,7 @@ export const CheckoutBook = ({ checkout, checkoutDialogOpen, setCheckoutDialogOp
                             max={checkout.maxDaysPerBook}
                             value={checkout.checkoutDays}
                             onChange={(e) => checkout.setCheckoutDays(Math.max(1, Math.min(checkout.maxDaysPerBook ?? 0, parseInt(e.target.value) || 1)))}
-                            className="font-body"
+                            className="font-body w-full min-w-0"
                         />
                         <p className="font-body text-xs text-muted-foreground mt-1">
                             Fecha de devolución: {new Date(Date.now() + (checkout.checkoutDays ?? 0) * 86400000).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}
@@ -51,7 +51,7 @@ export const CheckoutBook = ({ checkout, checkoutDialogOpen, setCheckoutDialogOp
                             onChange={(e) => checkout.setActionNotes(e.target.value.slice(0, 500))}
                             placeholder="Notas adicionales..."
                             rows={2}
-                            className="font-body resize-none"
+                            className="font-body resize-none w-full min-w-0 break-all"
                         />
                         <p className="font-body text-xs text-muted-foreground mt-1 text-right">{checkout.actionNotes.length}/500</p>
                     </div>

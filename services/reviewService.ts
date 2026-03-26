@@ -1,10 +1,10 @@
 import { api } from "@/lib/axios";
-import type { ApiResponse, Review, PageResponse } from "@/lib/definitions";
+import type { ApiResponse, Review, PageResponse, editReview } from "@/lib/definitions";
 
 export const reviewService = {
 
-    getBookReviews: async (bookId: string, page: number = 0): Promise<PageResponse<Review>> => {
-        const response = await api.get<ApiResponse<PageResponse<Review>>>(`/reviews/${bookId}`, {
+    getBookReviews: async (id: string, page: number = 0): Promise<PageResponse<Review>> => {
+        const response = await api.get<ApiResponse<PageResponse<Review>>>(`/reviews/${id}`, {
             params: { page }
         });
 
@@ -19,4 +19,10 @@ export const reviewService = {
             empty: true
         };
     },
+
+    editReview: async (review: editReview, id: string): Promise<ApiResponse<void>> => {
+        const response = await api.put<ApiResponse<void>>(`/reviews/${id}`, review);
+
+        return response.data;
+    }
 };

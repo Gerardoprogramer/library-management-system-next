@@ -2,8 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { reviewService } from "@/services/reviewService";
 import type { PageResponse, Review } from "@/lib/definitions";
-
-type ReviewType = { type: "book"; id: string } | { type: "mine" };
+import type { ReviewType } from "@/lib/definitions";
 
 export const useReviews = (target: ReviewType) => {
   const searchParams = useSearchParams();

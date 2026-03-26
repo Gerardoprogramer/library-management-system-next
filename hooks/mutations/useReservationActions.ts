@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { reservationService } from "@/services/reservationService";
 import { showToast } from "@/lib/toast-utils";
-import { reserve, reserveBook } from "@/lib/definitions";
+import { reserve } from "@/lib/definitions";
 
 export const useReservationActions = (bookId: string) => {
   const queryClient = useQueryClient();
