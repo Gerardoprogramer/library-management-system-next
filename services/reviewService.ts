@@ -24,5 +24,11 @@ export const reviewService = {
         const response = await api.put<ApiResponse<void>>(`/reviews/${id}`, review);
 
         return response.data;
+    },
+
+    deleteReview: async (id: string): Promise<ApiResponse<void>> => {
+        const response = await api.delete<ApiResponse<void>>(`/reviews/${id}`);
+
+        return response.data;
     }
 };

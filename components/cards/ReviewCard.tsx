@@ -7,6 +7,8 @@ import { EditReviewDialog } from "../dialog/EditReviewDialog";
 import { useState } from "react";
 import { editReview, editReviewProps, Review } from "@/lib/definitions";
 import { useReviewActions } from "@/hooks/mutations/useReviewActions";
+import { DeleteReviewDialog } from "../dialog/DeleteReviewDialog";
+import { useDeleteReview } from "@/hooks/mutations/useDeleteReviewActions";
 
 
 interface Props {
@@ -17,8 +19,13 @@ interface Props {
 }
 
 export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
+
     const { performReview, isPending } = useReviewActions(review.id, { type: "book", id: bookId }, review.rating);
+    const { deleteReview, isDeleting } = useDeleteReview(review.id, { type: "book", id: bookId }, review.rating);
+
     const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
     const [formRating, setFormRating] = useState(review.rating);
     const [formTitle, setFormTitle] = useState(review.title);
     const [formText, setFormText] = useState(review.reviewText);
@@ -44,6 +51,11 @@ export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
         setEditDialogOpen(false);
     }
 
+    const handleDelete = () => {
+        deleteReview();
+        setDeleteDialogOpen(false);
+    }
+
 
     return (
         <div key={review.id} className="bg-card border border-border rounded-lg p-5">
@@ -55,10 +67,14 @@ export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
                 <div className="flex items-center gap-2">
                     {isOwn && (
                         <>
-                            <Button onClick={() => setEditDialogOpen(true)} variant="ghost" size="icon" className="h-7 w-7">
+                            <Button
+                                onClick={() => setEditDialogOpen(true)}
+                                variant="ghost" size="icon" className="h-7 w-7">
                                 <Pencil className="w-3.5 h-3.5" />
                             </Button>
-                            <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive">
+                            <Button
+                                onClick={() => setDeleteDialogOpen(true)}
+                                variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive">
                                 <Trash2 className="w-3.5 h-3.5" />
                             </Button>
                         </>
@@ -85,6 +101,13 @@ export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
                 props={data}
                 handleSave={handleSave}
                 isPending={isPending}
+            />
+
+            <DeleteReviewDialog
+                confirmDelete={handleDelete}
+                deleteDialogOpen={deleteDialogOpen}
+                setDeleteDialogOpen={setDeleteDialogOpen}
+                isPending={isDeleting}
             />
         </div>
     )
