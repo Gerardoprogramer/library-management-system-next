@@ -7,25 +7,26 @@ export const useCreateReview = (target: ReviewType) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (reviewData: createReview) => 
+        mutationFn: (reviewData: createReview) =>
             reviewService.createReview(reviewData),
 
         onSuccess: (newReview, variables) => {
             showToast.success("Reseña publicada con éxito");
 
-            queryClient.invalidateQueries({
-                queryKey: ["reviews", target]
-            });
 
             if (target.type === "book") {
                 const bookId = target.id;
+
+                queryClient.invalidateQueries({
+                    queryKey: ["reviews", "book", bookId]
+                });
 
                 queryClient.setQueryData(['book', bookId], (oldBook: BookDetail | undefined) => {
                     if (!oldBook) return oldBook;
 
                     const totalAnterior = oldBook.totalReviews || 0;
                     const nuevoTotal = totalAnterior + 1;
-                    
+
                     const promedioActual = Number(oldBook.averageRating) || 0;
                     const nuevoRating = Number(variables.rating);
 
@@ -35,8 +36,16 @@ export const useCreateReview = (target: ReviewType) => {
                     return {
                         ...oldBook,
                         totalReviews: nuevoTotal,
-                        averageRating: Number(nuevoPromedio.toFixed(1))
+                        averageRating: Number(nuevoPromedio.toFixed(1)),
+                        alreadyReviewed: !oldBook.alreadyReviewed,
+                        canReview: !oldBook.canReview
+
                     };
+                });
+
+                queryClient.invalidateQueries({
+                    queryKey: ['books'],
+                    refetchType: 'none'
                 });
             }
         },

@@ -5,24 +5,24 @@ import { useReviews } from "@/hooks/queries/useReviews";
 import { ReviewListSkeleton } from "../custom/skeletons";
 import { CustomPagination } from "../custom/CustomPagination";
 import { ReviewCard } from "../cards/ReviewCard";
-import { useReviewPermissions } from "@/hooks/ui/useReviewPermissions";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { ReviewFormDialog } from "../dialog/ReviewFormDialog";
 import { useCreateReview } from "@/hooks/mutations/useCreateReview";
-import { id } from "zod/locales";
 
 interface ReviewListProps {
     bookId: string;
     bookTitle: string;
+    canCreate: boolean;
+    alreadyReviewed: boolean;
+
 }
 
-export const ReviewList = ({ bookId, bookTitle }: ReviewListProps) => {
+export const ReviewList = ({ bookId, bookTitle, alreadyReviewed, canCreate }: ReviewListProps) => {
 
 
     const { data: user } = useCurrentUser();
     const { data: reviews, isLoading } = useReviews({ type: "book", id: bookId });
-    const { canCreate, alreadyReviewed } = useReviewPermissions(bookId);
     const [dialogOpen, setDialogOpen] = useState(false);
     const { mutate: create } = useCreateReview({ type: "book", id: bookId });
 

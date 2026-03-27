@@ -129,6 +129,8 @@ export const BookDetail = ({ id }: { id: string }) => {
           <ReviewList
             bookId={book.id}
             bookTitle={book.title}
+            alreadyReviewed={book.alreadyReviewed}
+            canCreate={book.canReview}
           />
 
         </div>

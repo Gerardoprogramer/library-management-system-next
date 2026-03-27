@@ -16,12 +16,13 @@ export const useDeleteReview = (
         onSuccess: () => {
             showToast.success("Reseña eliminada con éxito");
 
-            queryClient.invalidateQueries({
-                queryKey: ["reviews", target]
-            });
 
             if (target.type === "book") {
                 const bookId = target.id;
+
+                queryClient.invalidateQueries({
+                    queryKey: ["reviews", "book", bookId]
+                });
 
                 queryClient.setQueryData(['book', bookId], (oldBook: BookDetail | undefined) => {
                     if (!oldBook) return oldBook;
@@ -32,7 +33,7 @@ export const useDeleteReview = (
                         return {
                             ...oldBook,
                             totalReviews: 0,
-                            averageRating: 0
+                            averageRating: 0,
                         };
                     }
 
@@ -47,8 +48,15 @@ export const useDeleteReview = (
                     return {
                         ...oldBook,
                         totalReviews: nuevoTotal,
-                        averageRating: Number(nuevoPromedio.toFixed(1))
+                        averageRating: Number(nuevoPromedio.toFixed(1)),
+                        alreadyReviewed: !oldBook.alreadyReviewed,
+                        canReview: !oldBook.canReview
                     };
+                });
+
+                queryClient.invalidateQueries({
+                    queryKey: ['books'],
+                    refetchType: 'none'
                 });
             }
         },

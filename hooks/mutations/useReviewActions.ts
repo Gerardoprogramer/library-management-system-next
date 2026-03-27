@@ -18,20 +18,18 @@ export const useReviewActions = (
         onSuccess: (data, variables) => {
             showToast.success("Reseña actualizada con éxito");
 
-            queryClient.invalidateQueries({
-                queryKey: ["reviews", target]
-            });
-
             if (target.type === "book") {
                 const bookId = target.id;
+
+                queryClient.invalidateQueries({
+                    queryKey: ["reviews", "book", bookId]
+                });
 
                 queryClient.setQueryData(['book', bookId], (oldBook: BookDetail | undefined) => {
                     if (!oldBook) return oldBook;
 
                     const total = oldBook.totalReviews || 0;
                     if (total === 0) return oldBook;
-
-                    console.log(oldRating)
 
                     const ratingAnterior = Number(oldRating);
                     const ratingNuevo = Number(variables.rating);
@@ -45,6 +43,11 @@ export const useReviewActions = (
                         ...oldBook,
                         averageRating: Number(nuevoPromedio.toFixed(1))
                     };
+                });
+
+                queryClient.invalidateQueries({
+                    queryKey: ['books'],
+                    refetchType: 'none'
                 });
             }
         },

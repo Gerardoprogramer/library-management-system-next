@@ -93,6 +93,9 @@ export interface BookDetail {
   active: boolean;
   averageRating: number;
   totalReviews: number;
+  canReview: boolean;
+  hasReturned: boolean;
+  alreadyReviewed: boolean;
 }
 
 export interface Review {

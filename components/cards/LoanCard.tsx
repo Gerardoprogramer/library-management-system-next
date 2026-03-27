@@ -99,13 +99,15 @@ export const LoanCard = ({ loan }: Props) => {
                                 <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
-                                            <div className="flex items-center gap-1.5 text-muted-foreground/70 mb-4 cursor-help group w-fit">
-                                                <Info className="w-3.5 h-3.5 group-hover:text-foreground transition-colors" />
-                                                <span className="text-xs line-clamp-1 max-w-200px">{loan.notes}</span>
+                                            <div className="flex items-center gap-1.5 text-muted-foreground/70 mb-4 cursor-help group w-full max-w-60">
+                                                <Info className="w-3.5 h-3.5 shrink-0 group-hover:text-foreground transition-colors" />
+                                                <span className="text-xs truncate block w-full">
+                                                    {loan.notes}
+                                                </span>
                                             </div>
                                         </TooltipTrigger>
-                                        <TooltipContent side="bottom" className="max-w-xs">
-                                            <p className="text-xs">{loan.notes}</p>
+                                        <TooltipContent side="bottom" className="max-w-75 wrap-break-word">
+                                            <p className="text-xs leading-relaxed">{loan.notes}</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </TooltipProvider>
