@@ -3,9 +3,9 @@ import { Clock, Star, Pencil, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { formatDate } from "@/lib/date-utils"
-import { EditReviewDialog } from "../dialog/EditReviewDialog";
+import { ReviewFormDialog } from "../dialog/ReviewFormDialog";
 import { useState } from "react";
-import { editReview, editReviewProps, Review } from "@/lib/definitions";
+import type { Review } from "@/lib/definitions";
 import { useReviewActions } from "@/hooks/mutations/useReviewActions";
 import { DeleteReviewDialog } from "../dialog/DeleteReviewDialog";
 import { useDeleteReview } from "@/hooks/mutations/useDeleteReviewActions";
@@ -26,28 +26,11 @@ export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-    const [formRating, setFormRating] = useState(review.rating);
-    const [formTitle, setFormTitle] = useState(review.title);
-    const [formText, setFormText] = useState(review.reviewText);
-
     const isOwn = userId === review.userId;
 
-    const data: editReviewProps = {
-        formRating: formRating,
-        formText: formText,
-        formTitle: formTitle,
-        setFormRating: setFormRating,
-        setFormText: setFormText,
-        setFormTitle: setFormTitle
-    }
 
-    const handleSave = () => {
-        const editReview: editReview = {
-            rating: formRating,
-            reviewText: formText,
-            title: formTitle
-        }
-        performReview(editReview);
+    const handleSave = (formValues: { rating: number; title: string; reviewText: string }) => {
+        performReview(formValues);
         setEditDialogOpen(false);
     }
 
@@ -93,16 +76,19 @@ export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
             <p className="font-body text-xs text-muted-foreground mt-2 flex items-center gap-1">
                 <Clock className="w-3 h-3" /> {formatDate(review.createdAt)}
             </p>
-
-            <EditReviewDialog
-                bookTitle={bookTitle}
-                editDialogOpen={editDialogOpen}
-                setEditDialogOpen={setEditDialogOpen}
-                props={data}
-                handleSave={handleSave}
-                isPending={isPending}
-            />
-
+            {
+                editDialogOpen && (
+                    <ReviewFormDialog
+                        bookTitle={bookTitle}
+                        review={review}
+                        isOpen={editDialogOpen}
+                        setIsOpen={setEditDialogOpen}
+                        isPending={isPending}
+                        handleSave={handleSave}
+                        mode="edit"
+                    />
+                )
+            }
             <DeleteReviewDialog
                 confirmDelete={handleDelete}
                 deleteDialogOpen={deleteDialogOpen}

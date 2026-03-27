@@ -129,7 +129,6 @@ export const BookDetail = ({ id }: { id: string }) => {
           <ReviewList
             bookId={book.id}
             bookTitle={book.title}
-            oldRating={book.averageRating}
           />
 
         </div>

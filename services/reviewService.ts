@@ -1,5 +1,5 @@
 import { api } from "@/lib/axios";
-import type { ApiResponse, Review, PageResponse, editReview } from "@/lib/definitions";
+import type { ApiResponse, Review, PageResponse, editReview, createReview } from "@/lib/definitions";
 
 export const reviewService = {
 
@@ -30,5 +30,10 @@ export const reviewService = {
         const response = await api.delete<ApiResponse<void>>(`/reviews/${id}`);
 
         return response.data;
+    },
+    createReview: async (review: createReview): Promise<ApiResponse<void>> => {
+        const response = await api.post<ApiResponse<void>>(`/reviews`, review);
+
+        return response.data
     }
 };

@@ -203,7 +203,7 @@ export interface reserve {
   notes?: string
 }
 
-export interface editReviewProps {
+export interface ReviewProps {
   formRating: number;
   setFormRating: Dispatch<SetStateAction<number>>;
   formTitle: string;
@@ -213,6 +213,13 @@ export interface editReviewProps {
 }
 
 export interface editReview {
+  rating: number,
+  reviewText: string,
+  title: string
+}
+
+export interface createReview {
+  bookId: string,
   rating: number,
   reviewText: string,
   title: string

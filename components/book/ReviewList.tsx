@@ -1,22 +1,36 @@
 
-import { Users } from "lucide-react";
+import { Users, Plus } from "lucide-react";
 import { useCurrentUser } from "@/hooks/queries/useCurrentUser";
 import { useReviews } from "@/hooks/queries/useReviews";
 import { ReviewListSkeleton } from "../custom/skeletons";
 import { CustomPagination } from "../custom/CustomPagination";
 import { ReviewCard } from "../cards/ReviewCard";
+import { useReviewPermissions } from "@/hooks/ui/useReviewPermissions";
+import { Button } from "../ui/button";
+import { useState } from "react";
+import { ReviewFormDialog } from "../dialog/ReviewFormDialog";
+import { useCreateReview } from "@/hooks/mutations/useCreateReview";
+import { id } from "zod/locales";
+
 interface ReviewListProps {
     bookId: string;
     bookTitle: string;
-    oldRating: number
 }
 
-export const ReviewList = ({ bookId, bookTitle, oldRating }: ReviewListProps) => {
+export const ReviewList = ({ bookId, bookTitle }: ReviewListProps) => {
 
 
     const { data: user } = useCurrentUser();
     const { data: reviews, isLoading } = useReviews({ type: "book", id: bookId });
+    const { canCreate, alreadyReviewed } = useReviewPermissions(bookId);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const { mutate: create } = useCreateReview({ type: "book", id: bookId });
 
+
+    const handlesave = (formValues: { rating: number; title: string; reviewText: string }) => {
+        create({ bookId: bookId, rating: formValues.rating, title: formValues.title, reviewText: formValues.reviewText });
+        setDialogOpen(false);
+    }
 
     if (isLoading) return <ReviewListSkeleton />
 
@@ -28,6 +42,12 @@ export const ReviewList = ({ bookId, bookTitle, oldRating }: ReviewListProps) =>
             <h2 className="font-display text-lg font-semibold mb-4 text-foreground flex items-center gap-2">
                 <Users className="w-5 h-5 text-primary" /> Reseñas
             </h2>
+            {canCreate && (
+                <Button size="sm" onClick={() => setDialogOpen(true)} className="font-body gap-1.5 mb-4">
+                    <Plus className="w-4 h-4" /> Escribir reseña
+                </Button>
+            )}
+            {alreadyReviewed && <p className="mb-4">Ya has calificado este libro</p>}
             {totalElements > 0 ? (
                 <div className="space-y-4">
                     {content.map((review) => (
@@ -49,6 +69,14 @@ export const ReviewList = ({ bookId, bookTitle, oldRating }: ReviewListProps) =>
                 </div>
             )}
 
+            <ReviewFormDialog
+                mode="create"
+                bookTitle={bookTitle}
+                handleSave={handlesave}
+                isOpen={dialogOpen}
+                setIsOpen={setDialogOpen}
+                isPending={false}
+            />
         </div>
     )
 }
