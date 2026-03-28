@@ -107,6 +107,9 @@ export interface Review {
   title: string;
   createdAt: string;
   updatedAt: string;
+  bookId: string;
+  bookTitle: string;
+  coverImageUrl: string;
 }
 
 export interface meLoans {

@@ -69,14 +69,16 @@ export const ReviewList = ({ bookId, bookTitle, alreadyReviewed, canCreate }: Re
                 </div>
             )}
 
-            <ReviewFormDialog
-                mode="create"
-                bookTitle={bookTitle}
-                handleSave={handlesave}
-                isOpen={dialogOpen}
-                setIsOpen={setDialogOpen}
-                isPending={false}
-            />
+            {dialogOpen && (
+                <ReviewFormDialog
+                    mode="create"
+                    bookTitle={bookTitle}
+                    handleSave={handlesave}
+                    isOpen={dialogOpen}
+                    setIsOpen={setDialogOpen}
+                    isPending={false}
+                />
+            )}
         </div>
     )
 }

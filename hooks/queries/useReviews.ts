@@ -19,9 +19,9 @@ export const useReviews = (target: ReviewType) => {
         return await reviewService.getBookReviews(target.id, pageIndex);
       }
 
-      /*       if (target.type === "mine") {
-              return await reviewService.getUserReviews(pageIndex);
-            } */
+      if (target.type === "mine") {
+        return await reviewService.getMeReviews(pageIndex);
+      }
 
       throw new Error("Tipo de reseña no soportado");
     },

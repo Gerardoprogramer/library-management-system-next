@@ -89,12 +89,14 @@ export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
                     />
                 )
             }
-            <DeleteReviewDialog
-                confirmDelete={handleDelete}
-                deleteDialogOpen={deleteDialogOpen}
-                setDeleteDialogOpen={setDeleteDialogOpen}
-                isPending={isDeleting}
-            />
+            {deleteDialogOpen && (
+                <DeleteReviewDialog
+                    confirmDelete={handleDelete}
+                    deleteDialogOpen={deleteDialogOpen}
+                    setDeleteDialogOpen={setDeleteDialogOpen}
+                    isPending={isDeleting}
+                />
+            )}
         </div>
     )
 }

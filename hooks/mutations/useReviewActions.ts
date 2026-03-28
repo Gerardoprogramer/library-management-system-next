@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { reviewService } from "@/services/reviewService";
 import { showToast } from "@/lib/toast-utils";
 import { editReview, BookDetail } from "@/lib/definitions";
-import type { ReviewType } from "@/lib/definitions";
+import type { PageResponse, Review, ReviewType } from "@/lib/definitions";
 
 export const useReviewActions = (
     reviewId: string,
@@ -18,12 +18,41 @@ export const useReviewActions = (
         onSuccess: (data, variables) => {
             showToast.success("Reseña actualizada con éxito");
 
+            if (target.type === "mine") {
+                queryClient.setQueriesData<PageResponse<Review>>(
+                    { queryKey: ["reviews", "mine"] },
+                    (oldData) => {
+                        if (!oldData) return oldData;
+                        return {
+                            ...oldData,
+                            content: oldData.content.map((r) =>
+                                r.id === reviewId ? { ...r, ...variables } : r
+                            ),
+                        };
+                    }
+                );
+
+                queryClient.invalidateQueries({
+                    queryKey: ["reviews", "mine"],
+                    refetchType: 'active'
+                });
+            }
+
             if (target.type === "book") {
                 const bookId = target.id;
 
-                queryClient.invalidateQueries({
-                    queryKey: ["reviews", "book", bookId]
-                });
+                queryClient.setQueryData<PageResponse<Review>>(
+                    ['reviews', 'book', bookId],
+                    (oldData) => {
+                        if (!oldData) return oldData;
+                        return {
+                            ...oldData,
+                            content: oldData.content.map((r) =>
+                                r.id === reviewId ? { ...r, ...variables } : r
+                            ),
+                        };
+                    }
+                );
 
                 queryClient.setQueryData(['book', bookId], (oldBook: BookDetail | undefined) => {
                     if (!oldBook) return oldBook;
@@ -46,10 +75,15 @@ export const useReviewActions = (
                 });
 
                 queryClient.invalidateQueries({
-                    queryKey: ['books'],
-                    refetchType: 'none'
+                    queryKey: ["reviews", "book", bookId],
+                    refetchType: 'active'
                 });
             }
+
+            queryClient.invalidateQueries({
+                queryKey: ['books'],
+                refetchType: 'none'
+            });
         },
 
         onError: (error: any) => {
