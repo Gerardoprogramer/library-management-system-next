@@ -185,8 +185,9 @@ export interface Subscription {
   price: number,
   maxBooksAllowed: number,
   maxDaysPerBook: number,
-  active: number,
+  active: boolean,
   autoRenew: boolean,
+  nextBillingDate: string,
   startDate: string,
   endDate: string,
   daysRemaining: number,
@@ -250,3 +251,28 @@ export interface reserveBook {
 }
 
 export type ReviewType = { type: "book"; id: string } | { type: "mine" };
+
+export interface SubscriptionPlan {
+  id: string;
+  planCode: string;
+  name: string;
+  description: string;
+  durationDays: number;
+  price: number;
+  currency: string;
+  maxBooksAllowed: number;
+  maxDaysPerBook: number;
+  displayOrder: number;
+  active: boolean;
+  featured: boolean;
+  badgeText: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SubscriptionPostResponse {
+  id: string,
+  planName: string,
+  active: boolean,
+  checkoutUrl: string
+}

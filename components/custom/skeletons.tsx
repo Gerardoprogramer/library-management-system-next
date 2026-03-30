@@ -356,3 +356,74 @@ export const LoanPageSkeleton = () => {
     </div>
   );
 };
+
+export const SubscriptionCardSkeleton = () => {
+  return (
+    <Card className="mb-8 border-muted/50">
+      <CardContent className="p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-7 w-48" />
+              <Skeleton className="h-5 w-16 rounded-full" />
+            </div>
+            <Skeleton className="h-4 w-32" />
+          </div>
+          <div className="text-right space-y-1">
+            <Skeleton className="h-8 w-24 ml-auto" />
+            <Skeleton className="h-3 w-12 ml-auto" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="bg-muted/30 rounded-lg p-3 space-y-2">
+              <Skeleton className="h-4 w-4" />
+              <Skeleton className="h-3 w-16" />
+              <Skeleton className="h-6 w-10" />
+            </div>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-3 mb-4">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-4 w-4" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+
+        <Skeleton className="h-9 w-40" />
+      </CardContent>
+    </Card>
+  );
+};
+
+export const SubscriptionPlanCardSkeleton = () => {
+  return (
+    <Card className="relative overflow-hidden">
+      <CardContent className="p-5 pt-6">
+        <Skeleton className="h-6 w-3/4 mb-2" />
+
+        <div className="space-y-1 mb-4">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-5/6" />
+        </div>
+
+        <div className="flex items-baseline gap-1 mb-4">
+          <Skeleton className="h-9 w-20" />
+          <Skeleton className="h-4 w-10" />
+        </div>
+
+        <div className="space-y-3 mb-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-center gap-2">
+              <Skeleton className="h-4 w-4 rounded-full" />
+              <Skeleton className="h-4 w-full" />
+            </div>
+          ))}
+        </div>
+
+        <Skeleton className="h-10 w-full rounded-md" />
+      </CardContent>
+    </Card>
+  );
+};
