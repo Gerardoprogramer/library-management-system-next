@@ -279,12 +279,13 @@ export interface SubscriptionPostResponse {
 }
 
 export interface PaymentDetails {
-  amount: number,
-  currency: string,
-  status: string,
-  description: string,
-  customerEmail: string,
-  date: string
-  type: "MEMBERSHIP" | "FINE" | "LOST_BOOK_PENALTY" | "DAMAGED_BOOK_PENALTY" | "GENERAL",
-  plan?: string
+  amount: number;
+  currency: string;
+  status: string;
+  description: string;
+  customerEmail: string;
+  date: string;
+  type: "MEMBERSHIP" | "FINE" | "LOST_BOOK_PENALTY" | "DAMAGED_BOOK_PENALTY" | "GENERAL";
+  plan?: string;
+  paymentId?: string;
 }
