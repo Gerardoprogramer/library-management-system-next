@@ -99,7 +99,7 @@ export default function paymentSuccess() {
               </div>
               <div className="flex justify-between items-center font-body text-xs mt-1">
                 <span className="text-muted-foreground">Fecha</span>
-                <span className="text-foreground">{formatDate(payment?.date)}</span>
+                <span className="text-foreground">{payment?.date ? String(payment.date).split('T')[0] : 'Hoy'}</span>
               </div>
             </div>
 
