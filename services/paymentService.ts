@@ -4,7 +4,7 @@ import type { ApiResponse, PaymentDetails } from "@/lib/definitions";
 export const PaymentService = {
     getSuccessDetails: async (sessionId: string): Promise<PaymentDetails> => {
         const response = await api.get<ApiResponse<PaymentDetails>>(
-            `/payments/success-details/${sessionId}`
+            `/payment/${sessionId}`
         );
 
         if (!response.data.data) {
