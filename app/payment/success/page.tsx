@@ -9,7 +9,7 @@ import { useSearchParams } from "next/navigation";
 import { formatDate } from "@/lib/date-utils";
 
 
-export default function paymentSuccess() {
+export default function PaymentSuccessPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
 
