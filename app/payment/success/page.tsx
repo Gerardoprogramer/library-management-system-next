@@ -12,6 +12,7 @@ export default function paymentSuccess() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
 
+  console.log("Session ID:", sessionId);
   const [showCheck, setShowCheck] = useState(false);
   const [showContent, setShowContent] = useState(false);
   const { data: payment, isLoading, isError } = usePaymentDetails(sessionId);
