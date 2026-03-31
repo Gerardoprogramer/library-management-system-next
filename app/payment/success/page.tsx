@@ -16,7 +16,7 @@ export default function paymentSuccess() {
   const [showCheck, setShowCheck] = useState(false);
   const [showContent, setShowContent] = useState(false);
   const { data: payment, isLoading, isError } = usePaymentDetails(sessionId);
-
+  console.log("Payment details:", payment);
   if (isLoading) return <div className="flex justify-center p-20">Cargando recibo...</div>;
 
   if (isError || !payment) return <div>Error al verificar el pago.</div>;
