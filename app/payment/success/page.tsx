@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePaymentDetails } from "@/hooks/queries/usePaymentDetails";
 import { useSearchParams } from "next/navigation";
+import { formatDate } from "@/lib/date-utils";
 
 
 export default function paymentSuccess() {
@@ -98,7 +99,7 @@ export default function paymentSuccess() {
               </div>
               <div className="flex justify-between items-center font-body text-xs mt-1">
                 <span className="text-muted-foreground">Fecha</span>
-                <span className="text-foreground">{new Date().toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}</span>
+                <span className="text-foreground">{formatDate(payment?.date)}</span>
               </div>
             </div>
 
