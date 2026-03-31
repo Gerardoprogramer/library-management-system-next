@@ -1,6 +1,7 @@
 import { LucideProps } from "lucide-react";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 import { Dispatch, SetStateAction } from "react"
+import { number, string } from "zod";
 
 
 export interface ApiResponse<T> {
@@ -275,4 +276,15 @@ export interface SubscriptionPostResponse {
   planName: string,
   active: boolean,
   checkoutUrl: string
+}
+
+export interface PaymentDetails {
+  amount: number,
+  currency: string,
+  status: string,
+  description: string,
+  customerEmail: string,
+  date: string
+  type: "MEMBERSHIP" | "FINE" | "LOST_BOOK_PENALTY" | "DAMAGED_BOOK_PENALTY" | "GENERAL",
+  plan?: string
 }
