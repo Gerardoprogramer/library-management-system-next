@@ -6,6 +6,6 @@ export async function GET(
     { params }: { params: Promise<{ sessionId: string }> }
 ) {
     const { sessionId } = await params;
-
+    console.log("Received session ID:", sessionId);
     return backendProxy(request, `/payments/success-details/${sessionId}`);
 }
