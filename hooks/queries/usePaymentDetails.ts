@@ -10,7 +10,6 @@ export const usePaymentDetails = (sessionId: string | null) => {
             return PaymentService.getSuccessDetails(sessionId);
         },
         enabled: !!sessionId,
-        retry: 1,
         staleTime: 1000 * 60 * 10,
     });
 };
