@@ -7,7 +7,6 @@ import { cinzel, cormorant } from "@/app/fonts";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
-
 export const metadata: Metadata = {
   metadataBase: new URL("https://obsidian-delta-kohl.vercel.app"),
 
@@ -31,7 +30,7 @@ export const metadata: Metadata = {
     "biblioteca digital",
     "notas markdown",
     "organización de ideas",
-    "productividad personal"
+    "productividad personal",
   ],
 
   authors: [{ name: "Gerardo Martinez Monge", url: "https://gerardodev.vercel.app" }],
@@ -91,11 +90,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
   const theme = cookieStore.get("library-theme")?.value ?? "light";
 
@@ -103,9 +98,7 @@ export default async function RootLayout({
     <html lang="en" className={theme === "dark" ? "dark" : ""}>
       <body className={`${cinzel.className} ${cormorant.className} antialiased`}>
         <ThemeProvider initialTheme={theme as "light" | "dark"}>
-          <Providers>
-            {children}
-          </Providers>
+          <Providers>{children}</Providers>
           <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>

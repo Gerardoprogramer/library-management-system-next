@@ -10,9 +10,7 @@ import { PasswordInput } from "@/components/auth/PasswordInput";
 import { useLogin } from "@/hooks/auth/useLogin";
 
 export default function LoginPage() {
-
-  const { email, setEmail, password,
-    setPassword, loading, errors, handleSubmit } = useLogin();
+  const { email, setEmail, password, setPassword, loading, errors, handleSubmit } = useLogin();
 
   return (
     <>
@@ -21,9 +19,7 @@ export default function LoginPage() {
       <AuthCard>
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
-            <label className="font-body text-sm text-foreground">
-              Correo electrónico
-            </label>
+            <label className="font-body text-sm text-foreground">Correo electrónico</label>
 
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -36,11 +32,11 @@ export default function LoginPage() {
                 required
               />
             </div>
-            {errors.email && (<p className="text-red-500 text-sm mt-1">{errors.email}</p>)}
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
 
           <PasswordInput value={password} onChange={setPassword} />
-          {errors.password && (<p className="text-red-500 text-sm mt-1">{errors.password}</p>)}
+          {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           <Button
             type="submit"
             disabled={loading}

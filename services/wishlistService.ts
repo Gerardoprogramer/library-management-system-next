@@ -10,18 +10,20 @@ export const WishListService = {
   },
   getMyWishlist: async (page?: number): Promise<PageResponse<myWishlist>> => {
     const response = await api.get<ApiResponse<PageResponse<myWishlist>>>(`/wishlist`, {
-      params: { page }
+      params: { page },
     });
 
-    return response.data.data ?? {
-      content: [],
-      number: 0,
-      size: 10,
-      totalElements: 0,
-      totalPages: 0,
-      last: true,
-      first: true,
-      empty: true
-    };
+    return (
+      response.data.data ?? {
+        content: [],
+        number: 0,
+        size: 10,
+        totalElements: 0,
+        totalPages: 0,
+        last: true,
+        first: true,
+        empty: true,
+      }
+    );
   },
 };

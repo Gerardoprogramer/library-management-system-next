@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { LoanOptions } from "@/lib/data";
 import { CustomPagination } from "@/components/custom/CustomPagination";
@@ -19,18 +19,23 @@ export default function LoanPage() {
       </h1>
       <div className="flex justify-between">
         <p className="font-body text-lg text-muted-foreground mb-8">
-          {loans?.content.filter((l) => l.overdue === false).length} activos · {loans?.content.filter((l) => l.overdue === true).length} vencidos
+          {loans?.content.filter((l) => l.overdue === false).length} activos ·{" "}
+          {loans?.content.filter((l) => l.overdue === true).length} vencidos
         </p>
-        <CustomSelect headline="Todos los Status" options={LoanOptions} selectedItem={status} setSelectedItem={setStatus} />
+        <CustomSelect
+          headline="Todos los Status"
+          options={LoanOptions}
+          selectedItem={status}
+          setSelectedItem={setStatus}
+        />
       </div>
       <div className="space-y-4">
-
         {loans?.totalElements === 0 ? (
-          <p className="font-body text-muted-foreground text-center py-12">No tienes préstamos activos.</p>
+          <p className="font-body text-muted-foreground text-center py-12">
+            No tienes préstamos activos.
+          </p>
         ) : (
-          loans?.content.map((loan) =>
-            <LoanCard key={loan.id} loan={loan} />
-          )
+          loans?.content.map((loan) => <LoanCard key={loan.id} loan={loan} />)
         )}
       </div>
       {loans && loans?.totalPages > 1 && (

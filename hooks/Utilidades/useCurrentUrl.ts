@@ -5,7 +5,7 @@ export function useCurrentUrl() {
   const searchParams = useSearchParams();
 
   const queryString = searchParams.toString();
-  
+
   const currentUrl = queryString ? `${pathname}?${queryString}` : pathname;
 
   return currentUrl;

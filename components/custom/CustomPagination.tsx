@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
@@ -10,10 +10,7 @@ interface Props {
   paramName?: string;
 }
 
-export const CustomPagination = ({
-  totalPages,
-  paramName = "page"
-}: Props) => {
+export const CustomPagination = ({ totalPages, paramName = "page" }: Props) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
@@ -53,14 +50,11 @@ export const CustomPagination = ({
   const pages = getPages();
 
   return (
-    <nav aria-label="Navegación de páginas" className="flex items-center justify-center gap-2 flex-wrap">
-
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={page === 1}
-        asChild={page !== 1}
-      >
+    <nav
+      aria-label="Navegación de páginas"
+      className="flex items-center justify-center gap-2 flex-wrap"
+    >
+      <Button variant="outline" size="sm" disabled={page === 1} asChild={page !== 1}>
         {page === 1 ? (
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         ) : (
@@ -70,23 +64,14 @@ export const CustomPagination = ({
         )}
       </Button>
 
-
       {pages.map((p, i) =>
         p === "..." ? (
           <span key={i} className="px-2 text-muted-foreground" aria-hidden="true">
             ...
           </span>
         ) : (
-          <Button
-            key={i}
-            variant={page === p ? "default" : "outline"}
-            size="sm"
-            asChild
-          >
-            <Link
-              href={createPageURL(p)}
-              aria-current={page === p ? "page" : undefined}
-            >
+          <Button key={i} variant={page === p ? "default" : "outline"} size="sm" asChild>
+            <Link href={createPageURL(p)} aria-current={page === p ? "page" : undefined}>
               {p}
             </Link>
           </Button>
@@ -107,7 +92,6 @@ export const CustomPagination = ({
           </Link>
         )}
       </Button>
-
     </nav>
   );
 };

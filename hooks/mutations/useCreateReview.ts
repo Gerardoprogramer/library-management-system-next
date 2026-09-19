@@ -4,57 +4,56 @@ import { showToast } from "@/lib/toast-utils";
 import { createReview, BookDetail, ReviewType } from "@/lib/definitions";
 
 export const useCreateReview = (target: ReviewType) => {
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: (reviewData: createReview) =>
-            reviewService.createReview(reviewData),
+  return useMutation({
+    mutationFn: (reviewData: createReview) => reviewService.createReview(reviewData),
 
-        onSuccess: (newReview, variables) => {
-            showToast.success("Reseña publicada con éxito");
+    onSuccess: (newReview, variables) => {
+      showToast.success("Reseña publicada con éxito");
 
-            queryClient.invalidateQueries({
-                queryKey: ["reviews", "mine"],
-                refetchType: 'active'
-            });
+      queryClient.invalidateQueries({
+        queryKey: ["reviews", "mine"],
+        refetchType: "active",
+      });
 
-            if (target.type === "book") {
-                const bookId = target.id;
+      if (target.type === "book") {
+        const bookId = target.id;
 
-                queryClient.invalidateQueries({
-                    queryKey: ["reviews", "book", bookId],
-                    refetchType: 'active'
-                });
+        queryClient.invalidateQueries({
+          queryKey: ["reviews", "book", bookId],
+          refetchType: "active",
+        });
 
-                queryClient.setQueryData(['book', bookId], (oldBook: BookDetail | undefined) => {
-                    if (!oldBook) return oldBook;
+        queryClient.setQueryData(["book", bookId], (oldBook: BookDetail | undefined) => {
+          if (!oldBook) return oldBook;
 
-                    const totalAnterior = oldBook.totalReviews || 0;
-                    const nuevoTotal = totalAnterior + 1;
-                    const promedioActual = Number(oldBook.averageRating) || 0;
-                    const nuevoRating = Number(variables.rating);
+          const totalAnterior = oldBook.totalReviews || 0;
+          const nuevoTotal = totalAnterior + 1;
+          const promedioActual = Number(oldBook.averageRating) || 0;
+          const nuevoRating = Number(variables.rating);
 
-                    const sumaPuntos = (promedioActual * totalAnterior) + nuevoRating;
-                    const nuevoPromedio = sumaPuntos / nuevoTotal;
+          const sumaPuntos = promedioActual * totalAnterior + nuevoRating;
+          const nuevoPromedio = sumaPuntos / nuevoTotal;
 
-                    return {
-                        ...oldBook,
-                        totalReviews: nuevoTotal,
-                        averageRating: Number(nuevoPromedio.toFixed(1)),
-                        alreadyReviewed: true,
-                        canReview: false
-                    };
-                });
-            }
+          return {
+            ...oldBook,
+            totalReviews: nuevoTotal,
+            averageRating: Number(nuevoPromedio.toFixed(1)),
+            alreadyReviewed: true,
+            canReview: false,
+          };
+        });
+      }
 
-            queryClient.invalidateQueries({
-                queryKey: ['books'],
-                refetchType: 'none'
-            });
-        },
+      queryClient.invalidateQueries({
+        queryKey: ["books"],
+        refetchType: "none",
+      });
+    },
 
-        onError: (error: any) => {
-            showToast.apiError(error);
-        },
-    });
+    onError: (error) => {
+      showToast.apiError(error);
+    },
+  });
 };

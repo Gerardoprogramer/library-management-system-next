@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { reservationOptions } from "@/lib/data";
 import { CustomSelect } from "@/components/custom/CustomSelect";
@@ -9,13 +9,11 @@ import { Label } from "@/components/ui/label";
 import { useReservation } from "@/hooks/queries/useReservation";
 import { ReservationPageSkeleton } from "@/components/custom/skeletons";
 
-
 export default function ReservationPage() {
+  const { reservations, setStatus, status, toggleAvailableOnly, availableOnly, isLoading } =
+    useReservation();
 
-  const { reservations, setStatus, status, toggleAvailableOnly, availableOnly, isLoading } = useReservation();
-
-
-  if (isLoading) return <ReservationPageSkeleton />
+  if (isLoading) return <ReservationPageSkeleton />;
 
   return (
     <div>
@@ -23,24 +21,26 @@ export default function ReservationPage() {
         Mis Reservas
       </h1>
       <div className="flex justify-end py-4 gap-4">
-        <CustomSelect headline="Todos los Status" options={reservationOptions} selectedItem={status} setSelectedItem={setStatus} />
+        <CustomSelect
+          headline="Todos los Status"
+          options={reservationOptions}
+          selectedItem={status}
+          setSelectedItem={setStatus}
+        />
         <div className="flex items-center space-x-2">
-          <Switch
-            id="available"
-            checked={availableOnly}
-            onCheckedChange={toggleAvailableOnly}
-          />
+          <Switch id="available" checked={availableOnly} onCheckedChange={toggleAvailableOnly} />
           <Label htmlFor="available">Solo disponibles</Label>
         </div>
       </div>
       <div className="space-y-4">
-
         {reservations?.totalElements === 0 ? (
-          <p className="font-body text-muted-foreground text-center py-12">No tienes reservas activas.</p>
+          <p className="font-body text-muted-foreground text-center py-12">
+            No tienes reservas activas.
+          </p>
         ) : (
-          reservations?.content.map((reservation) =>
+          reservations?.content.map((reservation) => (
             <ReservationCard key={reservation.id} data={reservation} />
-          )
+          ))
         )}
       </div>
       {reservations && reservations?.totalPages > 1 && (
@@ -49,5 +49,5 @@ export default function ReservationPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

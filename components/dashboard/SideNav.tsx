@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { LogOut, Gem, X } from "lucide-react";
 import { useLogout } from "@/hooks/auth/useLogout";
@@ -40,16 +40,11 @@ export const SideNav = ({ isOpen, setIsOpen }: SideNavProps) => {
             <div className="w-8 h-8 bg-foreground flex items-center justify-center rotate-45">
               <Gem className="w-4 h-4 text-background -rotate-45" strokeWidth={1.5} />
             </div>
-            <span className="text-sm font-semibold uppercase">
-              Obsidian
-            </span>
+            <span className="text-sm font-semibold uppercase">Obsidian</span>
           </div>
 
           {/* Botón cerrar solo en móvil */}
-          <button
-            onClick={() => setIsOpen(false)}
-            className="md:hidden"
-          >
+          <button onClick={() => setIsOpen(false)} className="md:hidden">
             <X className="w-5 h-5" />
           </button>
         </div>

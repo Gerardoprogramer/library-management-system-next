@@ -1,8 +1,6 @@
 import { LucideProps } from "lucide-react";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
-import { Dispatch, SetStateAction } from "react"
-import { number, string } from "zod";
-
+import { Dispatch, SetStateAction } from "react";
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -140,75 +138,74 @@ export type typeLoans = "CHECKOUT" | "RENEWAL" | "RETURN";
 
 export interface selectOptions {
   id: string;
-  name: string
+  name: string;
 }
 
 export interface reservationBook {
-  id: string,
-  bookId: string,
-  bookTitle: string,
-  author: string,
-  bookCoverImageUrl: string,
-  userId: string,
-  status: reservationStatus,
-  queuePosition: number,
-  notificationSent: boolean,
-  notes: string,
-  reservedAt: string,
-  availableAt: string,
-  availableUntil: string,
-  cancelledAt: string,
-  fulfilledAt: string,
-  createdAt: string,
-  updatedAt: string
+  id: string;
+  bookId: string;
+  bookTitle: string;
+  author: string;
+  bookCoverImageUrl: string;
+  userId: string;
+  status: reservationStatus;
+  queuePosition: number;
+  notificationSent: boolean;
+  notes: string;
+  reservedAt: string;
+  availableAt: string;
+  availableUntil: string;
+  cancelledAt: string;
+  fulfilledAt: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type reservationStatus = "PENDING" | "AVAILABLE" | "FULFILLED" | "CANCELLED" | "EXPIRED";
 
-
 export interface myWishlist {
-  id: string,
-  bookId: string,
-  bookTitle: string,
-  bookAuthor: string,
-  bookCoverImageUrl: string,
-  availableCopies: number,
-  notes: string,
-  addedAt: string
+  id: string;
+  bookId: string;
+  bookTitle: string;
+  bookAuthor: string;
+  bookCoverImageUrl: string;
+  availableCopies: number;
+  notes: string;
+  addedAt: string;
 }
 
 export interface Subscription {
-  id: string,
-  userId: string,
-  subscriptionPlanId: string,
-  planName: string,
-  planCode: string,
-  price: number,
-  maxBooksAllowed: number,
-  maxDaysPerBook: number,
-  active: boolean,
-  autoRenew: boolean,
-  nextBillingDate: string,
-  startDate: string,
-  endDate: string,
-  daysRemaining: number,
-  expired: boolean,
-  cancelledAt: string,
-  cancellationReason: string,
-  notes: string,
-  createdAt: string,
-  updatedAt: string
+  id: string;
+  userId: string;
+  subscriptionPlanId: string;
+  planName: string;
+  planCode: string;
+  price: number;
+  maxBooksAllowed: number;
+  maxDaysPerBook: number;
+  active: boolean;
+  autoRenew: boolean;
+  nextBillingDate: string;
+  startDate: string;
+  endDate: string;
+  daysRemaining: number;
+  expired: boolean;
+  cancelledAt: string;
+  cancellationReason: string;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface checkoutLoan {
-  bookId?: string,
-  checkoutDays?: number,
-  notes?: string
+  bookId?: string;
+  checkoutDays?: number;
+  notes?: string;
 }
 
 export interface reserve {
-  bookId?: string,
-  notes?: string
+  bookId?: string;
+  notes?: string;
 }
 
 export interface ReviewProps {
@@ -221,34 +218,34 @@ export interface ReviewProps {
 }
 
 export interface editReview {
-  rating: number,
-  reviewText: string,
-  title: string
+  rating: number;
+  reviewText: string;
+  title: string;
 }
 
 export interface createReview {
-  bookId: string,
-  rating: number,
-  reviewText: string,
-  title: string
+  bookId: string;
+  rating: number;
+  reviewText: string;
+  title: string;
 }
 
 export interface checkoutProps {
-  title?: string,
-  maxDaysPerBook?: number,
-  checkoutDays?: number,
-  setCheckoutDays: Dispatch<SetStateAction<number>>,
-  actionNotes: string,
-  setActionNotes: Dispatch<SetStateAction<string>>,
-  handleCheckout: () => void
+  title?: string;
+  maxDaysPerBook?: number;
+  checkoutDays?: number;
+  setCheckoutDays: Dispatch<SetStateAction<number>>;
+  actionNotes: string;
+  setActionNotes: Dispatch<SetStateAction<string>>;
+  handleCheckout: () => void;
 }
 
 export interface reserveBook {
-  bookId?: string
-  title?: string,
-  actionNotes: string,
-  setActionNotes: Dispatch<SetStateAction<string>>,
-  handleReserve: () => void
+  bookId?: string;
+  title?: string;
+  actionNotes: string;
+  setActionNotes: Dispatch<SetStateAction<string>>;
+  handleReserve: () => void;
 }
 
 export type ReviewType = { type: "book"; id: string } | { type: "mine" };
@@ -272,10 +269,10 @@ export interface SubscriptionPlan {
 }
 
 export interface SubscriptionPostResponse {
-  id: string,
-  planName: string,
-  active: boolean,
-  checkoutUrl: string
+  id: string;
+  planName: string;
+  active: boolean;
+  checkoutUrl: string;
 }
 
 export interface PaymentDetails {

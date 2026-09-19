@@ -1,10 +1,26 @@
 import {
-  BookOpen, Clock, Bookmark, Heart,
-  Star, Shield, Users, BarChart3, Gem, CheckCircle,
-  AlertTriangle, XCircle, PackageX, Bell
+  BookOpen,
+  Clock,
+  Bookmark,
+  Heart,
+  Star,
+  Shield,
+  Users,
+  BarChart3,
+  Gem,
+  CheckCircle,
+  AlertTriangle,
+  XCircle,
+  PackageX,
+  Bell,
 } from "lucide-react";
-import type { navLinkstype, statusLoan, selectOptions, typeLoans, reservationStatus } from "./definitions";
-
+import type {
+  navLinkstype,
+  statusLoan,
+  selectOptions,
+  typeLoans,
+  reservationStatus,
+} from "./definitions";
 
 export const userNav: navLinkstype[] = [
   { label: "Catálogo", path: "/dashboard/catalog", icon: BookOpen },
@@ -13,7 +29,7 @@ export const userNav: navLinkstype[] = [
   { label: "Mi Wishlist", path: "/dashboard/wishlist", icon: Heart },
   { label: "Mis Reseñas", path: "/dashboard/review", icon: Star },
   { label: "pagos y multas", path: "/dashboard/pay", icon: Gem },
-  { label: "Subscripciónes", path: "/dashboard/subscription", icon: Gem }
+  { label: "Subscripciónes", path: "/dashboard/subscription", icon: Gem },
 ];
 
 export const adminNav: navLinkstype[] = [
@@ -23,22 +39,22 @@ export const adminNav: navLinkstype[] = [
 ];
 
 export const typeLoanConfig: Record<typeLoans, { label: string }> = {
-  "CHECKOUT": {
-    label: "Prestado"
+  CHECKOUT: {
+    label: "Prestado",
   },
-  "RENEWAL": {
-    label: "Renovación"
+  RENEWAL: {
+    label: "Renovación",
   },
-  "RETURN": {
-    label: "Devuelto"
-  }
-}
+  RETURN: {
+    label: "Devuelto",
+  },
+};
 
 export const statusLoanConfig: Record<
   statusLoan,
   {
     label: string;
-    icon: any;
+    icon: React.ElementType;
     variant: "default" | "secondary" | "destructive" | "outline";
   }
 > = {
@@ -74,7 +90,7 @@ export const LoanOptions: selectOptions[] = [
   { id: "RETURNED", name: "Devuelto" },
   { id: "OVERDUE", name: "Vencido" },
   { id: "LOST", name: "Perdido" },
-  { id: "DAMAGED", name: "Dañado" }
+  { id: "DAMAGED", name: "Dañado" },
 ];
 
 export const reservationOptions: selectOptions[] = [
@@ -82,11 +98,17 @@ export const reservationOptions: selectOptions[] = [
   { id: "AVAILABLE", name: "Disponible" },
   { id: "FULFILLED", name: "Cumplido" },
   { id: "CANCELLED", name: "Cancelado" },
-  { id: "EXPIRED", name: "Caducado" }
+  { id: "EXPIRED", name: "Caducado" },
 ];
 
-
-export const statusConfig: Record<reservationStatus, { label: string; icon: React.ElementType; variant: "default" | "secondary" | "destructive" | "outline" }> = {
+export const statusConfig: Record<
+  reservationStatus,
+  {
+    label: string;
+    icon: React.ElementType;
+    variant: "default" | "secondary" | "destructive" | "outline";
+  }
+> = {
   PENDING: { label: "En espera", icon: Clock, variant: "secondary" },
   AVAILABLE: { label: "¡Disponible!", icon: Bell, variant: "default" },
   CANCELLED: { label: "Cancelada", icon: XCircle, variant: "outline" },

@@ -1,55 +1,64 @@
 import { api } from "@/lib/axios";
-import type { ApiResponse, Review, PageResponse, editReview, createReview } from "@/lib/definitions";
+import type {
+  ApiResponse,
+  Review,
+  PageResponse,
+  editReview,
+  createReview,
+} from "@/lib/definitions";
 
 export const reviewService = {
+  getBookReviews: async (id: string, page: number = 0): Promise<PageResponse<Review>> => {
+    const response = await api.get<ApiResponse<PageResponse<Review>>>(`/reviews/${id}`, {
+      params: { page },
+    });
 
-    getBookReviews: async (id: string, page: number = 0): Promise<PageResponse<Review>> => {
-        const response = await api.get<ApiResponse<PageResponse<Review>>>(`/reviews/${id}`, {
-            params: { page }
-        });
+    return (
+      response.data.data ?? {
+        content: [],
+        number: 0,
+        size: 10,
+        totalElements: 0,
+        totalPages: 0,
+        last: true,
+        first: true,
+        empty: true,
+      }
+    );
+  },
 
-        return response.data.data ?? {
-            content: [],
-            number: 0,
-            size: 10,
-            totalElements: 0,
-            totalPages: 0,
-            last: true,
-            first: true,
-            empty: true
-        };
-    },
+  editReview: async (review: editReview, id: string): Promise<ApiResponse<void>> => {
+    const response = await api.put<ApiResponse<void>>(`/reviews/${id}`, review);
 
-    editReview: async (review: editReview, id: string): Promise<ApiResponse<void>> => {
-        const response = await api.put<ApiResponse<void>>(`/reviews/${id}`, review);
+    return response.data;
+  },
 
-        return response.data;
-    },
+  deleteReview: async (id: string): Promise<ApiResponse<void>> => {
+    const response = await api.delete<ApiResponse<void>>(`/reviews/${id}`);
 
-    deleteReview: async (id: string): Promise<ApiResponse<void>> => {
-        const response = await api.delete<ApiResponse<void>>(`/reviews/${id}`);
+    return response.data;
+  },
+  createReview: async (review: createReview): Promise<ApiResponse<void>> => {
+    const response = await api.post<ApiResponse<void>>(`/reviews`, review);
 
-        return response.data;
-    },
-    createReview: async (review: createReview): Promise<ApiResponse<void>> => {
-        const response = await api.post<ApiResponse<void>>(`/reviews`, review);
+    return response.data;
+  },
+  getMeReviews: async (page: number = 0): Promise<PageResponse<Review>> => {
+    const response = await api.get<ApiResponse<PageResponse<Review>>>(`/reviews`, {
+      params: { page },
+    });
 
-        return response.data
-    },
-    getMeReviews: async (page: number = 0): Promise<PageResponse<Review>> => {
-        const response = await api.get<ApiResponse<PageResponse<Review>>>(`/reviews`, {
-            params: { page }
-        });
-
-        return response.data.data ?? {
-            content: [],
-            number: 0,
-            size: 10,
-            totalElements: 0,
-            totalPages: 0,
-            last: true,
-            first: true,
-            empty: true
-        };
-    }
+    return (
+      response.data.data ?? {
+        content: [],
+        number: 0,
+        size: 10,
+        totalElements: 0,
+        totalPages: 0,
+        last: true,
+        first: true,
+        empty: true,
+      }
+    );
+  },
 };

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { AuthCard } from "@/components/auth/AuthCard";
 import { AuthHeader } from "@/components/auth/AuthHeader";
@@ -7,14 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, User } from "lucide-react";
 import Link from "next/link";
-import { useRegister } from "@/hooks/auth/useRegister"
+import { useRegister } from "@/hooks/auth/useRegister";
 
 export default function RegisterPage() {
-
-  const { email, errors, fullName,
-    handleSubmit, loading, password,
-    setEmail, setFullName, setPassword } = useRegister();
-
+  const {
+    email,
+    errors,
+    fullName,
+    handleSubmit,
+    loading,
+    password,
+    setEmail,
+    setFullName,
+    setPassword,
+  } = useRegister();
 
   return (
     <>
@@ -33,9 +39,7 @@ export default function RegisterPage() {
                 onChange={(e) => setFullName(e.target.value)}
               />
             </div>
-            {errors.fullName && (
-              <p className="text-sm text-red-500">{errors.fullName}</p>
-            )}
+            {errors.fullName && <p className="text-sm text-red-500">{errors.fullName}</p>}
           </div>
 
           <div className="space-y-2">
@@ -50,18 +54,11 @@ export default function RegisterPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            {errors.email && (
-              <p className="text-sm text-red-500">{errors.email}</p>
-            )}
+            {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
           </div>
 
-          <PasswordInput
-            value={password}
-            onChange={setPassword}
-          />
-          {errors.password && (
-            <p className="text-sm text-red-500">{errors.password}</p>
-          )}
+          <PasswordInput value={password} onChange={setPassword} />
+          {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
           <Button
             type="submit"
             className="w-full font-display tracking-wider uppercase text-sm"
@@ -72,15 +69,12 @@ export default function RegisterPage() {
 
           <p className="font-body text-sm text-center text-muted-foreground">
             ¿Ya tienes cuenta?{" "}
-            <Link
-              href="/auth/login"
-              className="text-primary hover:underline font-medium"
-            >
+            <Link href="/auth/login" className="text-primary hover:underline font-medium">
               Inicia sesión
             </Link>
           </p>
         </form>
       </AuthCard>
     </>
-  )
+  );
 }

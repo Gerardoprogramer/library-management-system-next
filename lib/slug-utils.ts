@@ -1,14 +1,13 @@
-
 export const parseSlug = (slug: string | null | undefined) => {
   if (!slug) return { id: null, title: "" };
 
   const parts = slug.split("-");
 
   const id = parts.slice(0, 5).join("-");
-  
+
   const title = parts
-    .slice(5) 
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .slice(5)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
   return { id, title };

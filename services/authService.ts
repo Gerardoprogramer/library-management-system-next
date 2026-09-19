@@ -1,10 +1,5 @@
 import { api } from "@/lib/axios";
-import type {
-  loginData,
-  registerData,
-  ApiResponse,
-  User
-} from "@/lib/definitions";
+import type { loginData, registerData, ApiResponse, User } from "@/lib/definitions";
 
 export const authService = {
   login: async (credentials: loginData): Promise<User> => {

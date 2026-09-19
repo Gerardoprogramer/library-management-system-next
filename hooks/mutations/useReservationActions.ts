@@ -7,17 +7,16 @@ export const useReservationActions = (bookId: string) => {
   const queryClient = useQueryClient();
 
   const reserveMutation = useMutation({
-    mutationFn: (reservationData: reserve) => 
-      reservationService.create(reservationData),
-    
+    mutationFn: (reservationData: reserve) => reservationService.create(reservationData),
+
     onSuccess: () => {
       showToast.success("Reserva realizada con éxito");
-      
+
       queryClient.invalidateQueries({ queryKey: ["reservations"] });
       queryClient.invalidateQueries({ queryKey: ["book", bookId] });
     },
-    
-    onError: (error: any) => {
+
+    onError: (error) => {
       showToast.apiError(error);
     },
   });

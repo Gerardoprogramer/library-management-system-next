@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/components/providers/ThemeProvider";
@@ -41,10 +41,7 @@ const ThemeToggle = () => {
       overlay.style.setProperty("--x", `${x}px`);
       overlay.style.setProperty("--y", `${y}px`);
       overlay.style.setProperty("--radius", `${maxRadius}px`);
-      overlay.style.backgroundColor =
-        theme === "dark"
-          ? "hsl(40 33% 97%)"
-          : "hsl(222 47% 8%)";
+      overlay.style.backgroundColor = theme === "dark" ? "hsl(40 33% 97%)" : "hsl(222 47% 8%)";
 
       document.body.appendChild(overlay);
 
@@ -72,18 +69,14 @@ const ThemeToggle = () => {
     >
       <Sun
         className={`absolute h-5 w-5 transition-all duration-300 ${
-          theme === "light"
-            ? "rotate-0 scale-100 opacity-100"
-            : "rotate-90 scale-0 opacity-0"
+          theme === "light" ? "rotate-0 scale-100 opacity-100" : "rotate-90 scale-0 opacity-0"
         }`}
         strokeWidth={1.5}
       />
 
       <Moon
         className={`absolute h-5 w-5 transition-all duration-300 ${
-          theme === "dark"
-            ? "rotate-0 scale-100 opacity-100"
-            : "-rotate-90 scale-0 opacity-0"
+          theme === "dark" ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-0 opacity-0"
         }`}
         strokeWidth={1.5}
       />

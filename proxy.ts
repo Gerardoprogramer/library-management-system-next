@@ -14,7 +14,7 @@ export async function proxy(request: NextRequest) {
         const refreshResponse = await fetch(`${process.env.BACKEND_URL}/api/v1/auth/refresh`, {
           method: "POST",
           headers: {
-            "Cookie": `refresh_token=${refreshToken}`,
+            Cookie: `refresh_token=${refreshToken}`,
             "Content-Type": "application/json",
           },
         });
@@ -22,7 +22,7 @@ export async function proxy(request: NextRequest) {
         if (refreshResponse.ok) {
           const response = NextResponse.next();
           const newCookies = refreshResponse.headers.get("set-cookie");
-          
+
           if (newCookies) {
             response.headers.set("set-cookie", newCookies);
           }
@@ -46,7 +46,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!api/|_next/static|_next/image|images|favicon.ico|robots.txt).*)',
-  ],
+  matcher: ["/((?!api/|_next/static|_next/image|images|favicon.ico|robots.txt).*)"],
 };

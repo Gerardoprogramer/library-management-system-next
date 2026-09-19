@@ -14,9 +14,7 @@ export function PasswordInput({ value, onChange }: PasswordInputProps) {
 
   return (
     <div className="space-y-2">
-      <label className="font-body text-sm text-foreground">
-        Contraseña
-      </label>
+      <label className="font-body text-sm text-foreground">Contraseña</label>
 
       <div className="relative">
         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -34,11 +32,7 @@ export function PasswordInput({ value, onChange }: PasswordInputProps) {
           onClick={() => setShowPassword(!showPassword)}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
         >
-          {showPassword ? (
-            <EyeOff className="w-4 h-4" />
-          ) : (
-            <Eye className="w-4 h-4" />
-          )}
+          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
         </button>
       </div>
     </div>

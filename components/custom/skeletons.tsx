@@ -4,7 +4,6 @@ import { Card, CardContent } from "../ui/card";
 export function BookCardSkeleton() {
   return (
     <div className="bg-card border border-border rounded-lg overflow-hidden">
-
       <div className="aspect-3/4 relative">
         <Skeleton className="h-full w-full rounded-none" />
 
@@ -14,7 +13,6 @@ export function BookCardSkeleton() {
       </div>
 
       <div className="p-4 space-y-3">
-
         <Skeleton className="h-4 w-20" />
 
         <Skeleton className="h-5 w-3/4" />
@@ -22,7 +20,6 @@ export function BookCardSkeleton() {
         <Skeleton className="h-4 w-1/2" />
 
         <div className="flex items-center justify-between pt-2">
-
           <div className="flex items-center gap-2">
             <Skeleton className="h-4 w-4" />
             <Skeleton className="h-4 w-8" />
@@ -47,7 +44,6 @@ export function BookInfoSkeleton() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-
         <div className="lg:col-span-1 space-y-4">
           <Skeleton className="aspect-3/4 w-full rounded-lg" />
           <div className="flex gap-2">
@@ -86,12 +82,8 @@ export function BookInfoSkeleton() {
 export const ReviewListSkeleton = ({ count = 3 }: { count?: number }) => {
   return (
     <div className="space-y-4 animate-pulse">
-
       {Array.from({ length: count }).map((_, i) => (
-        <div
-          key={i}
-          className="bg-card border border-border rounded-lg p-5 space-y-3"
-        >
+        <div key={i} className="bg-card border border-border rounded-lg p-5 space-y-3">
           {/* Header: name + stars */}
           <div className="flex items-center justify-between">
             <div className="h-4 w-32 rounded bg-muted" />
@@ -113,7 +105,6 @@ export const ReviewListSkeleton = ({ count = 3 }: { count?: number }) => {
           <div className="h-3 w-24 rounded bg-muted mt-2" />
         </div>
       ))}
-
     </div>
   );
 };
@@ -122,14 +113,12 @@ export const BookSideSkeleton = () => {
   return (
     <div className="lg:col-span-1 h-full">
       <div className="sticky top-20 space-y-4 animate-pulse">
-
         <div className="aspect-3/4 rounded-lg overflow-hidden border border-border shadow-xl bg-muted" />
 
         <div className="flex gap-2">
           <div className="flex-1 h-10 rounded-md bg-muted" />
           <div className="h-10 w-10 rounded-md bg-muted" />
         </div>
-
       </div>
     </div>
   );
@@ -138,7 +127,6 @@ export const BookSideSkeleton = () => {
 export const BookMainInfoSkeleton = () => {
   return (
     <div className="space-y-8 animate-pulse">
-
       {/* Header */}
       <div>
         {/* Genre badge */}
@@ -171,21 +159,16 @@ export const BookMainInfoSkeleton = () => {
       {/* Metadata Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div
-            key={i}
-            className="bg-card border border-border rounded-lg p-4 space-y-3"
-          >
+          <div key={i} className="bg-card border border-border rounded-lg p-4 space-y-3">
             <div className="h-4 w-4 rounded bg-muted" />
             <div className="h-3 w-16 rounded bg-muted" />
             <div className="h-4 w-20 rounded bg-muted" />
           </div>
         ))}
       </div>
-
     </div>
   );
 };
-
 
 export const WishlistCardSkeleton = () => {
   return (
@@ -227,8 +210,6 @@ export const WishlistPageSkeleton = () => {
   );
 };
 
-
-
 export const ReservationCardSkeleton = () => {
   return (
     <Card className="overflow-hidden border-border">
@@ -240,7 +221,6 @@ export const ReservationCardSkeleton = () => {
           <div className="flex-1 p-4 sm:p-5">
             <div className="flex items-start justify-between gap-2 mb-4">
               <div className="space-y-2 flex-1">
-
                 <div className="h-5 w-2/3 bg-muted animate-pulse rounded" />
                 <div className="h-4 w-1/3 bg-muted animate-pulse rounded" />
               </div>
@@ -268,8 +248,6 @@ export const ReservationCardSkeleton = () => {
   );
 };
 
-
-
 export const ReservationPageSkeleton = () => {
   return (
     <div className="space-y-6">
@@ -291,7 +269,6 @@ export const ReservationPageSkeleton = () => {
     </div>
   );
 };
-
 
 export const LoanCardSkeleton = () => {
   return (

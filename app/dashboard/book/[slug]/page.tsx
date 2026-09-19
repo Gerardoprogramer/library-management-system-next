@@ -4,8 +4,8 @@ import { parseSlug } from "@/lib/slug-utils";
 import { notFound } from "next/navigation";
 
 type Props = {
-    params: Promise<{ slug: string }>
-}
+  params: Promise<{ slug: string }>;
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BookDetailPage({ params }: Props) {
-   const { slug } = await params;
+  const { slug } = await params;
 
   const { id } = parseSlug(slug);
 
@@ -31,5 +31,5 @@ export default async function BookDetailPage({ params }: Props) {
     notFound();
   }
 
-    return <BookDetail id={id} />
+  return <BookDetail id={id} />;
 }

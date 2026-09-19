@@ -1,4 +1,12 @@
-export const isBookInList = (list: any[] | undefined, bookId: string | undefined): boolean => {
-    if (!list) return false;
-    return list.some((item) => item.bookId === bookId);
+type BookListItem = {
+  bookId: string;
+};
+
+export const isBookInList = (
+  list: BookListItem[] | undefined,
+  bookId: string | undefined
+): boolean => {
+  if (!list || !bookId) return false;
+
+  return list.some((item) => item.bookId === bookId);
 };

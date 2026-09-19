@@ -6,6 +6,6 @@ export async function POST(request: NextRequest) {
 
   return backendProxy(request, "/auth/signup", {
     method: "POST",
-    body: body
+    body: body,
   });
 }

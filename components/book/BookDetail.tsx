@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,6 @@ import { useBookNavigation } from "@/hooks/ui/useBookNavigation";
 import { useReservationActions } from "@/hooks/mutations/useReservationActions";
 
 export const BookDetail = ({ id }: { id: string }) => {
-
   const [checkoutDialogOpen, setCheckoutDialogOpen] = useState(false);
   const [reserveDialogOpen, setReserveDialogOpen] = useState(false);
   const [checkoutDays, setCheckoutDays] = useState(14);
@@ -68,7 +67,7 @@ export const BookDetail = ({ id }: { id: string }) => {
     setCheckoutDays,
     actionNotes,
     setActionNotes,
-    handleCheckout
+    handleCheckout,
   };
 
   const reserveBook: reserveBook = {
@@ -76,7 +75,7 @@ export const BookDetail = ({ id }: { id: string }) => {
     title: book?.title,
     actionNotes,
     setActionNotes,
-    handleReserve
+    handleReserve,
   };
 
   if (isBookLoading || !book) {
@@ -96,7 +95,6 @@ export const BookDetail = ({ id }: { id: string }) => {
     );
   }
 
-
   return (
     <div>
       <Button variant="ghost" onClick={handleBack} className="mb-6 font-body gap-2">
@@ -104,7 +102,6 @@ export const BookDetail = ({ id }: { id: string }) => {
       </Button>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-
         {isBookLoading || !book ? (
           <BookSideSkeleton />
         ) : (
@@ -119,12 +116,7 @@ export const BookDetail = ({ id }: { id: string }) => {
         )}
 
         <div className="lg:col-span-2 space-y-8">
-
-          {isBookLoading || !book ? (
-            <BookMainInfoSkeleton />
-          ) : (
-            <BookMain book={book} />
-          )}
+          {isBookLoading || !book ? <BookMainInfoSkeleton /> : <BookMain book={book} />}
 
           <ReviewList
             bookId={book.id}
@@ -132,7 +124,6 @@ export const BookDetail = ({ id }: { id: string }) => {
             alreadyReviewed={book.alreadyReviewed}
             canCreate={book.canReview}
           />
-
         </div>
       </div>
 
@@ -147,9 +138,8 @@ export const BookDetail = ({ id }: { id: string }) => {
         reserve={reserveBook}
         reserveDialogOpen={reserveDialogOpen}
         setReserveDialogOpen={setReserveDialogOpen}
-        isPending={isReserving} />
-
+        isPending={isReserving}
+      />
     </div>
-  )
-
-}
+  );
+};
