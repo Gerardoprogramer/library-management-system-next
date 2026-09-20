@@ -1,14 +1,17 @@
-import { Star, BookOpen, Heart } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { BookSummary } from "@/lib/definitions";
+import Link from "next/link";
+import { PiBookOpen, PiHeart, PiHeartFill, PiStarFill } from "react-icons/pi";
+
+import { Badge } from "@/components/ui/badge";
+import type { BookSummary } from "@/lib/definitions";
 
 interface BookGridProps {
   book: BookSummary;
+  href?: string;
   handleWishlistToggle: (bookId: string, isInWishlist: boolean) => void;
 }
 
-export const BooksGrid = (props: BookGridProps) => {
+export const BooksGrid = ({ book, href, handleWishlistToggle }: BookGridProps) => {
   const {
     id,
     title,
@@ -20,58 +23,83 @@ export const BooksGrid = (props: BookGridProps) => {
     isWishList,
     averageRating,
     totalReviews,
-  } = props.book;
-  const { handleWishlistToggle } = props;
+  } = book;
 
-  return (
-    <div className="group bg-card border border-border rounded-lg overflow-hidden hover:border-primary/30 hover:shadow-lg transition-all duration-300">
-      <div className="aspect-3/4 relative overflow-hidden">
+  const content = (
+    <>
+      <div className="relative aspect-3/4 overflow-hidden bg-muted">
         <Image
           src={coverImageUrl}
-          alt={title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          loading="lazy"
+          alt={`Portada de ${title}`}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
         />
-        <div className="absolute top-3 right-3">
-          <Badge variant={availableCopies > 0 ? "default" : "destructive"} className="font-body text-xs">
-            {availableCopies > 0 ? `${availableCopies} disponible${availableCopies > 1 ? "s" : ""}` : "No disponible"}
+
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-black/55 to-transparent" />
+
+        <Badge
+          variant={availableCopies > 0 ? "default" : "destructive"}
+          className="absolute right-3 top-3 border-0 shadow-sm"
+        >
+          {availableCopies > 0 ? `${availableCopies} disponible${availableCopies === 1 ? "" : "s"}` : "No disponible"}
+        </Badge>
+      </div>
+
+      <div className="flex flex-1 flex-col p-4">
+        <div className="mb-3">
+          <Badge variant="outline" className="max-w-full font-normal text-muted-foreground">
+            <span className="truncate">{genreName}</span>
           </Badge>
         </div>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            handleWishlistToggle(id, isWishList);
-          }}
-          className="absolute top-3 left-3 w-8 h-8 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center  opacity-100 transition-opacity"
-          aria-label="Añadir a wishlist"
-        >
-          <Heart
-            className={`w-4 h-4 transition-colors ${
-              isWishList ? "text-red-500 fill-red-500" : "text-muted-foreground hover:text-red-500"
-            }`}
-          />
-        </button>
-      </div>
-      <div className="p-4">
-        <Badge variant="outline" className="font-body text-xs mb-2">
-          {genreName}
-        </Badge>
-        <h3 className="font-display text-base font-semibold text-foreground line-clamp-1 mb-1">{title}</h3>
-        <p className="font-body text-sm text-muted-foreground mb-3">{author}</p>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1">
-            <Star className="w-3.5 h-3.5 fill-primary text-primary" />
-            <span className="font-body text-sm font-medium text-foreground">{averageRating.toFixed(1)}</span>
-            <span className="font-body text-xs text-muted-foreground">({totalReviews})</span>
+
+        <h3 className="line-clamp-2 text-base font-semibold leading-snug tracking-tight text-foreground">{title}</h3>
+
+        <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{author}</p>
+
+        <div className="mt-auto flex items-center justify-between gap-3 pt-5">
+          <div className="flex items-center gap-1.5">
+            <PiStarFill className="size-4 text-primary" />
+
+            <span className="text-sm font-medium text-foreground">{averageRating.toFixed(1)}</span>
+
+            <span className="text-xs text-muted-foreground">({totalReviews})</span>
           </div>
-          <div className="flex items-center gap-1 text-muted-foreground">
-            <BookOpen className="w-3.5 h-3.5" />
-            <span className="font-body text-xs">{pages}p</span>
+
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <PiBookOpen className="size-4" />
+            <span className="text-xs">{pages} pág.</span>
           </div>
         </div>
       </div>
-    </div>
+    </>
+  );
+
+  return (
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md">
+      <button
+        type="button"
+        onClick={(event) => {
+          event.stopPropagation();
+          event.preventDefault();
+          handleWishlistToggle(id, isWishList);
+        }}
+        aria-label={isWishList ? `Eliminar ${title} de la wishlist` : `Agregar ${title} a la wishlist`}
+        className="absolute left-3 top-3 z-10 flex size-9 items-center justify-center rounded-full border border-white/10 bg-background/90 text-muted-foreground shadow-sm backdrop-blur-md transition-colors hover:text-destructive"
+      >
+        {isWishList ? <PiHeartFill className="size-4.5 text-destructive" /> : <PiHeart className="size-4.5" />}
+      </button>
+
+      {href ? (
+        <Link
+          href={href}
+          className="flex h-full flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {content}
+        </Link>
+      ) : (
+        content
+      )}
+    </article>
   );
 };

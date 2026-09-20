@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from "react";
+import { PiFunnel } from "react-icons/pi";
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Filter } from "lucide-react";
 
 type Option = {
   id: string;
@@ -11,7 +12,7 @@ interface SelectItemProps {
   options: Option[];
   headline: string;
   selectedItem: string;
-  setSelectedItem: (Item: string) => void;
+  setSelectedItem: (item: string) => void;
 }
 
 const subscribe = () => () => {};
@@ -26,10 +27,10 @@ export const CustomSelect = ({ options, headline, selectedItem, setSelectedItem 
   if (!mounted) return null;
 
   return (
-    <Select value={selectedItem} onValueChange={(value) => setSelectedItem(value)}>
-      <SelectTrigger className="w-40 sm:w-auto">
-        <Filter className="mr-2 h-4 w-4" />
-        <SelectValue placeholder="Category" />
+    <Select value={selectedItem} onValueChange={setSelectedItem}>
+      <SelectTrigger className="h-11 w-full min-w-44 rounded-xl">
+        <PiFunnel className="mr-2 size-4.5 shrink-0 text-muted-foreground" />
+        <SelectValue placeholder={headline} />
       </SelectTrigger>
 
       <SelectContent>
