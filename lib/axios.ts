@@ -19,6 +19,7 @@ export const api = axios.create({
 });
 
 let csrfRequest: Promise<void> | null = null;
+let refreshRequest: Promise<void> | null = null;
 
 function getCookie(name: string): string | null {
   if (typeof document === "undefined") {
@@ -63,6 +64,28 @@ async function ensureCsrfToken() {
   await csrfRequest;
 }
 
+async function refreshSession() {
+  if (!refreshRequest) {
+    refreshRequest = (async () => {
+      await ensureCsrfToken();
+
+      const csrfToken = getCookie(CSRF_COOKIE);
+
+      await csrfClient.post(
+        "/auth/refresh",
+        {},
+        {
+          headers: csrfToken ? { [CSRF_HEADER]: csrfToken } : {},
+        }
+      );
+    })().finally(() => {
+      refreshRequest = null;
+    });
+  }
+
+  await refreshRequest;
+}
+
 api.interceptors.request.use(async (config) => {
   if (requiresCsrf(config.method)) {
     await ensureCsrfToken();
@@ -89,21 +112,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await ensureCsrfToken();
-
-        const csrfToken = getCookie(CSRF_COOKIE);
-
-        await csrfClient.post(
-          "/auth/refresh",
-          {},
-          {
-            headers: csrfToken
-              ? {
-                  [CSRF_HEADER]: csrfToken,
-                }
-              : {},
-          }
-        );
+        await refreshSession();
 
         return api(originalRequest);
       } catch (refreshError) {
