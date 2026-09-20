@@ -1,14 +1,25 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { useCallback, useRef } from "react";
+import { PiMoon, PiSun } from "react-icons/pi";
+
 import { useTheme } from "@/components/providers/ThemeProvider";
-import { useRef, useCallback } from "react";
+
+const LIGHT_BACKGROUND = "oklch(0.985 0.003 80)";
+const DARK_BACKGROUND = "oklch(0.145 0.008 70)";
 
 const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleToggle = useCallback(async () => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion) {
+      toggleTheme();
+      return;
+    }
+
     const button = buttonRef.current;
 
     if (!button) {
@@ -32,50 +43,56 @@ const ThemeToggle = () => {
       });
 
       await transition.ready;
-    } else {
-      const overlay = document.createElement("div");
-      overlay.className = "theme-transition-overlay";
-      overlay.style.setProperty("--x", `${x}px`);
-      overlay.style.setProperty("--y", `${y}px`);
-      overlay.style.setProperty("--radius", `${maxRadius}px`);
-      overlay.style.backgroundColor = theme === "dark" ? "hsl(40 33% 97%)" : "hsl(222 47% 8%)";
 
-      document.body.appendChild(overlay);
-
-      requestAnimationFrame(() => {
-        overlay.classList.add("expanding");
-      });
-
-      setTimeout(() => {
-        toggleTheme();
-      }, 400);
-
-      setTimeout(() => {
-        overlay.remove();
-      }, 700);
+      return;
     }
+
+    const overlay = document.createElement("div");
+
+    overlay.className = "theme-transition-overlay";
+    overlay.style.setProperty("--x", `${x}px`);
+    overlay.style.setProperty("--y", `${y}px`);
+    overlay.style.setProperty("--radius", `${maxRadius}px`);
+    overlay.style.backgroundColor = theme === "dark" ? LIGHT_BACKGROUND : DARK_BACKGROUND;
+
+    document.body.appendChild(overlay);
+
+    requestAnimationFrame(() => {
+      overlay.classList.add("expanding");
+    });
+
+    window.setTimeout(() => {
+      toggleTheme();
+    }, 320);
+
+    window.setTimeout(() => {
+      overlay.remove();
+    }, 500);
   }, [theme, toggleTheme]);
+
+  const isLight = theme === "light";
 
   return (
     <button
       ref={buttonRef}
+      type="button"
       onClick={handleToggle}
-      className="group relative flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card transition-all duration-200 hover:bg-secondary hover:border-primary/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-      aria-label={theme === "light" ? "Activar modo oscuro" : "Activar modo claro"}
-      title={theme === "light" ? "Modo oscuro" : "Modo claro"}
+      aria-label={isLight ? "Activar modo oscuro" : "Activar modo claro"}
+      title={isLight ? "Modo oscuro" : "Modo claro"}
+      className="relative flex size-10 items-center justify-center rounded-xl border border-border/70 bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <Sun
-        className={`absolute h-5 w-5 transition-all duration-300 ${
-          theme === "light" ? "rotate-0 scale-100 opacity-100" : "rotate-90 scale-0 opacity-0"
+      <PiSun
+        aria-hidden="true"
+        className={`absolute size-4.75 transition-all duration-200 ${
+          isLight ? "rotate-0 scale-100 opacity-100" : "rotate-90 scale-75 opacity-0"
         }`}
-        strokeWidth={1.5}
       />
 
-      <Moon
-        className={`absolute h-5 w-5 transition-all duration-300 ${
-          theme === "dark" ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-0 opacity-0"
+      <PiMoon
+        aria-hidden="true"
+        className={`absolute size-4.75 transition-all duration-200 ${
+          isLight ? "-rotate-90 scale-75 opacity-0" : "rotate-0 scale-100 opacity-100"
         }`}
-        strokeWidth={1.5}
       />
     </button>
   );
