@@ -1,46 +1,82 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { PiList } from "react-icons/pi";
+
 import { SideNav } from "@/components/dashboard/SideNav";
-import { Menu } from "lucide-react";
 import ThemeToggle from "@/components/landing/ThemeToggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useCurrentUser } from "@/hooks/queries/useCurrentUser";
 
+const routeTitles = [
+  { path: "/dashboard/catalog", title: "Catálogo" },
+  { path: "/dashboard/book", title: "Detalle del libro" },
+  { path: "/dashboard/loans", title: "Mis préstamos" },
+  { path: "/dashboard/reservation", title: "Mis reservas" },
+  { path: "/dashboard/wishlist", title: "Mi wishlist" },
+  { path: "/dashboard/review", title: "Mis reseñas" },
+  { path: "/dashboard/pay", title: "Pagos y multas" },
+  { path: "/dashboard/subscription", title: "Suscripciones" },
+  { path: "/dashboard/admin/usuarios", title: "Usuarios" },
+  { path: "/dashboard/admin/stats", title: "Estadísticas" },
+  { path: "/dashboard/admin", title: "Panel administrativo" },
+];
+
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-
+  const pathname = usePathname();
   const { data: user } = useCurrentUser();
 
+  const pageTitle =
+    routeTitles.find((route) => pathname === route.path || pathname.startsWith(`${route.path}/`))?.title ??
+    "Biblioteca";
+
+  const initials = user?.fullName
+    ? user.fullName
+        .split(" ")
+        .slice(0, 2)
+        .map((name) => name[0])
+        .join("")
+        .toUpperCase()
+    : "OB";
+
   return (
-    <div className="h-screen bg-background flex">
+    <div className="flex h-screen overflow-hidden bg-background">
       <SideNav isOpen={isOpen} setIsOpen={setIsOpen} />
 
-      <div className="flex-1 flex flex-col min-h-0">
-        <header className="h-16 border-b border-border bg-card/80 backdrop-blur-sm flex items-center justify-between md:justify-end px-6 sticky top-0 z-30">
-          <button onClick={() => setIsOpen(true)} className="md:hidden">
-            <Menu className="w-6 h-6" />
-          </button>
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <div className="flex items-center gap-2">
-              <span className="font-body text-sm text-muted-foreground hidden sm:block">{user?.fullName}</span>
-              <Avatar className="w-9 h-9 border border-border">
-                <AvatarFallback className="font-display text-xs bg-primary/10 text-primary">
-                  {user?.fullName
-                    ? user.fullName
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase()
-                    : "Ob"}
-                </AvatarFallback>
-              </Avatar>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-20 flex h-20 shrink-0 items-center justify-between border-b border-border/70 bg-background/85 px-4 backdrop-blur-xl sm:px-6">
+          <div className="flex min-w-0 items-center gap-3">
+            <button
+              type="button"
+              aria-label="Abrir menú"
+              onClick={() => setIsOpen(true)}
+              className="flex size-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden"
+            >
+              <PiList className="size-5" />
+            </button>
+
+            <div className="min-w-0">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                Biblioteca Obsidian
+              </p>
+
+              <h1 className="truncate text-lg font-semibold tracking-tight text-foreground">{pageTitle}</h1>
             </div>
           </div>
+
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+
+            <Avatar className="size-10 border border-border/70">
+              <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">{initials}</AvatarFallback>
+            </Avatar>
+          </div>
         </header>
-        <main className="flex-1 overflow-y-auto">
-          <div className="p-6">{children}</div>
+
+        <main className="min-h-0 flex-1 overflow-y-auto">
+          <div className="mx-auto w-full max-w-400 p-4 sm:p-6 lg:p-8">{children}</div>
         </main>
       </div>
     </div>
