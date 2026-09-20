@@ -1,9 +1,10 @@
 import Image from "next/image";
-import { Alert, AlertDescription } from "../ui/alert";
+import { PiBookmarkSimple, PiBookOpenText, PiHeart, PiHeartFill, PiInfo } from "react-icons/pi";
+
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Heart, CalendarClock, BookMarked, AlertCircle } from "lucide-react";
-import { useWishlistActions } from "@/hooks/mutations/useWishlistActions";
 import { useDebouncedCallback } from "@/hooks/Utilidades/useDebouncedCallback";
+import { useWishlistActions } from "@/hooks/mutations/useWishlistActions";
 
 interface BookSideProps {
   book: {
@@ -13,12 +14,13 @@ interface BookSideProps {
     availableCopies: number;
     isWishList: boolean;
   };
-  setCheckoutDialogOpen: (Open: boolean) => void;
-  setReserveDialogOpen: (Open: boolean) => void;
+  setCheckoutDialogOpen: (open: boolean) => void;
+  setReserveDialogOpen: (open: boolean) => void;
   hasSub: boolean;
   hasRes: boolean;
   hasLoan: boolean;
 }
+
 export const BookSide = ({
   book,
   setCheckoutDialogOpen,
@@ -33,69 +35,107 @@ export const BookSide = ({
     toggleWishlist({ bookId, isInWishlist });
   }, 300);
 
+  const isAvailable = book.availableCopies > 0;
+
   return (
-    <div className="lg:col-span-1 h-full">
-      <div className="sticky top-20 space-y-4">
-        <div className="aspect-3/4 rounded-lg overflow-hidden border border-border shadow-xl">
-          <Image
-            src={book.coverImageUrl}
-            alt={book.title}
-            className="w-full h-full object-cover"
-            width={300}
-            height={400}
-          />
-        </div>
-        <div className="flex gap-2">
-          {book.availableCopies > 0 || hasLoan ? (
-            <Button
-              className="flex-1 font-display tracking-wider text-sm gap-2"
-              disabled={!hasSub || hasLoan}
-              onClick={() => setCheckoutDialogOpen(true)}
-            >
-              <BookMarked className="w-4 h-4" /> Solicitar Préstamo
-            </Button>
-          ) : (
-            <Button
-              className="flex-1 font-display tracking-wider text-sm gap-2"
-              variant="secondary"
-              disabled={!hasSub || hasRes}
-              onClick={() => setReserveDialogOpen(true)}
-            >
-              <CalendarClock className="w-4 h-4" /> Reservar
-            </Button>
-          )}
-          <Button
-            variant="outline"
-            size="icon"
-            aria-label="Añadir a wishlist"
-            onClick={() => debouncedToggle(book.id, book.isWishList)}
-          >
-            <Heart
-              className={`w-4 h-4 transition-colors ${
-                book.isWishList ? "text-red-500 fill-red-500" : "text-muted-foreground hover:text-red-500"
-              }`}
+    <aside className="lg:col-span-1">
+      <div className="space-y-4 lg:sticky lg:top-24">
+        <div className="overflow-hidden rounded-2xl border border-border/70 bg-muted shadow-sm">
+          <div className="relative aspect-3/4">
+            <Image
+              src={book.coverImageUrl}
+              alt={`Portada de ${book.title}`}
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 33vw"
+              className="object-cover"
             />
-          </Button>
+          </div>
         </div>
+
+        <div className="rounded-2xl border border-border/70 bg-card p-4">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">Disponibilidad</p>
+
+              <p className="mt-1 text-sm font-semibold text-foreground">
+                {isAvailable
+                  ? `${book.availableCopies} ${book.availableCopies === 1 ? "copia disponible" : "copias disponibles"}`
+                  : "Sin copias disponibles"}
+              </p>
+            </div>
+
+            <div
+              className={`size-2.5 rounded-full ${isAvailable ? "bg-primary" : "bg-destructive"}`}
+              aria-hidden="true"
+            />
+          </div>
+
+          <div className="flex gap-2">
+            {isAvailable || hasLoan ? (
+              <Button
+                className="h-11 flex-1 gap-2 rounded-xl"
+                disabled={!hasSub || hasLoan}
+                onClick={() => setCheckoutDialogOpen(true)}
+              >
+                <PiBookOpenText className="size-4.5" />
+
+                {hasLoan ? "Préstamo activo" : "Solicitar préstamo"}
+              </Button>
+            ) : (
+              <Button
+                className="h-11 flex-1 gap-2 rounded-xl"
+                variant="secondary"
+                disabled={!hasSub || hasRes}
+                onClick={() => setReserveDialogOpen(true)}
+              >
+                <PiBookmarkSimple className="size-4.5" />
+
+                {hasRes ? "Reserva activa" : "Reservar"}
+              </Button>
+            )}
+
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="size-11 shrink-0 rounded-xl"
+              aria-label={
+                book.isWishList ? `Eliminar ${book.title} de la wishlist` : `Agregar ${book.title} a la wishlist`
+              }
+              onClick={() => debouncedToggle(book.id, book.isWishList)}
+            >
+              {book.isWishList ? (
+                <PiHeartFill className="size-4.75 text-destructive" />
+              ) : (
+                <PiHeart className="size-4.75" />
+              )}
+            </Button>
+          </div>
+        </div>
+
         {!hasSub && (
-          <Alert className="py-2 px-3">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription className="font-body text-xs">
-              Necesitas una suscripción activa para solicitar préstamos o reservas.
+          <Alert className="rounded-xl border-primary/20 bg-primary/5">
+            <PiInfo className="size-4 text-primary" />
+
+            <AlertDescription className="text-sm leading-5 text-muted-foreground">
+              Necesitás una suscripción activa para solicitar préstamos o realizar reservas.
             </AlertDescription>
           </Alert>
         )}
+
         {hasLoan && (
-          <p className="font-body text-xs text-muted-foreground text-center">
-            Ya tienes un préstamo activo de este libro.
-          </p>
+          <div className="rounded-xl border border-border/70 bg-muted/40 px-4 py-3">
+            <p className="text-sm text-muted-foreground">Ya tenés un préstamo activo de este libro.</p>
+          </div>
         )}
-        {hasRes && book.availableCopies === 0 && (
-          <p className="font-body text-xs text-muted-foreground text-center">
-            Ya tienes una reserva activa para este libro.
-          </p>
+
+        {hasRes && !isAvailable && (
+          <div className="rounded-xl border border-border/70 bg-muted/40 px-4 py-3">
+            <p className="text-sm text-muted-foreground">Ya tenés una reserva activa para este libro.</p>
+          </div>
         )}
       </div>
-    </div>
+    </aside>
   );
 };
