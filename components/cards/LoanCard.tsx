@@ -67,18 +67,14 @@ export const LoanCard = ({ loan }: Props) => {
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 <div className="space-y-1">
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">
-                    Préstamo
-                  </p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">Préstamo</p>
                   <p className="text-sm font-medium">{formatDate(loan.checkoutDate)}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">
                     Vencimiento
                   </p>
-                  <p
-                    className={`text-sm font-bold ${loan.overdue ? "text-destructive" : "text-foreground"}`}
-                  >
+                  <p className={`text-sm font-bold ${loan.overdue ? "text-destructive" : "text-foreground"}`}>
                     {formatDate(loan.dueDate)}
                   </p>
                 </div>
@@ -103,9 +99,7 @@ export const LoanCard = ({ loan }: Props) => {
               {loan.overdue && (
                 <div className="flex items-center gap-2 text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2 mb-4">
                   <AlertTriangle className="w-4 h-4 shrink-0" />
-                  <span className="font-body text-xs font-semibold">
-                    {loan.overdueDays} días de retraso
-                  </span>
+                  <span className="font-body text-xs font-semibold">{loan.overdueDays} días de retraso</span>
                 </div>
               )}
 
@@ -129,10 +123,7 @@ export const LoanCard = ({ loan }: Props) => {
             <div className="flex items-center justify-between pt-4 border-t border-white/5">
               <div className="flex items-center gap-2">
                 {loan.renewalCount < loan.maxRenewals && !loan.returnDate && (
-                  <Button
-                    size="sm"
-                    className="font-body text-xs h-8 gap-1.5 px-4 shadow-lg shadow-primary/10"
-                  >
+                  <Button size="sm" className="font-body text-xs h-8 gap-1.5 px-4 shadow-lg shadow-primary/10">
                     <RefreshCw className="w-3 h-3" /> Renovar
                   </Button>
                 )}

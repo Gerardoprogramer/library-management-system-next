@@ -17,16 +17,8 @@ interface Props {
 }
 
 export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
-  const { performReview, isPending } = useReviewActions(
-    review.id,
-    { type: "book", id: bookId },
-    review.rating
-  );
-  const { deleteReview, isDeleting } = useDeleteReview(
-    review.id,
-    { type: "book", id: bookId },
-    review.rating
-  );
+  const { performReview, isPending } = useReviewActions(review.id, { type: "book", id: bookId }, review.rating);
+  const { deleteReview, isDeleting } = useDeleteReview(review.id, { type: "book", id: bookId }, review.rating);
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -47,9 +39,7 @@ export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
     <div key={review.id} className="bg-card border border-border rounded-lg p-5">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <span className="font-display text-sm font-semibold text-foreground">
-            {review.userName}
-          </span>
+          <span className="font-display text-sm font-semibold text-foreground">{review.userName}</span>
           {isOwn && (
             <Badge variant="outline" className="text-[10px] px-1.5 py-0">
               Tú
@@ -59,12 +49,7 @@ export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
         <div className="flex items-center gap-2">
           {isOwn && (
             <>
-              <Button
-                onClick={() => setEditDialogOpen(true)}
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7"
-              >
+              <Button onClick={() => setEditDialogOpen(true)} variant="ghost" size="icon" className="h-7 w-7">
                 <Pencil className="w-3.5 h-3.5" />
               </Button>
               <Button
@@ -87,9 +72,7 @@ export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
           </div>
         </div>
       </div>
-      {review.title && (
-        <p className="font-display text-sm font-medium text-foreground mb-1">{review.title}</p>
-      )}
+      {review.title && <p className="font-display text-sm font-medium text-foreground mb-1">{review.title}</p>}
       <p className="font-body text-sm text-muted-foreground">{review.reviewText}</p>
       <p className="font-body text-xs text-muted-foreground mt-2 flex items-center gap-1">
         <Clock className="w-3 h-3" /> {formatDate(review.createdAt)}

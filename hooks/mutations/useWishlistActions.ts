@@ -24,18 +24,13 @@ export const useWishlistActions = () => {
         return { ...old, isWishList: newValue };
       });
 
-      queryClient.setQueriesData<PageResponse<BookSummary>>(
-        { queryKey: ["books"], exact: false },
-        (old) => {
-          if (!old) return old;
-          return {
-            ...old,
-            content: old.content.map((book) =>
-              book.id === variables.bookId ? { ...book, isWishList: newValue } : book
-            ),
-          };
-        }
-      );
+      queryClient.setQueriesData<PageResponse<BookSummary>>({ queryKey: ["books"], exact: false }, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          content: old.content.map((book) => (book.id === variables.bookId ? { ...book, isWishList: newValue } : book)),
+        };
+      });
 
       return { previousBooks, previousBookDetail };
     },

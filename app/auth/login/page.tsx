@@ -37,20 +37,14 @@ export default function LoginPage() {
 
           <PasswordInput value={password} onChange={setPassword} />
           {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full font-display tracking-wider uppercase text-sm"
-          >
+          <Button type="submit" disabled={loading} className="w-full font-display tracking-wider uppercase text-sm">
             {loading ? "Cargando..." : "Iniciar Sesión"}
           </Button>
 
           <p className="font-body text-sm text-center text-muted-foreground">
             ¿No tienes cuenta?{" "}
             <Link href="/auth/register">
-              <span className="text-primary hover:underline font-medium cursor-pointer">
-                Regístrate
-              </span>
+              <span className="text-primary hover:underline font-medium cursor-pointer">Regístrate</span>
             </Link>
           </p>
         </form>

@@ -22,19 +22,13 @@ export default function WishlistPage() {
     <div>
       <div className="flex items-center gap-3 mb-2">
         <Heart className="w-7 h-7 text-primary" />
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold text-foreground">
-          Mi Lista de Deseos
-        </h1>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold text-foreground">Mi Lista de Deseos</h1>
       </div>
-      <p className="font-body text-lg text-muted-foreground mb-8">
-        {wishlist?.totalElements} libros guardados
-      </p>
+      <p className="font-body text-lg text-muted-foreground mb-8">{wishlist?.totalElements} libros guardados</p>
 
       {wishlist?.totalElements === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 w-full">
-          <p className="font-body text-muted-foreground text-center">
-            No tienes libros en la lista de deseos
-          </p>
+          <p className="font-body text-muted-foreground text-center">No tienes libros en la lista de deseos</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

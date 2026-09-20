@@ -13,10 +13,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   return backendProxy(request, `/reviews/${id}`);
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   //id --> reviewId
   return backendProxy(request, `/reviews/${id}`);

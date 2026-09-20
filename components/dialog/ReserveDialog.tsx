@@ -1,11 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { CalendarClock } from "lucide-react";
@@ -20,12 +13,7 @@ interface Props {
   isPending: boolean;
 }
 
-export const ReserveDialog = ({
-  reserve,
-  reserveDialogOpen,
-  setReserveDialogOpen,
-  isPending,
-}: Props) => {
+export const ReserveDialog = ({ reserve, reserveDialogOpen, setReserveDialogOpen, isPending }: Props) => {
   const { data: Queue } = useQuery<number>({
     queryKey: ["Queue", reserve.bookId],
     enabled: !!reserve.bookId && reserve.bookId !== "undefined" && reserveDialogOpen,
@@ -51,14 +39,11 @@ export const ReserveDialog = ({
         <div className="space-y-4 py-2">
           <div className="bg-muted/50 border border-border rounded-lg p-3">
             <p className="font-body text-sm text-foreground">
-              Posición estimada en cola:{" "}
-              <span className="font-display font-semibold">{(Queue ?? 0) + 1}</span>
+              Posición estimada en cola: <span className="font-display font-semibold">{(Queue ?? 0) + 1}</span>
             </p>
           </div>
           <div>
-            <label className="font-body text-sm text-foreground mb-1.5 block">
-              Notas (opcional)
-            </label>
+            <label className="font-body text-sm text-foreground mb-1.5 block">Notas (opcional)</label>
             <Textarea
               value={reserve.actionNotes}
               onChange={(e) => reserve.setActionNotes(e.target.value.slice(0, 500))}
@@ -66,9 +51,7 @@ export const ReserveDialog = ({
               rows={2}
               className="font-body resize-none w-full min-w-0 break-all"
             />
-            <p className="font-body text-xs text-muted-foreground mt-1 text-right">
-              {reserve.actionNotes.length}/500
-            </p>
+            <p className="font-body text-xs text-muted-foreground mt-1 text-right">{reserve.actionNotes.length}/500</p>
           </div>
         </div>
         <DialogFooter>
@@ -82,11 +65,7 @@ export const ReserveDialog = ({
           >
             Cancelar
           </Button>
-          <Button
-            onClick={reserve.handleReserve}
-            disabled={isPending}
-            className="font-display gap-2"
-          >
+          <Button onClick={reserve.handleReserve} disabled={isPending} className="font-display gap-2">
             <CalendarClock className="w-4 h-4" /> Confirmar Reserva
           </Button>
         </DialogFooter>

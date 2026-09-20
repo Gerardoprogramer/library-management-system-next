@@ -37,10 +37,7 @@ export const MeReviewCard = ({ review }: Props) => {
   };
 
   return (
-    <div
-      key={review.id}
-      className="bg-card border border-border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row gap-4"
-    >
+    <div key={review.id} className="bg-card border border-border rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row gap-4">
       <Link
         href={{
           pathname: `/dashboard/book/${createSlug(review.bookId, review.bookTitle)}`,
@@ -59,16 +56,9 @@ export const MeReviewCard = ({ review }: Props) => {
       </Link>
       <div className="flex-1">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-display text-base font-semibold text-foreground mb-1">
-            {review.bookTitle}
-          </h3>
+          <h3 className="font-display text-base font-semibold text-foreground mb-1">{review.bookTitle}</h3>
           <div className="flex items-center gap-1 shrink-0">
-            <Button
-              onClick={() => setEditDialogOpen(true)}
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7"
-            >
+            <Button onClick={() => setEditDialogOpen(true)} variant="ghost" size="icon" className="h-7 w-7">
               <Pencil className="w-3.5 h-3.5" />
             </Button>
             <Button
@@ -83,18 +73,11 @@ export const MeReviewCard = ({ review }: Props) => {
         </div>
         <div className="flex items-center gap-1 mb-2">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Star
-              key={i}
-              className={`w-4 h-4 ${i < review.rating ? "fill-primary text-primary" : "text-muted"}`}
-            />
+            <Star key={i} className={`w-4 h-4 ${i < review.rating ? "fill-primary text-primary" : "text-muted"}`} />
           ))}
         </div>
-        {review.title && (
-          <p className="font-display text-sm font-medium text-foreground mb-1">{review.title}</p>
-        )}
-        <p className="font-body text-sm text-muted-foreground leading-relaxed mb-2">
-          {review.reviewText}
-        </p>
+        {review.title && <p className="font-display text-sm font-medium text-foreground mb-1">{review.title}</p>}
+        <p className="font-body text-sm text-muted-foreground leading-relaxed mb-2">{review.reviewText}</p>
         <p className="font-body text-xs text-muted-foreground flex items-center gap-1">
           <Clock className="w-3 h-3" /> {formatDate(review.createdAt)}
         </p>

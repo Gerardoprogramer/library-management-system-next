@@ -7,11 +7,7 @@ type ApiErrorResponse = {
 };
 
 export const showToast = {
-  success: (
-    title: string,
-    description?: string,
-    action?: { label: string; onClick: () => void }
-  ) => {
+  success: (title: string, description?: string, action?: { label: string; onClick: () => void }) => {
     toast.success(title, {
       description: description,
       icon: <CheckCircle2 className="h-5 w-5 text-emerald-500" />,

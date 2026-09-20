@@ -1,11 +1,5 @@
 import { useSyncExternalStore } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Filter } from "lucide-react";
 
 type Option = {
@@ -22,12 +16,7 @@ interface SelectItemProps {
 
 const subscribe = () => () => {};
 
-export const CustomSelect = ({
-  options,
-  headline,
-  selectedItem,
-  setSelectedItem,
-}: SelectItemProps) => {
+export const CustomSelect = ({ options, headline, selectedItem, setSelectedItem }: SelectItemProps) => {
   const mounted = useSyncExternalStore(
     subscribe,
     () => true,

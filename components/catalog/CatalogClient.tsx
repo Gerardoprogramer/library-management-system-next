@@ -37,9 +37,7 @@ export const CatalogClient = () => {
   return (
     <div>
       <div className="mb-10">
-        <h1 className="font-display text-3xl sm:text-4xl font-semibold text-foreground mb-2">
-          Catálogo
-        </h1>
+        <h1 className="font-display text-3xl sm:text-4xl font-semibold text-foreground mb-2">Catálogo</h1>
         <p className="font-body text-lg text-muted-foreground">
           Explora nuestra colección de {books?.totalElements ?? 0} volúmenes
         </p>
@@ -63,11 +61,7 @@ export const CatalogClient = () => {
             setSelectedItem={setGenre}
           />
           <div className="flex items-center space-x-2">
-            <Switch
-              id="available"
-              checked={filters.availableOnly}
-              onCheckedChange={toggleAvailableOnly}
-            />
+            <Switch id="available" checked={filters.availableOnly} onCheckedChange={toggleAvailableOnly} />
             <Label htmlFor="available">Solo disponibles</Label>
           </div>
         </div>
@@ -108,9 +102,7 @@ export const CatalogClient = () => {
         <div className="text-center py-20">
           <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <p className="font-display text-xl text-foreground mb-2">Sin resultados</p>
-          <p className="font-body text-muted-foreground">
-            No encontramos libros con esos criterios de búsqueda
-          </p>
+          <p className="font-body text-muted-foreground">No encontramos libros con esos criterios de búsqueda</p>
         </div>
       )}
     </div>

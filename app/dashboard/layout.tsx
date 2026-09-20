@@ -4,9 +4,11 @@ import DashboardShell from "@/app/dashboard/DashboardShell";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
-  const token = cookieStore.get("access_token");
 
-  if (!token) {
+  const accessToken = cookieStore.get("access_token");
+  const refreshToken = cookieStore.get("refresh_token");
+
+  if (!accessToken && !refreshToken) {
     redirect("/auth/login");
   }
 

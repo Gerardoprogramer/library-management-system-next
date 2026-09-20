@@ -3,7 +3,5 @@ interface AuthCardProps {
 }
 
 export function AuthCard({ children }: AuthCardProps) {
-  return (
-    <div className="bg-card border border-border rounded-lg p-6 sm:p-8 space-y-5">{children}</div>
-  );
+  return <div className="bg-card border border-border rounded-lg p-6 sm:p-8 space-y-5">{children}</div>;
 }

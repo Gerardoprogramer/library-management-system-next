@@ -5,15 +5,8 @@ import { SubscriptionService } from "@/services/SubscriptionService";
 
 export const useSubscribeActions = (setPayDialog: (open: boolean) => void) => {
   const subscribeMutation = useMutation({
-    mutationFn: ({
-      planId,
-      autoRenew,
-      notes,
-    }: {
-      planId: string;
-      autoRenew: boolean;
-      notes: string;
-    }) => SubscriptionService.subscribeToPlan(planId, autoRenew, notes),
+    mutationFn: ({ planId, autoRenew, notes }: { planId: string; autoRenew: boolean; notes: string }) =>
+      SubscriptionService.subscribeToPlan(planId, autoRenew, notes),
 
     onSuccess: (data: SubscriptionPostResponse) => {
       setPayDialog(false);

@@ -46,10 +46,7 @@ export default function PaymentSuccessPage() {
     );
   }
 
-  const config: Record<
-    string,
-    { title: string; description: string; redirect: string; redirectLabel: string }
-  > = {
+  const config: Record<string, { title: string; description: string; redirect: string; redirectLabel: string }> = {
     MEMBERSHIP: {
       title: "¡Membresía Activa!",
       description: payment.plan
@@ -120,9 +117,7 @@ export default function PaymentSuccessPage() {
                 </div>
                 <div className="flex justify-between items-center font-body text-sm">
                   <span className="text-muted-foreground">Fecha</span>
-                  <span className="text-foreground font-medium">
-                    {String(payment.date).split("T")[0]}
-                  </span>
+                  <span className="text-foreground font-medium">{String(payment.date).split("T")[0]}</span>
                 </div>
                 <div className="flex justify-between items-center font-body pt-3 mt-3 border-t border-border/50">
                   <span className="text-muted-foreground font-medium">Total pagado</span>

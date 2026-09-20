@@ -14,13 +14,7 @@ import {
   PackageX,
   Bell,
 } from "lucide-react";
-import type {
-  navLinkstype,
-  statusLoan,
-  selectOptions,
-  typeLoans,
-  reservationStatus,
-} from "./definitions";
+import type { navLinkstype, statusLoan, selectOptions, typeLoans, reservationStatus } from "./definitions";
 
 export const userNav: navLinkstype[] = [
   { label: "Catálogo", path: "/dashboard/catalog", icon: BookOpen },

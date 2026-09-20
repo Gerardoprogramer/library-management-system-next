@@ -30,9 +30,7 @@ export const HeroSection = () => {
           {/* Decorative line */}
           <div className="flex items-center gap-4 mb-8 animate-fade-in">
             <div className="h-px w-12 bg-primary" />
-            <span className="font-display text-xs tracking-[0.4em] uppercase text-primary">
-              Est. MMXXVI
-            </span>
+            <span className="font-display text-xs tracking-[0.4em] uppercase text-primary">Est. MMXXVI</span>
           </div>
 
           <h1
@@ -50,34 +48,24 @@ export const HeroSection = () => {
             className="font-body text-xl sm:text-2xl text-muted-foreground mb-10 leading-relaxed max-w-xl animate-fade-in"
             style={{ animationDelay: "0.2s" }}
           >
-            Descubre siglos de conocimiento. Desde manuscritos raros hasta obras contemporáneas, tu
-            viaje por la historia empieza aquí.
+            Descubre siglos de conocimiento. Desde manuscritos raros hasta obras contemporáneas, tu viaje por la
+            historia empieza aquí.
           </p>
 
-          <div
-            className="flex flex-wrap gap-4 mb-12 animate-fade-in"
-            style={{ animationDelay: "0.3s" }}
-          >
+          <div className="flex flex-wrap gap-4 mb-12 animate-fade-in" style={{ animationDelay: "0.3s" }}>
             <Link href="/auth/register">
               <Button size="lg" className="px-8 font-display tracking-wider uppercase text-sm">
                 Comenzar Ahora
               </Button>
             </Link>
             <Link href="/auth/login">
-              <Button
-                size="lg"
-                variant="ghost"
-                className="px-8 font-display tracking-wider uppercase text-sm"
-              >
+              <Button size="lg" variant="ghost" className="px-8 font-display tracking-wider uppercase text-sm">
                 Ya tengo cuenta
               </Button>
             </Link>
           </div>
 
-          <div
-            className="flex flex-wrap gap-8 sm:gap-12 animate-fade-in"
-            style={{ animationDelay: "0.4s" }}
-          >
+          <div className="flex flex-wrap gap-8 sm:gap-12 animate-fade-in" style={{ animationDelay: "0.4s" }}>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-sm bg-primary/10 flex items-center justify-center">
                 <BookOpen className="w-5 h-5 text-primary" />
@@ -107,10 +95,7 @@ export const HeroSection = () => {
             </div>
           </div>
 
-          <div
-            className="mt-16 flex items-center gap-3 animate-fade-in"
-            style={{ animationDelay: "0.5s" }}
-          >
+          <div className="mt-16 flex items-center gap-3 animate-fade-in" style={{ animationDelay: "0.5s" }}>
             <Sparkles className="w-4 h-4 text-primary animate-pulse" />
             <span className="font-body text-sm text-muted-foreground italic">
               «El conocimiento es el tesoro de un hombre sabio.»

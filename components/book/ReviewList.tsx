@@ -51,19 +51,11 @@ export const ReviewList = ({ bookId, bookTitle, alreadyReviewed, canCreate }: Re
       {totalElements > 0 ? (
         <div className="space-y-4">
           {content.map((review) => (
-            <ReviewCard
-              key={review.id}
-              review={review}
-              userId={user?.id}
-              bookTitle={bookTitle}
-              bookId={bookId}
-            />
+            <ReviewCard key={review.id} review={review} userId={user?.id} bookTitle={bookTitle} bookId={bookId} />
           ))}
         </div>
       ) : (
-        <p className="font-body text-muted-foreground text-sm">
-          Aún no hay reseñas para este libro.
-        </p>
+        <p className="font-body text-muted-foreground text-sm">Aún no hay reseñas para este libro.</p>
       )}
 
       {reviews && reviews.totalPages > 1 && (

@@ -10,17 +10,8 @@ import Link from "next/link";
 import { useRegister } from "@/hooks/auth/useRegister";
 
 export default function RegisterPage() {
-  const {
-    email,
-    errors,
-    fullName,
-    handleSubmit,
-    loading,
-    password,
-    setEmail,
-    setFullName,
-    setPassword,
-  } = useRegister();
+  const { email, errors, fullName, handleSubmit, loading, password, setEmail, setFullName, setPassword } =
+    useRegister();
 
   return (
     <>
@@ -59,11 +50,7 @@ export default function RegisterPage() {
 
           <PasswordInput value={password} onChange={setPassword} />
           {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
-          <Button
-            type="submit"
-            className="w-full font-display tracking-wider uppercase text-sm"
-            disabled={loading}
-          >
+          <Button type="submit" className="w-full font-display tracking-wider uppercase text-sm" disabled={loading}>
             {loading ? "Cargando..." : "Crear Cuenta"}
           </Button>
 

@@ -37,14 +37,9 @@ export const WishlistCard = ({ data, handleWishlistToggle }: Porps) => {
         </Link>
       </div>
       <div className="flex-1 min-w-0 flex flex-col">
-        <h3 className="font-display text-sm font-semibold text-foreground line-clamp-1">
-          {data.bookTitle}
-        </h3>
+        <h3 className="font-display text-sm font-semibold text-foreground line-clamp-1">{data.bookTitle}</h3>
         <p className="font-body text-sm text-muted-foreground mb-1">{data.bookAuthor}</p>
-        <Badge
-          variant={available ? "default" : "secondary"}
-          className="font-body text-xs self-start mb-1"
-        >
+        <Badge variant={available ? "default" : "secondary"} className="font-body text-xs self-start mb-1">
           {available ? "Disponible" : "No disponible"}
         </Badge>
         {data.notes && (

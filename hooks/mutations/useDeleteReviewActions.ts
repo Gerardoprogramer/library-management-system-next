@@ -14,17 +14,14 @@ export const useDeleteReview = (reviewId: string, target: ReviewType, oldRating:
       showToast.success("Reseña eliminada con éxito");
 
       if (target.type === "mine") {
-        queryClient.setQueriesData<PageResponse<Review>>(
-          { queryKey: ["reviews", "mine"] },
-          (oldData) => {
-            if (!oldData) return oldData;
-            return {
-              ...oldData,
-              content: oldData.content.filter((r) => r.id !== reviewId),
-              totalElements: oldData.totalElements - 1,
-            };
-          }
-        );
+        queryClient.setQueriesData<PageResponse<Review>>({ queryKey: ["reviews", "mine"] }, (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            content: oldData.content.filter((r) => r.id !== reviewId),
+            totalElements: oldData.totalElements - 1,
+          };
+        });
 
         queryClient.invalidateQueries({
           queryKey: ["reviews", "mine"],

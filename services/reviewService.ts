@@ -1,11 +1,5 @@
 import { api } from "@/lib/axios";
-import type {
-  ApiResponse,
-  Review,
-  PageResponse,
-  editReview,
-  createReview,
-} from "@/lib/definitions";
+import type { ApiResponse, Review, PageResponse, editReview, createReview } from "@/lib/definitions";
 
 export const reviewService = {
   getBookReviews: async (id: string, page: number = 0): Promise<PageResponse<Review>> => {

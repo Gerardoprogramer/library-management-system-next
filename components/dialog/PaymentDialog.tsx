@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CreditCard, Loader2, CheckCircle2 } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import { SubscriptionPlan } from "@/lib/definitions";
@@ -65,9 +59,7 @@ export const PaymentDialog = ({
 
               <div className="flex justify-between items-end">
                 <div>
-                  <h4 className="font-display text-lg font-bold text-foreground leading-none">
-                    {selectedPlan?.name}
-                  </h4>
+                  <h4 className="font-display text-lg font-bold text-foreground leading-none">{selectedPlan?.name}</h4>
                   <p className="text-xs text-muted-foreground mt-1">
                     Hasta {selectedPlan?.maxBooksAllowed} libros simultáneos
                   </p>
@@ -87,9 +79,7 @@ export const PaymentDialog = ({
                   <Label htmlFor="renew" className="text-sm font-medium">
                     Renovación automática
                   </Label>
-                  <p className="text-[11px] text-muted-foreground italic">
-                    Puedes cancelarla en cualquier momento
-                  </p>
+                  <p className="text-[11px] text-muted-foreground italic">Puedes cancelarla en cualquier momento</p>
                 </div>
                 <Switch id="renew" checked={autoRenew} onCheckedChange={setAutoRenew} />
               </div>
@@ -98,8 +88,8 @@ export const PaymentDialog = ({
             <div className="flex items-start gap-2 px-1 text-[11px] font-body text-muted-foreground leading-tight">
               <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0 mt-0.5" />
               <span>
-                Al hacer clic en pagar, serás redirigido a la plataforma oficial de Stripe para
-                completar la transacción de forma segura.
+                Al hacer clic en pagar, serás redirigido a la plataforma oficial de Stripe para completar la transacción
+                de forma segura.
               </span>
             </div>
 
@@ -112,11 +102,7 @@ export const PaymentDialog = ({
               >
                 Cancelar
               </Button>
-              <Button
-                onClick={() => handlePayment()}
-                className="font-body gap-2 shadow-md px-6"
-                disabled={isLoading}
-              >
+              <Button onClick={() => handlePayment()} className="font-body gap-2 shadow-md px-6" disabled={isLoading}>
                 <CreditCard className="w-4 h-4" />
                 Pagar Ahora
               </Button>

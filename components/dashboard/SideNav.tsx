@@ -20,12 +20,7 @@ export const SideNav = ({ isOpen, setIsOpen }: SideNavProps) => {
   return (
     <>
       {/* Overlay móvil */}
-      {isOpen && (
-        <div
-          onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black/40 z-30 md:hidden"
-        />
-      )}
+      {isOpen && <div onClick={() => setIsOpen(false)} className="fixed inset-0 bg-black/40 z-30 md:hidden" />}
 
       <aside
         className={cn(
@@ -50,18 +45,14 @@ export const SideNav = ({ isOpen, setIsOpen }: SideNavProps) => {
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-          <p className="px-3 mb-2 text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
-            Principal
-          </p>
+          <p className="px-3 mb-2 text-[10px] tracking-[0.3em] uppercase text-muted-foreground">Principal</p>
 
           <NavLinks links={userNav} />
 
           {user?.isAdmin && (
             <>
               <div className="h-px bg-border my-4" />
-              <p className="px-3 mb-2 text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
-                Administración
-              </p>
+              <p className="px-3 mb-2 text-[10px] tracking-[0.3em] uppercase text-muted-foreground">Administración</p>
               <NavLinks links={adminNav} />
             </>
           )}

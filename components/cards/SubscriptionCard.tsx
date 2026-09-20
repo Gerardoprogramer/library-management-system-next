@@ -30,14 +30,8 @@ export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <h2 className="font-display text-xl font-semibold text-foreground">
-                {subscription?.planName}
-              </h2>
-              <Badge
-                variant={
-                  subscription?.active && !subscription.daysRemaining ? "default" : "destructive"
-                }
-              >
+              <h2 className="font-display text-xl font-semibold text-foreground">{subscription?.planName}</h2>
+              <Badge variant={subscription?.active && !subscription.daysRemaining ? "default" : "destructive"}>
                 {subscription?.active && subscription.daysRemaining
                   ? "Activo"
                   : subscription?.daysRemaining === 0
@@ -45,14 +39,10 @@ export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
                     : "Cancelado"}
               </Badge>
             </div>
-            <p className="font-body text-sm text-muted-foreground">
-              Código: {subscription?.planCode}
-            </p>
+            <p className="font-body text-sm text-muted-foreground">Código: {subscription?.planCode}</p>
           </div>
           <div className="text-right">
-            <p className="font-display text-2xl font-bold text-foreground">
-              ${(subscription?.price / 100).toFixed(2)}
-            </p>
+            <p className="font-display text-2xl font-bold text-foreground">${(subscription?.price / 100).toFixed(2)}</p>
             <p className="font-body text-xs text-muted-foreground">/ mes</p>
           </div>
         </div>
@@ -60,27 +50,17 @@ export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           <div className="bg-muted/30 rounded-lg p-3">
             <BookOpen className="w-4 h-4 text-primary mb-1" />
-            <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">
-              Máx. libros
-            </p>
-            <p className="font-display text-lg font-semibold text-foreground">
-              {subscription?.maxBooksAllowed}
-            </p>
+            <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Máx. libros</p>
+            <p className="font-display text-lg font-semibold text-foreground">{subscription?.maxBooksAllowed}</p>
           </div>
           <div className="bg-muted/30 rounded-lg p-3">
             <Clock className="w-4 h-4 text-primary mb-1" />
-            <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">
-              Días/libro
-            </p>
-            <p className="font-display text-lg font-semibold text-foreground">
-              {subscription?.maxDaysPerBook}
-            </p>
+            <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Días/libro</p>
+            <p className="font-display text-lg font-semibold text-foreground">{subscription?.maxDaysPerBook}</p>
           </div>
           <div className="bg-muted/30 rounded-lg p-3">
             <Calendar className="w-4 h-4 text-primary mb-1" />
-            <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">
-              Días restantes
-            </p>
+            <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Días restantes</p>
             <p
               className={`font-display text-lg font-semibold ${subscription?.daysRemaining <= 5 ? "text-destructive" : "text-foreground"}`}
             >
@@ -89,9 +69,7 @@ export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
           </div>
           <div className="bg-muted/30 rounded-lg p-3">
             <RefreshCw className="w-4 h-4 text-primary mb-1" />
-            <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">
-              Auto-renovar
-            </p>
+            <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Auto-renovar</p>
             <p className="font-display text-lg font-semibold text-foreground">
               {subscription?.autoRenew ? "Sí" : "No"}
             </p>

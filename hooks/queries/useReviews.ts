@@ -10,10 +10,7 @@ export const useReviews = (target: ReviewType) => {
   const pageIndex = isNaN(+queryPage) ? 0 : +queryPage - 1;
 
   return useQuery<PageResponse<Review>>({
-    queryKey:
-      target.type === "book"
-        ? ["reviews", "book", target.id, queryPage]
-        : ["reviews", "mine", queryPage],
+    queryKey: target.type === "book" ? ["reviews", "book", target.id, queryPage] : ["reviews", "mine", queryPage],
     queryFn: async () => {
       if (target.type === "book") {
         return await reviewService.getBookReviews(target.id, pageIndex);

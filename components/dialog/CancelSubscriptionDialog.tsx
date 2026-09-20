@@ -37,15 +37,12 @@ export const CancelSubscriptionDialog = ({
 
         <div className="space-y-4">
           <p className="font-body text-sm text-muted-foreground">
-            ¿Estás seguro de cancelar tu suscripción <strong>Plan {sub.planName}</strong>? Perderás
-            acceso a los beneficios al finalizar el período actual.
+            ¿Estás seguro de cancelar tu suscripción <strong>Plan {sub.planName}</strong>? Perderás acceso a los
+            beneficios al finalizar el período actual.
           </p>
 
           <div className="space-y-2">
-            <Label
-              htmlFor="reason"
-              className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
-            >
+            <Label htmlFor="reason" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Cuéntanos el motivo
             </Label>
             <Textarea
@@ -70,12 +67,7 @@ export const CancelSubscriptionDialog = ({
           >
             Mantener
           </Button>
-          <Button
-            variant="destructive"
-            onClick={handleCancel}
-            className="font-body"
-            disabled={!reason.trim()}
-          >
+          <Button variant="destructive" onClick={handleCancel} className="font-body" disabled={!reason.trim()}>
             Confirmar cancelación
           </Button>
         </DialogFooter>

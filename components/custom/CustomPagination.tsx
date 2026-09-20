@@ -50,10 +50,7 @@ export const CustomPagination = ({ totalPages, paramName = "page" }: Props) => {
   const pages = getPages();
 
   return (
-    <nav
-      aria-label="Navegación de páginas"
-      className="flex items-center justify-center gap-2 flex-wrap"
-    >
+    <nav aria-label="Navegación de páginas" className="flex items-center justify-center gap-2 flex-wrap">
       <Button variant="outline" size="sm" disabled={page === 1} asChild={page !== 1}>
         {page === 1 ? (
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
@@ -78,12 +75,7 @@ export const CustomPagination = ({ totalPages, paramName = "page" }: Props) => {
         )
       )}
 
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={page === totalPages}
-        asChild={page !== totalPages}
-      >
+      <Button variant="outline" size="sm" disabled={page === totalPages} asChild={page !== totalPages}>
         {page === totalPages ? (
           <ChevronRight className="h-4 w-4" aria-hidden="true" />
         ) : (

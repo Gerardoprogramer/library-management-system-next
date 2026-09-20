@@ -72,9 +72,7 @@ export const BookSide = ({
           >
             <Heart
               className={`w-4 h-4 transition-colors ${
-                book.isWishList
-                  ? "text-red-500 fill-red-500"
-                  : "text-muted-foreground hover:text-red-500"
+                book.isWishList ? "text-red-500 fill-red-500" : "text-muted-foreground hover:text-red-500"
               }`}
             />
           </Button>

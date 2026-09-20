@@ -66,19 +66,13 @@ export const ReservationCard = ({ data }: Props) => {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
               <div>
-                <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">
-                  Reservado
-                </p>
+                <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Reservado</p>
                 <p className="font-body text-sm text-foreground">{formatDate(data.reservedAt)}</p>
               </div>
               {data.queuePosition != null && data.status === "PENDING" && (
                 <div>
-                  <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">
-                    Posición
-                  </p>
-                  <p className="font-body text-sm text-foreground font-semibold">
-                    #{data.queuePosition} en cola
-                  </p>
+                  <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Posición</p>
+                  <p className="font-body text-sm text-foreground font-semibold">#{data.queuePosition} en cola</p>
                 </div>
               )}
               {data.availableAt && (
@@ -86,9 +80,7 @@ export const ReservationCard = ({ data }: Props) => {
                   <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">
                     Disponible desde
                   </p>
-                  <p className="font-body text-sm text-foreground">
-                    {formatDate(data.availableAt)}
-                  </p>
+                  <p className="font-body text-sm text-foreground">{formatDate(data.availableAt)}</p>
                 </div>
               )}
               {data.availableUntil && data.status === "AVAILABLE" && (
@@ -96,29 +88,19 @@ export const ReservationCard = ({ data }: Props) => {
                   <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">
                     Recoger antes de
                   </p>
-                  <p className="font-body text-sm text-primary font-semibold">
-                    {formatDate(data.availableUntil)}
-                  </p>
+                  <p className="font-body text-sm text-primary font-semibold">{formatDate(data.availableUntil)}</p>
                 </div>
               )}
               {data.fulfilledAt && (
                 <div>
-                  <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">
-                    Recogido
-                  </p>
-                  <p className="font-body text-sm text-foreground">
-                    {formatDate(data.fulfilledAt)}
-                  </p>
+                  <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Recogido</p>
+                  <p className="font-body text-sm text-foreground">{formatDate(data.fulfilledAt)}</p>
                 </div>
               )}
               {data.cancelledAt && (
                 <div>
-                  <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">
-                    Cancelada
-                  </p>
-                  <p className="font-body text-sm text-foreground">
-                    {formatDate(data.cancelledAt)}
-                  </p>
+                  <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Cancelada</p>
+                  <p className="font-body text-sm text-foreground">{formatDate(data.cancelledAt)}</p>
                 </div>
               )}
             </div>

@@ -1,11 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -20,12 +13,7 @@ interface Props {
   isPending: boolean;
 }
 
-export const CheckoutBook = ({
-  checkout,
-  checkoutDialogOpen,
-  setCheckoutDialogOpen,
-  isPending,
-}: Props) => {
+export const CheckoutBook = ({ checkout, checkoutDialogOpen, setCheckoutDialogOpen, isPending }: Props) => {
   const [baseDate] = useState(() => new Date());
 
   const returnDate = new Date(baseDate.getTime() + (checkout.checkoutDays ?? 0) * 86400000);
@@ -44,15 +32,12 @@ export const CheckoutBook = ({
             <BookMarked className="w-5 h-5 text-primary" /> Solicitar Préstamo
           </DialogTitle>
           <DialogDescription className="font-body text-sm">
-            Solicita el préstamo de «{checkout.title}». Tu plan permite hasta{" "}
-            {checkout.maxDaysPerBook} días por libro.
+            Solicita el préstamo de «{checkout.title}». Tu plan permite hasta {checkout.maxDaysPerBook} días por libro.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
           <div>
-            <label className="font-body text-sm text-foreground mb-1.5 block">
-              Días de préstamo
-            </label>
+            <label className="font-body text-sm text-foreground mb-1.5 block">Días de préstamo</label>
             <Input
               type="number"
               min={1}
@@ -75,9 +60,7 @@ export const CheckoutBook = ({
             </p>
           </div>
           <div>
-            <label className="font-body text-sm text-foreground mb-1.5 block">
-              Notas (opcional)
-            </label>
+            <label className="font-body text-sm text-foreground mb-1.5 block">Notas (opcional)</label>
             <Textarea
               value={checkout.actionNotes}
               onChange={(e) => checkout.setActionNotes(e.target.value.slice(0, 500))}
@@ -85,9 +68,7 @@ export const CheckoutBook = ({
               rows={2}
               className="font-body resize-none w-full min-w-0 break-all"
             />
-            <p className="font-body text-xs text-muted-foreground mt-1 text-right">
-              {checkout.actionNotes.length}/500
-            </p>
+            <p className="font-body text-xs text-muted-foreground mt-1 text-right">{checkout.actionNotes.length}/500</p>
           </div>
         </div>
         <DialogFooter>
@@ -101,11 +82,7 @@ export const CheckoutBook = ({
           >
             Cancelar
           </Button>
-          <Button
-            onClick={checkout.handleCheckout}
-            disabled={isPending}
-            className="font-display gap-2"
-          >
+          <Button onClick={checkout.handleCheckout} disabled={isPending} className="font-display gap-2">
             <BookMarked className="w-4 h-4" /> Confirmar Préstamo
           </Button>
         </DialogFooter>

@@ -45,8 +45,7 @@ export async function backendProxy(
 
     const backendResponse = await fetch(backendUrl.toString(), fetchOptions);
 
-    const data =
-      backendResponse.status !== 204 ? await backendResponse.json().catch(() => null) : null;
+    const data = backendResponse.status !== 204 ? await backendResponse.json().catch(() => null) : null;
 
     const response = NextResponse.json(data, {
       status: backendResponse.status,
@@ -59,7 +58,6 @@ export async function backendProxy(
     }
 
     return response;
-    
   } catch (error) {
     console.error(`[Proxy Error] ${endpoint}:`, error);
 

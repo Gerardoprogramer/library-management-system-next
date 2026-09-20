@@ -14,9 +14,7 @@ export default function LoanPage() {
 
   return (
     <div>
-      <h1 className="font-display text-3xl sm:text-4xl font-semibold text-foreground mb-2">
-        Mis Préstamos
-      </h1>
+      <h1 className="font-display text-3xl sm:text-4xl font-semibold text-foreground mb-2">Mis Préstamos</h1>
       <div className="flex justify-between">
         <p className="font-body text-lg text-muted-foreground mb-8">
           {loans?.content.filter((l) => l.overdue === false).length} activos ·{" "}
@@ -31,9 +29,7 @@ export default function LoanPage() {
       </div>
       <div className="space-y-4">
         {loans?.totalElements === 0 ? (
-          <p className="font-body text-muted-foreground text-center py-12">
-            No tienes préstamos activos.
-          </p>
+          <p className="font-body text-muted-foreground text-center py-12">No tienes préstamos activos.</p>
         ) : (
           loans?.content.map((loan) => <LoanCard key={loan.id} loan={loan} />)
         )}

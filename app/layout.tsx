@@ -84,8 +84,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Biblioteca Obsidian | Segundo cerebro digital",
-    description:
-      "Organiza tu conocimiento, ideas y notas interconectadas con un sistema inspirado en Obsidian.",
+    description: "Organiza tu conocimiento, ideas y notas interconectadas con un sistema inspirado en Obsidian.",
     images: ["/icon1.png"],
   },
 };

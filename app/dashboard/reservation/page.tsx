@@ -10,16 +10,13 @@ import { useReservation } from "@/hooks/queries/useReservation";
 import { ReservationPageSkeleton } from "@/components/custom/skeletons";
 
 export default function ReservationPage() {
-  const { reservations, setStatus, status, toggleAvailableOnly, availableOnly, isLoading } =
-    useReservation();
+  const { reservations, setStatus, status, toggleAvailableOnly, availableOnly, isLoading } = useReservation();
 
   if (isLoading) return <ReservationPageSkeleton />;
 
   return (
     <div>
-      <h1 className="font-display text-3xl sm:text-4xl font-semibold text-foreground mb-2">
-        Mis Reservas
-      </h1>
+      <h1 className="font-display text-3xl sm:text-4xl font-semibold text-foreground mb-2">Mis Reservas</h1>
       <div className="flex justify-end py-4 gap-4">
         <CustomSelect
           headline="Todos los Status"
@@ -34,13 +31,9 @@ export default function ReservationPage() {
       </div>
       <div className="space-y-4">
         {reservations?.totalElements === 0 ? (
-          <p className="font-body text-muted-foreground text-center py-12">
-            No tienes reservas activas.
-          </p>
+          <p className="font-body text-muted-foreground text-center py-12">No tienes reservas activas.</p>
         ) : (
-          reservations?.content.map((reservation) => (
-            <ReservationCard key={reservation.id} data={reservation} />
-          ))
+          reservations?.content.map((reservation) => <ReservationCard key={reservation.id} data={reservation} />)
         )}
       </div>
       {reservations && reservations?.totalPages > 1 && (

@@ -24,9 +24,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
           <div className="flex items-center gap-3">
             <ThemeToggle />
             <div className="flex items-center gap-2">
-              <span className="font-body text-sm text-muted-foreground hidden sm:block">
-                {user?.fullName}
-              </span>
+              <span className="font-body text-sm text-muted-foreground hidden sm:block">{user?.fullName}</span>
               <Avatar className="w-9 h-9 border border-border">
                 <AvatarFallback className="font-display text-xs bg-primary/10 text-primary">
                   {user?.fullName

@@ -12,12 +12,7 @@ export const useReservation = () => {
   const { data: reservations, isLoading } = useQuery<PageResponse<reservationBook>>({
     queryKey: ["reservations", { status, availableOnly, page }],
     queryFn: () =>
-      reservationService.getReservations(
-        undefined,
-        status === "all" ? undefined : status,
-        availableOnly,
-        page - 1
-      ),
+      reservationService.getReservations(undefined, status === "all" ? undefined : status, availableOnly, page - 1),
     placeholderData: (prev) => prev,
     staleTime: 1000 * 60 * 5,
   });

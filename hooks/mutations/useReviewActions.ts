@@ -14,16 +14,13 @@ export const useReviewActions = (reviewId: string, target: ReviewType, oldRating
       showToast.success("Reseña actualizada con éxito");
 
       if (target.type === "mine") {
-        queryClient.setQueriesData<PageResponse<Review>>(
-          { queryKey: ["reviews", "mine"] },
-          (oldData) => {
-            if (!oldData) return oldData;
-            return {
-              ...oldData,
-              content: oldData.content.map((r) => (r.id === reviewId ? { ...r, ...variables } : r)),
-            };
-          }
-        );
+        queryClient.setQueriesData<PageResponse<Review>>({ queryKey: ["reviews", "mine"] }, (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            content: oldData.content.map((r) => (r.id === reviewId ? { ...r, ...variables } : r)),
+          };
+        });
 
         queryClient.invalidateQueries({
           queryKey: ["reviews", "mine"],

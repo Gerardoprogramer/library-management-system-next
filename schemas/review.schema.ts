@@ -11,10 +11,7 @@ export const reviewSchema = z.object({
     .min(10, "La reseña debe ser más descriptiva")
     .max(255, "La reseña no puede exceder los 255 caracteres"),
 
-  rating: z
-    .number()
-    .min(1, "Debes seleccionar al menos 1 estrella")
-    .max(5, "El máximo son 5 estrellas"),
+  rating: z.number().min(1, "Debes seleccionar al menos 1 estrella").max(5, "El máximo son 5 estrellas"),
 });
 
 export type ReviewFormData = z.infer<typeof reviewSchema>;

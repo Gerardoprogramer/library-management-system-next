@@ -3,8 +3,7 @@ import type { ApiResponse, PageResponse, SubscriptionPlan } from "@/lib/definiti
 
 export const SubscriptionPlanService = {
   subscriptionPlans: async (): Promise<PageResponse<SubscriptionPlan>> => {
-    const response =
-      await api.get<ApiResponse<PageResponse<SubscriptionPlan>>>("/subscription-plan");
+    const response = await api.get<ApiResponse<PageResponse<SubscriptionPlan>>>("/subscription-plan");
 
     if (!response.data.data) {
       throw new Error("No hay planes de suscripción disponibles en este momento.");

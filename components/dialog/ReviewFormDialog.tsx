@@ -1,11 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "../ui/dialog";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -42,19 +35,10 @@ const StarRating = ({ value, onChange }: { value: number; onChange: (v: number) 
   </div>
 );
 
-export const ReviewFormDialog = ({
-  isOpen,
-  setIsOpen,
-  bookTitle,
-  handleSave,
-  isPending,
-  mode,
-  review,
-}: Props) => {
+export const ReviewFormDialog = ({ isOpen, setIsOpen, bookTitle, handleSave, isPending, mode, review }: Props) => {
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  const { formRating, formText, formTitle, setFormRating, setFormText, setFormTitle } =
-    useReviewForm(review);
+  const { formRating, formText, formTitle, setFormRating, setFormText, setFormTitle } = useReviewForm(review);
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -98,9 +82,7 @@ export const ReviewFormDialog = ({
       <DialogContent className="sm:max-w-md max-w-[95vw] overflow-hidden">
         <DialogHeader>
           <DialogTitle className="font-display">{config[mode].title}</DialogTitle>
-          <DialogDescription className="font-body text-sm">
-            {config[mode].description}
-          </DialogDescription>
+          <DialogDescription className="font-body text-sm">{config[mode].description}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
@@ -110,9 +92,7 @@ export const ReviewFormDialog = ({
           </div>
 
           <div>
-            <label className="font-body text-sm text-foreground mb-1.5 block">
-              Título (opcional)
-            </label>
+            <label className="font-body text-sm text-foreground mb-1.5 block">Título (opcional)</label>
             <Input
               value={formTitle}
               onChange={(e) => setFormTitle(e.target.value)}
@@ -138,9 +118,7 @@ export const ReviewFormDialog = ({
               className={`font-body resize-none w-full min-w-0 break-all ${validationError ? "border-destructive" : ""}`}
             />
             {validationError && (
-              <p className="text-[12px] text-destructive mt-1 font-medium italic">
-                {validationError}
-              </p>
+              <p className="text-[12px] text-destructive mt-1 font-medium italic">{validationError}</p>
             )}
           </div>
         </div>
@@ -149,11 +127,7 @@ export const ReviewFormDialog = ({
           <Button variant="outline" onClick={() => handleOpenChange(false)} className="font-body">
             Cancelar
           </Button>
-          <Button
-            onClick={onValidateAndSave}
-            disabled={!formText.trim() || isPending}
-            className="font-display"
-          >
+          <Button onClick={onValidateAndSave} disabled={!formText.trim() || isPending} className="font-display">
             {isPending ? "Procesando..." : config[mode].button}
           </Button>
         </DialogFooter>
