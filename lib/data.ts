@@ -1,35 +1,36 @@
 import {
-  BookOpen,
-  Clock,
-  Bookmark,
-  Heart,
-  Star,
-  Shield,
-  Users,
-  BarChart3,
-  Gem,
-  CheckCircle,
-  AlertTriangle,
-  XCircle,
-  PackageX,
-  Bell,
-} from "lucide-react";
+  PiBell,
+  PiBookmarkSimple,
+  PiBookOpen,
+  PiChartBar,
+  PiCheckCircle,
+  PiClock,
+  PiCreditCard,
+  PiCrown,
+  PiHeart,
+  PiPackage,
+  PiShieldCheck,
+  PiStar,
+  PiUsersThree,
+  PiWarning,
+  PiXCircle,
+} from "react-icons/pi";
 import type { navLinkstype, statusLoan, selectOptions, typeLoans, reservationStatus } from "./definitions";
 
 export const userNav: navLinkstype[] = [
-  { label: "Catálogo", path: "/dashboard/catalog", icon: BookOpen },
-  { label: "Mis Préstamos", path: "/dashboard/loans", icon: Clock },
-  { label: "Mis Reservas", path: "/dashboard/reservation", icon: Bookmark },
-  { label: "Mi Wishlist", path: "/dashboard/wishlist", icon: Heart },
-  { label: "Mis Reseñas", path: "/dashboard/review", icon: Star },
-  { label: "pagos y multas", path: "/dashboard/pay", icon: Gem },
-  { label: "Subscripciónes", path: "/dashboard/subscription", icon: Gem },
+  { label: "Catálogo", path: "/dashboard/catalog", icon: PiBookOpen },
+  { label: "Mis préstamos", path: "/dashboard/loans", icon: PiClock },
+  { label: "Mis reservas", path: "/dashboard/reservation", icon: PiBookmarkSimple },
+  { label: "Mi wishlist", path: "/dashboard/wishlist", icon: PiHeart },
+  { label: "Mis reseñas", path: "/dashboard/review", icon: PiStar },
+  { label: "Pagos y multas", path: "/dashboard/pay", icon: PiCreditCard },
+  { label: "Suscripciones", path: "/dashboard/subscription", icon: PiCrown },
 ];
 
 export const adminNav: navLinkstype[] = [
-  { label: "Panel Admin", path: "/dashboard/admin", icon: Shield },
-  { label: "Usuarios", path: "/dashboard/admin/usuarios", icon: Users },
-  { label: "Estadísticas", path: "/dashboard/admin/stats", icon: BarChart3 },
+  { label: "Panel admin", path: "/dashboard/admin", icon: PiShieldCheck },
+  { label: "Usuarios", path: "/dashboard/admin/usuarios", icon: PiUsersThree },
+  { label: "Estadísticas", path: "/dashboard/admin/stats", icon: PiChartBar },
 ];
 
 export const typeLoanConfig: Record<typeLoans, { label: string }> = {
@@ -54,27 +55,27 @@ export const statusLoanConfig: Record<
 > = {
   CHECKED_OUT: {
     label: "Prestado",
-    icon: CheckCircle,
+    icon: PiCheckCircle,
     variant: "default",
   },
   OVERDUE: {
     label: "Vencido",
-    icon: AlertTriangle,
+    icon: PiWarning,
     variant: "destructive",
   },
   RETURNED: {
     label: "Devuelto",
-    icon: CheckCircle,
+    icon: PiCheckCircle,
     variant: "secondary",
   },
   LOST: {
     label: "Perdido",
-    icon: XCircle,
+    icon: PiXCircle,
     variant: "destructive",
   },
   DAMAGED: {
     label: "Dañado",
-    icon: PackageX,
+    icon: PiPackage,
     variant: "outline",
   },
 };
@@ -103,9 +104,29 @@ export const statusConfig: Record<
     variant: "default" | "secondary" | "destructive" | "outline";
   }
 > = {
-  PENDING: { label: "En espera", icon: Clock, variant: "secondary" },
-  AVAILABLE: { label: "¡Disponible!", icon: Bell, variant: "default" },
-  CANCELLED: { label: "Cancelada", icon: XCircle, variant: "outline" },
-  FULFILLED: { label: "Completada", icon: CheckCircle, variant: "secondary" },
-  EXPIRED: { label: "Expirada", icon: XCircle, variant: "destructive" },
+  PENDING: {
+    label: "En espera",
+    icon: PiClock,
+    variant: "secondary",
+  },
+  AVAILABLE: {
+    label: "¡Disponible!",
+    icon: PiBell,
+    variant: "default",
+  },
+  CANCELLED: {
+    label: "Cancelada",
+    icon: PiXCircle,
+    variant: "outline",
+  },
+  FULFILLED: {
+    label: "Completada",
+    icon: PiCheckCircle,
+    variant: "secondary",
+  },
+  EXPIRED: {
+    label: "Expirada",
+    icon: PiXCircle,
+    variant: "destructive",
+  },
 };

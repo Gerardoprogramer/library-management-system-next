@@ -12,49 +12,30 @@ export const metadata: Metadata = {
 
   title: {
     template: "%s | Biblioteca Obsidian",
-    default: "Biblioteca Obsidian | Gestión de conocimiento y notas interconectadas",
+    default: "Biblioteca Obsidian | Sistema de Gestión Bibliotecaria",
   },
 
   description:
-    "Biblioteca digital para organizar conocimiento, notas interconectadas y construir tu segundo cerebro usando metodologías inspiradas en Obsidian.",
+    "Plataforma de gestión bibliotecaria para explorar libros, administrar préstamos, reservas, reseñas, listas de deseos y suscripciones.",
 
   applicationName: "Biblioteca Obsidian",
 
   keywords: [
-    "obsidian",
-    "obsidian notes",
-    "personal knowledge management",
-    "pkm",
-    "second brain",
-    "gestión del conocimiento",
     "biblioteca digital",
-    "notas markdown",
-    "organización de ideas",
-    "productividad personal",
+    "gestión bibliotecaria",
+    "libros",
+    "préstamos",
+    "reservas",
+    "reseñas",
+    "suscripciones",
   ],
 
-  authors: [{ name: "Gerardo Martinez Monge", url: "https://gerardodev.vercel.app" }],
-
-  creator: "Gerardo Martinez Monge",
-  publisher: "Biblioteca Obsidian",
-
-  category: "technology",
-
-  alternates: {
-    canonical: "https://obsidian-delta-kohl.vercel.app",
-  },
+  authors: [{ name: "Gerardo Martínez Monge", url: "https://www.gerardomartinez.dev" }],
+  creator: "Gerardo Martínez Monge",
 
   robots: {
     index: true,
     follow: true,
-    nocache: false,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
   },
 
   icons: {
@@ -65,12 +46,12 @@ export const metadata: Metadata = {
 
   openGraph: {
     type: "website",
-    locale: "es",
+    locale: "es_CR",
     url: "https://obsidian-delta-kohl.vercel.app",
     siteName: "Biblioteca Obsidian",
-    title: "Biblioteca Obsidian | Gestión de conocimiento digital",
+    title: "Biblioteca Obsidian | Sistema de Gestión Bibliotecaria",
     description:
-      "Explora una biblioteca digital para organizar notas, ideas y conocimiento interconectado inspirada en Obsidian.",
+      "Explora el catálogo, administra préstamos y reservas, publica reseñas y gestiona tu experiencia dentro de la biblioteca.",
     images: [
       {
         url: "/icon1.png",
@@ -83,8 +64,9 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Biblioteca Obsidian | Segundo cerebro digital",
-    description: "Organiza tu conocimiento, ideas y notas interconectadas con un sistema inspirado en Obsidian.",
+    title: "Biblioteca Obsidian | Sistema de Gestión Bibliotecaria",
+    description:
+      "Explora libros, préstamos, reservas, reseñas y suscripciones desde una plataforma bibliotecaria moderna.",
     images: ["/icon1.png"],
   },
 };
@@ -94,7 +76,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const theme = cookieStore.get("library-theme")?.value ?? "light";
 
   return (
-    <html lang="en" className={theme === "dark" ? "dark" : ""}>
+    <html lang="es" className={theme === "dark" ? "dark" : ""}>
       <body className={`${cinzel.className} ${cormorant.className} antialiased`}>
         <ThemeProvider initialTheme={theme as "light" | "dark"}>
           <Providers>{children}</Providers>

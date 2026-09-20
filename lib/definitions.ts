@@ -1,5 +1,3 @@
-import { LucideProps } from "lucide-react";
-import { ForwardRefExoticComponent, RefAttributes } from "react";
 import { Dispatch, SetStateAction } from "react";
 
 export interface ApiResponse<T> {
@@ -52,7 +50,7 @@ export type Genre = {
 export type navLinkstype = {
   label: string;
   path: string;
-  icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
+  icon: React.ElementType;
 };
 
 export type BookSummary = {
