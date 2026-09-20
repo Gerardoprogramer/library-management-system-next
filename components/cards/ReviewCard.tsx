@@ -1,13 +1,14 @@
-import { Clock, Star, Pencil, Trash2 } from "lucide-react";
-import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
-import { formatDate } from "@/lib/date-utils";
-import { ReviewFormDialog } from "../dialog/ReviewFormDialog";
 import { useState } from "react";
-import type { Review } from "@/lib/definitions";
-import { useReviewActions } from "@/hooks/mutations/useReviewActions";
-import { DeleteReviewDialog } from "../dialog/DeleteReviewDialog";
+import { PiClock, PiPencilSimple, PiStar, PiStarFill, PiTrash } from "react-icons/pi";
+
+import { DeleteReviewDialog } from "@/components/dialog/DeleteReviewDialog";
+import { ReviewFormDialog } from "@/components/dialog/ReviewFormDialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useDeleteReview } from "@/hooks/mutations/useDeleteReviewActions";
+import { useReviewActions } from "@/hooks/mutations/useReviewActions";
+import type { Review } from "@/lib/definitions";
+import { formatDate } from "@/lib/date-utils";
 
 interface Props {
   review: Review;
@@ -17,11 +18,12 @@ interface Props {
 }
 
 export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
-  const { performReview, isPending } = useReviewActions(review.id, { type: "book", id: bookId }, review.rating);
-  const { deleteReview, isDeleting } = useDeleteReview(review.id, { type: "book", id: bookId }, review.rating);
-
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const { performReview, isPending } = useReviewActions(review.id, { type: "book", id: bookId }, review.rating);
+
+  const { deleteReview, isDeleting } = useDeleteReview(review.id, { type: "book", id: bookId }, review.rating);
 
   const isOwn = userId === review.userId;
 
@@ -36,47 +38,72 @@ export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
   };
 
   return (
-    <div key={review.id} className="bg-card border border-border rounded-lg p-5">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <span className="font-display text-sm font-semibold text-foreground">{review.userName}</span>
-          {isOwn && (
-            <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-              Tú
-            </Badge>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          {isOwn && (
-            <>
-              <Button onClick={() => setEditDialogOpen(true)} variant="ghost" size="icon" className="h-7 w-7">
-                <Pencil className="w-3.5 h-3.5" />
-              </Button>
-              <Button
-                onClick={() => setDeleteDialogOpen(true)}
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 text-destructive hover:text-destructive"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </Button>
-            </>
-          )}
-          <div className="flex items-center gap-0.5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star
-                key={i}
-                className={`w-3.5 h-3.5 ${i < review.rating ? "fill-primary text-primary" : "text-muted"}`}
-              />
-            ))}
+    <article className="rounded-2xl border border-border/70 bg-card p-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="truncate text-sm font-semibold text-foreground">{review.userName}</p>
+
+            {isOwn && (
+              <Badge variant="outline" className="rounded-full px-2 py-0.5 text-[10px] font-medium">
+                Tu reseña
+              </Badge>
+            )}
+          </div>
+
+          <div className="mt-2 flex items-center gap-2">
+            <div className="flex items-center gap-0.5" aria-label={`${review.rating} de 5 estrellas`}>
+              {Array.from({ length: 5 }).map((_, index) =>
+                index < review.rating ? (
+                  <PiStarFill key={index} className="size-4 text-primary" />
+                ) : (
+                  <PiStar key={index} className="size-4 text-muted-foreground/40" />
+                )
+              )}
+            </div>
+
+            <span className="text-xs font-medium text-muted-foreground">{review.rating}/5</span>
           </div>
         </div>
+
+        {isOwn && (
+          <div className="flex shrink-0 items-center gap-1">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Editar reseña"
+              onClick={() => setEditDialogOpen(true)}
+              className="size-9 rounded-lg"
+            >
+              <PiPencilSimple className="size-4.5" />
+            </Button>
+
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Eliminar reseña"
+              onClick={() => setDeleteDialogOpen(true)}
+              className="size-9 rounded-lg text-destructive hover:bg-destructive/10 hover:text-destructive"
+            >
+              <PiTrash className="size-4.5" />
+            </Button>
+          </div>
+        )}
       </div>
-      {review.title && <p className="font-display text-sm font-medium text-foreground mb-1">{review.title}</p>}
-      <p className="font-body text-sm text-muted-foreground">{review.reviewText}</p>
-      <p className="font-body text-xs text-muted-foreground mt-2 flex items-center gap-1">
-        <Clock className="w-3 h-3" /> {formatDate(review.createdAt)}
-      </p>
+
+      <div className="mt-4">
+        {review.title && <h3 className="text-sm font-semibold leading-6 text-foreground">{review.title}</h3>}
+
+        <p className="mt-1 whitespace-pre-line text-sm leading-6 text-muted-foreground">{review.reviewText}</p>
+      </div>
+
+      <div className="mt-4 flex items-center gap-1.5 border-t border-border/60 pt-3 text-xs text-muted-foreground">
+        <PiClock className="size-3.5" />
+        <time dateTime={review.createdAt}>{formatDate(review.createdAt)}</time>
+      </div>
+
       {editDialogOpen && (
         <ReviewFormDialog
           bookTitle={bookTitle}
@@ -88,6 +115,7 @@ export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
           mode="edit"
         />
       )}
+
       {deleteDialogOpen && (
         <DeleteReviewDialog
           confirmDelete={handleDelete}
@@ -96,6 +124,6 @@ export const ReviewCard = ({ review, userId, bookTitle, bookId }: Props) => {
           isPending={isDeleting}
         />
       )}
-    </div>
+    </article>
   );
 };
