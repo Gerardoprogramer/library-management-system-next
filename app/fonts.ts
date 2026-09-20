@@ -1,13 +1,13 @@
-import { Cinzel, Cormorant_Garamond } from "next/font/google";
+import { Inter, Source_Serif_4 } from "next/font/google";
 
-export const cinzel = Cinzel({
+export const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-cinzel",
+  variable: "--font-inter",
+  display: "swap",
 });
 
-export const cormorant = Cormorant_Garamond({
+export const sourceSerif = Source_Serif_4({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-cormorant",
+  variable: "--font-source-serif",
+  display: "swap",
 });

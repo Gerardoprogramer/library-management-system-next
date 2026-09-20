@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { Toaster } from "sonner";
 import { Providers } from "@/components/providers/Providers";
 
-import { cinzel, cormorant } from "@/app/fonts";
+import { inter, sourceSerif } from "@/app/fonts";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
@@ -77,7 +77,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="es" className={theme === "dark" ? "dark" : ""}>
-      <body className={`${cinzel.className} ${cormorant.className} antialiased`}>
+      <body className={`${inter.variable} ${sourceSerif.variable} font-sans antialiased`}>
         <ThemeProvider initialTheme={theme as "light" | "dark"}>
           <Providers>{children}</Providers>
           <Toaster richColors position="top-right" />
