@@ -52,13 +52,14 @@ export async function backendProxy(
       status: backendResponse.status,
     });
 
-    const setCookie = backendResponse.headers.get("set-cookie");
+    const setCookies = backendResponse.headers.getSetCookie();
 
-    if (setCookie) {
-      response.headers.set("set-cookie", setCookie);
+    for (const cookie of setCookies) {
+      response.headers.append("Set-Cookie", cookie);
     }
 
     return response;
+    
   } catch (error) {
     console.error(`[Proxy Error] ${endpoint}:`, error);
 
