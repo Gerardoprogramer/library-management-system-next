@@ -1,13 +1,14 @@
-import { Users, Plus } from "lucide-react";
+import { useState } from "react";
+import { PiPlus, PiStar, PiUsersThree } from "react-icons/pi";
+
+import { ReviewCard } from "@/components/cards/ReviewCard";
+import { CustomPagination } from "@/components/custom/CustomPagination";
+import { ReviewListSkeleton } from "@/components/custom/skeletons";
+import { ReviewFormDialog } from "@/components/dialog/ReviewFormDialog";
+import { Button } from "@/components/ui/button";
+import { useCreateReview } from "@/hooks/mutations/useCreateReview";
 import { useCurrentUser } from "@/hooks/queries/useCurrentUser";
 import { useReviews } from "@/hooks/queries/useReviews";
-import { ReviewListSkeleton } from "../custom/skeletons";
-import { CustomPagination } from "../custom/CustomPagination";
-import { ReviewCard } from "../cards/ReviewCard";
-import { Button } from "../ui/button";
-import { useState } from "react";
-import { ReviewFormDialog } from "../dialog/ReviewFormDialog";
-import { useCreateReview } from "@/hooks/mutations/useCreateReview";
 
 interface ReviewListProps {
   bookId: string;
@@ -17,49 +18,93 @@ interface ReviewListProps {
 }
 
 export const ReviewList = ({ bookId, bookTitle, alreadyReviewed, canCreate }: ReviewListProps) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const { data: user } = useCurrentUser();
   const { data: reviews, isLoading } = useReviews({ type: "book", id: bookId });
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const { mutate: create } = useCreateReview({ type: "book", id: bookId });
+  const { mutate: create, isPending } = useCreateReview({ type: "book", id: bookId });
 
-  const handlesave = (formValues: { rating: number; title: string; reviewText: string }) => {
+  const handleSave = (formValues: { rating: number; title: string; reviewText: string }) => {
     create({
-      bookId: bookId,
+      bookId,
       rating: formValues.rating,
       title: formValues.title,
       reviewText: formValues.reviewText,
     });
+
     setDialogOpen(false);
   };
 
-  if (isLoading) return <ReviewListSkeleton />;
+  if (isLoading) {
+    return <ReviewListSkeleton />;
+  }
 
   const totalElements = reviews?.totalElements ?? 0;
   const content = reviews?.content ?? [];
 
   return (
-    <div>
-      <h2 className="font-display text-lg font-semibold mb-4 text-foreground flex items-center gap-2">
-        <Users className="w-5 h-5 text-primary" /> Reseñas
-      </h2>
-      {canCreate && (
-        <Button size="sm" onClick={() => setDialogOpen(true)} className="font-body gap-1.5 mb-4">
-          <Plus className="w-4 h-4" /> Escribir reseña
-        </Button>
+    <div className="space-y-5">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <div className="flex items-center gap-2">
+            <PiUsersThree className="size-5 text-primary" />
+
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">Reseñas</h2>
+          </div>
+
+          <p className="mt-1 text-sm text-muted-foreground">
+            {totalElements === 0
+              ? "Todavía no hay opiniones sobre este libro."
+              : `${totalElements} ${totalElements === 1 ? "reseña publicada" : "reseñas publicadas"}`}
+          </p>
+        </div>
+
+        {canCreate && (
+          <Button type="button" onClick={() => setDialogOpen(true)} className="h-10 gap-2 rounded-xl">
+            <PiPlus className="size-4.5" />
+            Escribir reseña
+          </Button>
+        )}
+      </div>
+
+      {alreadyReviewed && !canCreate && (
+        <div className="flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <PiStar className="size-4.5" />
+          </div>
+
+          <div>
+            <p className="text-sm font-medium text-foreground">Ya calificaste este libro</p>
+
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              Podés editar o eliminar tu reseña desde la tarjeta correspondiente.
+            </p>
+          </div>
+        </div>
       )}
-      {alreadyReviewed && <p className="mb-4">Ya has calificado este libro</p>}
+
       {totalElements > 0 ? (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {content.map((review) => (
             <ReviewCard key={review.id} review={review} userId={user?.id} bookTitle={bookTitle} bookId={bookId} />
           ))}
         </div>
       ) : (
-        <p className="font-body text-muted-foreground text-sm">Aún no hay reseñas para este libro.</p>
+        <div className="flex min-h-56 flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/40 px-6 text-center">
+          <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <PiStar className="size-6" />
+          </div>
+
+          <h3 className="mt-4 text-base font-semibold text-foreground">Sé la primera persona en opinar</h3>
+
+          <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">
+            Las reseñas ayudan a otros lectores a conocer mejor este libro.
+          </p>
+        </div>
       )}
 
       {reviews && reviews.totalPages > 1 && (
-        <div className="col-span-full mt-8">
+        <div className="flex justify-center pt-3">
           <CustomPagination totalPages={reviews.totalPages} paramName="ReviewPage" />
         </div>
       )}
@@ -68,10 +113,10 @@ export const ReviewList = ({ bookId, bookTitle, alreadyReviewed, canCreate }: Re
         <ReviewFormDialog
           mode="create"
           bookTitle={bookTitle}
-          handleSave={handlesave}
+          handleSave={handleSave}
           isOpen={dialogOpen}
           setIsOpen={setDialogOpen}
-          isPending={false}
+          isPending={isPending}
         />
       )}
     </div>
