@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { authService } from "@/services/authService";
-import { registerSchema } from "@/schemas/auth.schema";
+
 import { showToast } from "@/lib/toast-utils";
+import { registerSchema } from "@/schemas/auth.schema";
+import { authService } from "@/services/authService";
 
 export const useRegister = () => {
   const router = useRouter();
+
   const [loading, setLoading] = useState(false);
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [formData, setFormData] = useState({
@@ -15,27 +18,43 @@ export const useRegister = () => {
     password: "",
   });
 
-  const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const handleChange = (field: keyof typeof formData, value: string) => {
+    setFormData((current) => ({
+      ...current,
+      [field]: value,
+    }));
+
     if (errors[field]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[field];
-        return newErrors;
+      setErrors((current) => {
+        const nextErrors = {
+          ...current,
+        };
+
+        delete nextErrors[field];
+
+        return nextErrors;
       });
     }
   };
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
     const result = registerSchema.safeParse(formData);
 
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
+
       result.error.issues.forEach((issue) => {
-        fieldErrors[issue.path[0] as string] = issue.message;
+        const field = issue.path[0] as string;
+
+        if (!fieldErrors[field]) {
+          fieldErrors[field] = issue.message;
+        }
       });
+
       setErrors(fieldErrors);
+
       return;
     }
 
@@ -44,7 +63,9 @@ export const useRegister = () => {
 
     try {
       await authService.register(result.data);
-      showToast.success("¡Cuenta creada!", "Bienvenido a Obsidian Library.");
+
+      showToast.success("Cuenta creada", "Bienvenido a Biblioteca Obsidian.");
+
       router.push("/dashboard");
     } catch (error) {
       showToast.apiError(error);
@@ -52,13 +73,17 @@ export const useRegister = () => {
       setLoading(false);
     }
   }
+
   return {
     fullName: formData.fullName,
-    setFullName: (val: string) => handleChange("fullName", val),
+    setFullName: (value: string) => handleChange("fullName", value),
+
     email: formData.email,
-    setEmail: (val: string) => handleChange("email", val),
+    setEmail: (value: string) => handleChange("email", value),
+
     password: formData.password,
-    setPassword: (val: string) => handleChange("password", val),
+    setPassword: (value: string) => handleChange("password", value),
+
     loading,
     errors,
     handleSubmit,

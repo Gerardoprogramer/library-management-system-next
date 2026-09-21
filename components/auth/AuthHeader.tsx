@@ -1,18 +1,24 @@
-import { Gem } from "lucide-react";
 import Link from "next/link";
+import { PiBooks } from "react-icons/pi";
 
 interface AuthHeaderProps {
   subtitle: string;
 }
 
-export const AuthHeader = (props: AuthHeaderProps) => {
+export const AuthHeader = ({ subtitle }: AuthHeaderProps) => {
   return (
-    <div className="flex flex-col items-center mb-10">
-      <Link href="/" className="w-14 h-14 bg-foreground flex items-center justify-center rotate-45 mb-4 cursor-pointer">
-        <Gem className="w-7 h-7 text-background -rotate-45" strokeWidth={1.5} />
+    <div className="mb-8 flex flex-col items-center text-center">
+      <Link
+        href="/"
+        aria-label="Volver al inicio"
+        className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors hover:bg-primary/15"
+      >
+        <PiBooks className="size-6" />
       </Link>
-      <h1 className="font-display text-2xl font-semibold text-foreground tracking-wider uppercase">Obsidian Library</h1>
-      <p className="font-body text-muted-foreground mt-1">{props.subtitle}</p>
+
+      <h1 className="mt-4 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">Biblioteca Obsidian</h1>
+
+      <p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">{subtitle}</p>
     </div>
   );
 };

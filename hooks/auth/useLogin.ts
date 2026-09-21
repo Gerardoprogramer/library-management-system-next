@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { authService } from "@/services/authService";
-import { loginSchema } from "@/schemas/auth.schema";
+
 import { showToast } from "@/lib/toast-utils";
+import { loginSchema } from "@/schemas/auth.schema";
+import { authService } from "@/services/authService";
 
 export const useLogin = () => {
   const router = useRouter();
+
   const [loading, setLoading] = useState(false);
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [credentials, setCredentials] = useState({
@@ -14,28 +17,43 @@ export const useLogin = () => {
     password: "",
   });
 
-  const handleChange = (field: string, value: string) => {
-    setCredentials((prev) => ({ ...prev, [field]: value }));
+  const handleChange = (field: keyof typeof credentials, value: string) => {
+    setCredentials((current) => ({
+      ...current,
+      [field]: value,
+    }));
 
     if (errors[field]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[field];
-        return newErrors;
+      setErrors((current) => {
+        const nextErrors = {
+          ...current,
+        };
+
+        delete nextErrors[field];
+
+        return nextErrors;
       });
     }
   };
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
     const result = loginSchema.safeParse(credentials);
 
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
+
       result.error.issues.forEach((issue) => {
-        fieldErrors[issue.path[0] as string] = issue.message;
+        const field = issue.path[0] as string;
+
+        if (!fieldErrors[field]) {
+          fieldErrors[field] = issue.message;
+        }
       });
+
       setErrors(fieldErrors);
+
       return;
     }
 
@@ -43,8 +61,10 @@ export const useLogin = () => {
     setLoading(true);
 
     try {
-      await authService.login(credentials);
-      showToast.success("Sesión iniciada", "Es bueno verte de nuevo.");
+      await authService.login(result.data);
+
+      showToast.success("Sesión iniciada", "Bienvenido de nuevo.");
+
       router.push("/dashboard");
     } catch (error) {
       showToast.apiError(error);
@@ -55,9 +75,11 @@ export const useLogin = () => {
 
   return {
     email: credentials.email,
-    setEmail: (val: string) => handleChange("email", val),
+    setEmail: (value: string) => handleChange("email", value),
+
     password: credentials.password,
-    setPassword: (val: string) => handleChange("password", val),
+    setPassword: (value: string) => handleChange("password", value),
+
     loading,
     errors,
     handleSubmit,

@@ -1,12 +1,13 @@
 "use client";
 
+import Link from "next/link";
+import { PiEnvelopeSimple, PiSpinnerGap, PiUser } from "react-icons/pi";
+
 import { AuthCard } from "@/components/auth/AuthCard";
 import { AuthHeader } from "@/components/auth/AuthHeader";
 import { PasswordInput } from "@/components/auth/PasswordInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail, User } from "lucide-react";
-import Link from "next/link";
 import { useRegister } from "@/hooks/auth/useRegister";
 
 export default function RegisterPage() {
@@ -15,49 +16,88 @@ export default function RegisterPage() {
 
   return (
     <>
-      <AuthHeader subtitle="Únete a nosotros" />
+      <AuthHeader subtitle="Creá tu cuenta para empezar a usar la biblioteca." />
 
       <AuthCard>
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
-            <label className="font-body text-sm text-foreground">Nombre completo</label>
+            <label htmlFor="full-name" className="text-sm font-medium text-foreground">
+              Nombre completo
+            </label>
+
             <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <PiUser className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+
               <Input
+                id="full-name"
+                type="text"
+                autoComplete="name"
                 placeholder="Tu nombre"
-                className="pl-10 font-body"
+                className="pl-10"
                 value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                onChange={(event) => setFullName(event.target.value)}
+                aria-invalid={Boolean(errors.fullName)}
+                aria-describedby={errors.fullName ? "full-name-error" : undefined}
+                required
               />
             </div>
-            {errors.fullName && <p className="text-sm text-red-500">{errors.fullName}</p>}
+
+            {errors.fullName && (
+              <p id="full-name-error" role="alert" className="text-sm text-destructive">
+                {errors.fullName}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
-            <label className="font-body text-sm text-foreground">Correo electrónico</label>
+            <label htmlFor="register-email" className="text-sm font-medium text-foreground">
+              Correo electrónico
+            </label>
+
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <PiEnvelopeSimple className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+
               <Input
+                id="register-email"
                 type="email"
+                autoComplete="email"
                 placeholder="tu@email.com"
-                className="pl-10 font-body"
+                className="pl-10"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(event) => setEmail(event.target.value)}
+                aria-invalid={Boolean(errors.email)}
+                aria-describedby={errors.email ? "register-email-error" : undefined}
+                required
               />
             </div>
-            {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
+
+            {errors.email && (
+              <p id="register-email-error" role="alert" className="text-sm text-destructive">
+                {errors.email}
+              </p>
+            )}
           </div>
 
-          <PasswordInput value={password} onChange={setPassword} />
-          {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
-          <Button type="submit" className="w-full font-display tracking-wider uppercase text-sm" disabled={loading}>
-            {loading ? "Cargando..." : "Crear Cuenta"}
+          <div className="space-y-2">
+            <PasswordInput id="register-password" value={password} onChange={setPassword} />
+
+            {errors.password && (
+              <p role="alert" className="text-sm text-destructive">
+                {errors.password}
+              </p>
+            )}
+          </div>
+
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading && <PiSpinnerGap className="animate-spin" />}
+
+            {loading ? "Creando cuenta..." : "Crear cuenta"}
           </Button>
 
-          <p className="font-body text-sm text-center text-muted-foreground">
-            ¿Ya tienes cuenta?{" "}
-            <Link href="/auth/login" className="text-primary hover:underline font-medium">
-              Inicia sesión
+          <p className="text-center text-sm text-muted-foreground">
+            ¿Ya tenés cuenta?{" "}
+            <Link href="/auth/login" className="font-medium text-primary underline-offset-4 hover:underline">
+              Iniciar sesión
             </Link>
           </p>
         </form>

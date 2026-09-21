@@ -17,17 +17,6 @@ export interface PageResponse<T> {
   empty: boolean;
 }
 
-export type loginData = {
-  email: string;
-  password: string;
-};
-
-export type registerData = {
-  fullName: string;
-  email: string;
-  password: string;
-};
-
 export type User = {
   id: string;
   email: string;
