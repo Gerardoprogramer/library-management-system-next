@@ -1,114 +1,201 @@
+"use client";
+
+import { useState } from "react";
+import { PiArrowsClockwise, PiBooks, PiCalendarBlank, PiClock, PiXCircle } from "react-icons/pi";
+
+import { CancelSubscriptionDialog } from "@/components/dialog/CancelSubscriptionDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatDate } from "@/lib/date-utils";
-import { Subscription } from "@/lib/definitions";
-import { BookOpen, Calendar, Clock, RefreshCw, XCircle } from "lucide-react";
-import { CancelSubscriptionDialog } from "../dialog/CancelSubscriptionDialog";
-import { useState } from "react";
 import { useCancelSubscriptionActions } from "@/hooks/mutations/useCancelSubscriptionActions";
+import { formatDate } from "@/lib/date-utils";
+import type { Subscription } from "@/lib/definitions";
 
-interface SubscriptionCardProps {
+interface Props {
   subscription: Subscription;
 }
 
-export const SubscriptionCard = ({ subscription }: SubscriptionCardProps) => {
-  const [cancelDialog, setCancelDialog] = useState(false);
+const formatPrice = (price: number) =>
+  new Intl.NumberFormat("es-CR", {
+    style: "currency",
+    currency: "USD",
+  }).format(price / 100);
+
+export const SubscriptionCard = ({ subscription }: Props) => {
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+
   const [reason, setReason] = useState("");
-  const { mutate: cancelSubscription } = useCancelSubscriptionActions();
+
+  const { cancelSubscription, isCancelling } = useCancelSubscriptionActions();
+
+  const isActive = subscription.active && !subscription.expired;
+
+  const status = subscription.expired
+    ? {
+        label: "Expirada",
+        variant: "destructive" as const,
+      }
+    : subscription.active
+      ? {
+          label: "Activa",
+          variant: "default" as const,
+        }
+      : {
+          label: "Cancelada",
+          variant: "secondary" as const,
+        };
 
   const handleCancel = () => {
-    cancelSubscription({ reason, id: subscription.id });
-    setCancelDialog(false);
+    const trimmedReason = reason.trim();
+
+    if (!trimmedReason) {
+      return;
+    }
+
+    cancelSubscription(
+      {
+        id: subscription.id,
+        reason: trimmedReason,
+      },
+      {
+        onSuccess: () => {
+          setCancelDialogOpen(false);
+          setReason("");
+        },
+      }
+    );
   };
 
   return (
-    <Card
-      className={`mb-8 ${subscription?.active && !subscription.daysRemaining ? "border-primary/30" : "border-destructive/30"}`}
-    >
-      <CardContent className="p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <h2 className="font-display text-xl font-semibold text-foreground">{subscription?.planName}</h2>
-              <Badge variant={subscription?.active && !subscription.daysRemaining ? "default" : "destructive"}>
-                {subscription?.active && subscription.daysRemaining
-                  ? "Activo"
-                  : subscription?.daysRemaining === 0
-                    ? "Expirado"
-                    : "Cancelado"}
-              </Badge>
+    <>
+      <Card className={isActive ? "overflow-hidden border-primary/25" : "overflow-hidden"}>
+        <CardContent className="p-5 sm:p-6">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="text-xl font-semibold tracking-tight text-foreground">{subscription.planName}</h2>
+
+                <Badge variant={status.variant}>{status.label}</Badge>
+              </div>
+
+              <p className="mt-1 text-sm text-muted-foreground">Plan {subscription.planCode}</p>
             </div>
-            <p className="font-body text-sm text-muted-foreground">Código: {subscription?.planCode}</p>
-          </div>
-          <div className="text-right">
-            <p className="font-display text-2xl font-bold text-foreground">${(subscription?.price / 100).toFixed(2)}</p>
-            <p className="font-body text-xs text-muted-foreground">/ mes</p>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          <div className="bg-muted/30 rounded-lg p-3">
-            <BookOpen className="w-4 h-4 text-primary mb-1" />
-            <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Máx. libros</p>
-            <p className="font-display text-lg font-semibold text-foreground">{subscription?.maxBooksAllowed}</p>
-          </div>
-          <div className="bg-muted/30 rounded-lg p-3">
-            <Clock className="w-4 h-4 text-primary mb-1" />
-            <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Días/libro</p>
-            <p className="font-display text-lg font-semibold text-foreground">{subscription?.maxDaysPerBook}</p>
-          </div>
-          <div className="bg-muted/30 rounded-lg p-3">
-            <Calendar className="w-4 h-4 text-primary mb-1" />
-            <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Días restantes</p>
-            <p
-              className={`font-display text-lg font-semibold ${subscription?.daysRemaining <= 5 ? "text-destructive" : "text-foreground"}`}
-            >
-              {subscription?.daysRemaining}
-            </p>
-          </div>
-          <div className="bg-muted/30 rounded-lg p-3">
-            <RefreshCw className="w-4 h-4 text-primary mb-1" />
-            <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Auto-renovar</p>
-            <p className="font-display text-lg font-semibold text-foreground">
-              {subscription?.autoRenew ? "Sí" : "No"}
-            </p>
-          </div>
-        </div>
+            <div className="lg:text-right">
+              <p className="text-2xl font-semibold tracking-tight text-foreground">{formatPrice(subscription.price)}</p>
 
-        <div className="flex items-center gap-3 text-sm font-body text-muted-foreground mb-4">
-          <span>Inicio: {formatDate(subscription?.startDate)}</span>
-          <span>·</span>
-          <span>Fin: {formatDate(subscription?.endDate)}</span>
-          {subscription?.nextBillingDate && (
-            <>
-              <span>·</span>
-              <span>Próximo cobro: {formatDate(subscription?.nextBillingDate)}</span>
-            </>
+              <p className="mt-1 text-xs text-muted-foreground">Precio del plan</p>
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <SubscriptionMetric icon={PiBooks} label="Máx. libros" value={subscription.maxBooksAllowed} />
+
+            <SubscriptionMetric icon={PiClock} label="Días por libro" value={subscription.maxDaysPerBook} />
+
+            <SubscriptionMetric
+              icon={PiCalendarBlank}
+              label="Días restantes"
+              value={subscription.daysRemaining}
+              destructive={isActive && subscription.daysRemaining <= 5}
+            />
+
+            <SubscriptionMetric
+              icon={PiArrowsClockwise}
+              label="Renovación"
+              value={subscription.autoRenew ? "Automática" : "Manual"}
+            />
+          </div>
+
+          <div className="mt-6 grid gap-4 border-t border-border/60 pt-5 sm:grid-cols-2 lg:grid-cols-3">
+            <SubscriptionDate label="Inicio" value={formatDate(subscription.startDate)} />
+
+            <SubscriptionDate label="Finalización" value={formatDate(subscription.endDate)} />
+
+            {subscription.autoRenew && subscription.nextBillingDate && (
+              <SubscriptionDate label="Próximo cobro" value={formatDate(subscription.nextBillingDate)} />
+            )}
+          </div>
+
+          {subscription.cancelledAt && (
+            <div className="mt-5 rounded-xl bg-muted/50 p-4">
+              <p className="text-sm font-medium text-foreground">Suscripción cancelada</p>
+
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                Cancelada el {formatDate(subscription.cancelledAt)}
+                {subscription.cancellationReason ? ` · ${subscription.cancellationReason}` : ""}
+              </p>
+            </div>
           )}
-        </div>
 
-        {subscription?.active && subscription.daysRemaining && (
-          <Button
-            onClick={() => setCancelDialog(true)}
-            variant="outline"
-            className="font-body text-sm gap-1.5 text-destructive hover:text-accent-foreground"
-          >
-            <XCircle className="w-3.5 h-3.5" /> Cancelar suscripción
-          </Button>
-        )}
-      </CardContent>
+          {isActive && (
+            <div className="mt-6 border-t border-border/60 pt-5">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setCancelDialogOpen(true)}
+                className="text-destructive hover:text-destructive"
+              >
+                <PiXCircle />
+                Cancelar suscripción
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-      {cancelDialog && (
+      {cancelDialogOpen && (
         <CancelSubscriptionDialog
           sub={subscription}
-          cancelDialog={cancelDialog}
-          setCancelDialog={setCancelDialog}
-          handleCancel={handleCancel}
+          cancelDialog={cancelDialogOpen}
+          setCancelDialog={setCancelDialogOpen}
           reason={reason}
           setReason={setReason}
+          handleCancel={handleCancel}
+          isPending={isCancelling}
         />
       )}
-    </Card>
+    </>
+  );
+};
+
+interface SubscriptionMetricProps {
+  icon: React.ElementType;
+  label: string;
+  value: string | number;
+  destructive?: boolean;
+}
+
+const SubscriptionMetric = ({ icon: Icon, label, value, destructive = false }: SubscriptionMetricProps) => {
+  return (
+    <div className="rounded-xl border border-border/60 bg-muted/30 p-4">
+      <Icon className="size-5 text-primary" />
+
+      <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
+
+      <p
+        className={
+          destructive ? "mt-1 text-lg font-semibold text-destructive" : "mt-1 text-lg font-semibold text-foreground"
+        }
+      >
+        {value}
+      </p>
+    </div>
+  );
+};
+
+interface SubscriptionDateProps {
+  label: string;
+  value: string | undefined;
+}
+
+const SubscriptionDate = ({ label, value }: SubscriptionDateProps) => {
+  return (
+    <div>
+      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
+
+      <p className="mt-1 text-sm font-medium text-foreground">{value ?? "—"}</p>
+    </div>
   );
 };
