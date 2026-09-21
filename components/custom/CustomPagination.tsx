@@ -1,9 +1,10 @@
 "use client";
 
-import { useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "../ui/button";
+import { usePathname, useSearchParams } from "next/navigation";
+import { PiCaretLeft, PiCaretRight } from "react-icons/pi";
+
+import { Button } from "@/components/ui/button";
 
 interface Props {
   totalPages: number;
@@ -14,33 +15,43 @@ export const CustomPagination = ({ totalPages, paramName = "page" }: Props) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const queryPage = searchParams.get(paramName) ?? "1";
-  const page = isNaN(+queryPage) ? 1 : +queryPage;
+  const rawPage = Number(searchParams.get(paramName) ?? "1");
 
-  if (totalPages <= 1) return null;
+  const page = Number.isInteger(rawPage) && rawPage >= 1 && rawPage <= totalPages ? rawPage : 1;
 
-  const createPageURL = (pageNumber: number | string) => {
+  if (totalPages <= 1) {
+    return null;
+  }
+
+  const createPageURL = (pageNumber: number) => {
     const params = new URLSearchParams(searchParams.toString());
+
     params.set(paramName, pageNumber.toString());
+
     return `${pathname}?${params.toString()}`;
   };
 
   const getPages = () => {
-    const pages: (number | "...")[] = [];
+    const pages: Array<number | "..."> = [];
     const delta = 2;
 
     const left = Math.max(2, page - delta);
+
     const right = Math.min(totalPages - 1, page + delta);
 
     pages.push(1);
 
-    if (left > 2) pages.push("...");
-
-    for (let i = left; i <= right; i++) {
-      pages.push(i);
+    if (left > 2) {
+      pages.push("...");
     }
 
-    if (right < totalPages - 1) pages.push("...");
+    for (let currentPage = left; currentPage <= right; currentPage++) {
+      pages.push(currentPage);
+    }
+
+    if (right < totalPages - 1) {
+      pages.push("...");
+    }
 
     pages.push(totalPages);
 
@@ -50,40 +61,48 @@ export const CustomPagination = ({ totalPages, paramName = "page" }: Props) => {
   const pages = getPages();
 
   return (
-    <nav aria-label="Navegación de páginas" className="flex items-center justify-center gap-2 flex-wrap">
-      <Button variant="outline" size="sm" disabled={page === 1} asChild={page !== 1}>
-        {page === 1 ? (
-          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-        ) : (
+    <nav aria-label="Navegación de páginas" className="flex flex-wrap items-center justify-center gap-2">
+      {page === 1 ? (
+        <Button type="button" variant="outline" size="sm" disabled aria-label="Página anterior">
+          <PiCaretLeft className="size-4" aria-hidden="true" />
+        </Button>
+      ) : (
+        <Button variant="outline" size="sm" asChild>
           <Link href={createPageURL(page - 1)} aria-label="Página anterior">
-            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+            <PiCaretLeft className="size-4" aria-hidden="true" />
           </Link>
-        )}
-      </Button>
+        </Button>
+      )}
 
-      {pages.map((p, i) =>
-        p === "..." ? (
-          <span key={i} className="px-2 text-muted-foreground" aria-hidden="true">
-            ...
+      {pages.map((item, index) =>
+        item === "..." ? (
+          <span key={`ellipsis-${index}`} className="px-2 text-sm text-muted-foreground" aria-hidden="true">
+            …
           </span>
         ) : (
-          <Button key={i} variant={page === p ? "default" : "outline"} size="sm" asChild>
-            <Link href={createPageURL(p)} aria-current={page === p ? "page" : undefined}>
-              {p}
+          <Button key={item} variant={page === item ? "default" : "outline"} size="sm" asChild>
+            <Link
+              href={createPageURL(item)}
+              aria-label={`Página ${item}`}
+              aria-current={page === item ? "page" : undefined}
+            >
+              {item}
             </Link>
           </Button>
         )
       )}
 
-      <Button variant="outline" size="sm" disabled={page === totalPages} asChild={page !== totalPages}>
-        {page === totalPages ? (
-          <ChevronRight className="h-4 w-4" aria-hidden="true" />
-        ) : (
-          <Link href={createPageURL(page + 1)} aria-label="Siguiente página">
-            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+      {page === totalPages ? (
+        <Button type="button" variant="outline" size="sm" disabled aria-label="Página siguiente">
+          <PiCaretRight className="size-4" aria-hidden="true" />
+        </Button>
+      ) : (
+        <Button variant="outline" size="sm" asChild>
+          <Link href={createPageURL(page + 1)} aria-label="Página siguiente">
+            <PiCaretRight className="size-4" aria-hidden="true" />
           </Link>
-        )}
-      </Button>
+        </Button>
+      )}
     </nav>
   );
 };

@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import type { Subscription } from "@/lib/definitions";
 import { showToast } from "@/lib/toast-utils";
 import { SubscriptionService } from "@/services/SubscriptionService";
 
@@ -15,13 +16,13 @@ export const useCancelSubscriptionActions = () => {
     mutationFn: ({ reason, id }: CancelSubscriptionInput) => SubscriptionService.cancelSubscription(reason, id),
 
     onSuccess: () => {
-      showToast.success("Suscripción cancelada", "Tu suscripción fue cancelada correctamente.");
-
-      queryClient.setQueryData(["subscription"], undefined);
+      queryClient.setQueryData<Subscription | null>(["subscription"], null);
 
       queryClient.invalidateQueries({
         queryKey: ["dashboard", "subscription"],
       });
+
+      showToast.success("Suscripción cancelada", "Tu suscripción fue cancelada correctamente.");
     },
 
     onError: (error) => {

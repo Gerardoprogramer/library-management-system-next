@@ -7,17 +7,16 @@ export const usePayFine = () => {
   const paymentMutation = useMutation({
     mutationFn: (fineId: string) => FineService.pay(fineId),
 
-    onSuccess: (response) => {
-      const checkoutUrl = response.data?.checkoutUrl;
+    onSuccess: (payment) => {
+      if (!payment.checkoutUrl) {
+        showToast.error("No se pudo iniciar el pago", "No fue posible obtener el enlace de Stripe.");
 
-      if (!checkoutUrl) {
-        showToast.error("No se pudo obtener el enlace de pago.");
         return;
       }
 
-      showToast.success("Redirigiendo a Stripe para completar el pago...");
+      showToast.success("Pago iniciado", "Te estamos redirigiendo a Stripe.");
 
-      window.location.assign(checkoutUrl);
+      window.location.assign(payment.checkoutUrl);
     },
 
     onError: (error) => {

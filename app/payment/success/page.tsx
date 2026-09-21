@@ -1,154 +1,206 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { CheckCircle, Sparkles, Receipt, ArrowRight, Loader2, Home } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { PiArrowRight, PiCheckCircle, PiHouse, PiReceipt, PiSpinnerGap, PiWarningCircle } from "react-icons/pi";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePaymentDetails } from "@/hooks/queries/usePaymentDetails";
-import { useSearchParams, useRouter } from "next/navigation";
+
+const formatCurrency = (amount: number, currency: string) => {
+  try {
+    return new Intl.NumberFormat("es-CR", {
+      style: "currency",
+      currency,
+    }).format(amount);
+  } catch {
+    return `${amount.toFixed(2)} ${currency}`;
+  }
+};
+
+const formatDate = (date: string) => {
+  return new Intl.DateTimeFormat("es-CR", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(date));
+};
 
 export default function PaymentSuccessPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+
   const sessionId = searchParams.get("session_id");
 
   const { data: payment, isLoading, isError } = usePaymentDetails(sessionId);
 
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    if (!isLoading && payment) {
-      const timer = setTimeout(() => setReady(true), 150);
-      return () => clearTimeout(timer);
-    }
-  }, [isLoading, payment]);
-
-  if (isLoading) {
+  if (!sessionId) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4">
-        <Loader2 className="w-10 h-10 text-primary animate-spin" />
-        <p className="font-body text-muted-foreground animate-pulse">Generando tu recibo...</p>
-      </div>
+      <PaymentState
+        title="Sesión de pago no válida"
+        description="No encontramos el identificador necesario para verificar este pago."
+        icon={<PiWarningCircle className="size-7" />}
+        action={<Button onClick={() => router.push("/dashboard/pay")}>Ir a pagos</Button>}
+      />
+    );
+  }
+
+  if (isLoading || payment?.status === "PENDING") {
+    return (
+      <PaymentState
+        title="Confirmando tu pago"
+        description="Estamos verificando la transacción con Stripe. Esta pantalla se actualizará automáticamente."
+        icon={<PiSpinnerGap className="size-7 animate-spin" />}
+      />
     );
   }
 
   if (isError || !payment) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4">
-        <div className="w-16 h-16 bg-destructive/10 text-destructive rounded-full flex items-center justify-center">
-          <span className="text-2xl font-bold">!</span>
-        </div>
-        <p className="font-body text-foreground">No pudimos verificar el pago.</p>
-        <Button variant="outline" onClick={() => router.push("/")}>
-          Volver al inicio
-        </Button>
-      </div>
+      <PaymentState
+        title="No pudimos verificar el pago"
+        description="No fue posible recuperar la información de esta transacción. Podés revisar tu historial de pagos."
+        icon={<PiWarningCircle className="size-7" />}
+        action={
+          <Button variant="outline" onClick={() => router.push("/dashboard/pay")}>
+            Ver pagos
+          </Button>
+        }
+      />
     );
   }
 
-  const config: Record<string, { title: string; description: string; redirect: string; redirectLabel: string }> = {
-    MEMBERSHIP: {
-      title: "¡Membresía Activa!",
-      description: payment.plan
-        ? `Bienvenido al plan ${payment.plan}. Ya puedes disfrutar de todos los beneficios.`
-        : "Tu suscripción se ha activado con éxito.",
-      redirect: "/dashboard/subscription",
-      redirectLabel: "Ver mi plan",
-    },
-    GENERAL: {
-      title: "¡Pago Exitoso!",
-      description: "Tu transacción ha sido procesada correctamente por nuestro sistema.",
-      redirect: "/dashboard/catalogo",
-      redirectLabel: "Ir al catálogo",
-    },
-  };
+  if (payment.status === "FAILED" || payment.status === "CANCELLED") {
+    return (
+      <PaymentState
+        title={payment.status === "CANCELLED" ? "Pago cancelado" : "No se pudo completar el pago"}
+        description={
+          payment.status === "CANCELLED"
+            ? "La transacción fue cancelada y no se realizó ningún cobro."
+            : "Stripe no pudo completar la transacción. Podés intentarlo nuevamente desde la plataforma."
+        }
+        icon={<PiWarningCircle className="size-7" />}
+        action={<Button onClick={() => router.push("/dashboard/pay")}>Volver a pagos</Button>}
+      />
+    );
+  }
 
-  const c = config[payment.type] || config.GENERAL;
+  const isMembership = payment.type === "MEMBERSHIP";
+
+  const redirectPath = isMembership ? "/dashboard/subscription" : "/dashboard/pay";
+
+  const redirectLabel = isMembership ? "Ver mi suscripción" : "Ver mis pagos";
+
+  const title =
+    payment.status === "REFUNDED" ? "Pago reembolsado" : isMembership ? "Suscripción activada" : "Pago completado";
+
+  const description =
+    payment.status === "REFUNDED"
+      ? "Esta transacción fue reembolsada."
+      : isMembership && payment.plan
+        ? `Tu plan ${payment.plan} está listo para usar.`
+        : "Tu transacción fue procesada correctamente.";
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4 py-12 bg-background/50">
-      <Card className="max-w-md w-full border-primary/10 shadow-2xl overflow-hidden relative">
-        <div className="h-3 w-full bg-linear-to-r from-primary/60 via-primary to-primary/60" />
-
-        <CardContent className="p-8 sm:p-10 flex flex-col items-center text-center">
-          <div
-            className={`relative mb-8 transition-all duration-1000 cubic-bezier(0.4, 0, 0.2, 1) ${ready ? "scale-100 opacity-100 translate-y-0" : "scale-50 opacity-0 translate-y-4"}`}
-          >
-            <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
-            <div className="relative w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center border-4 border-background shadow-sm">
-              <CheckCircle className="w-12 h-12 text-primary" strokeWidth={2} />
+    <main className="flex min-h-screen items-center justify-center bg-muted/20 px-4 py-10">
+      <Card className="w-full max-w-lg overflow-hidden">
+        <CardContent className="p-6 sm:p-8">
+          <div className="flex flex-col items-center text-center">
+            <div className="flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+              <PiCheckCircle className="size-7" />
             </div>
 
-            <Sparkles
-              className={`absolute -top-3 -right-4 w-7 h-7 text-primary transition-all duration-700 delay-300 ${ready ? "opacity-100 rotate-12 scale-100" : "opacity-0 -rotate-45 scale-0"}`}
-            />
-            <Sparkles
-              className={`absolute bottom-0 -left-5 w-5 h-5 text-primary/60 transition-all duration-700 delay-500 ${ready ? "opacity-100 -rotate-12 scale-100" : "opacity-0 rotate-45 scale-0"}`}
-            />
+            <h1 className="mt-5 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">{title}</h1>
+
+            <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">{description}</p>
           </div>
 
-          <div
-            className={`w-full transition-all duration-700 delay-100 ease-out ${ready ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
-          >
-            <h1 className="font-display text-3xl font-extrabold text-foreground mb-3 tracking-tight">
-              {String(c.title)}
-            </h1>
-            <p className="font-body text-muted-foreground/90 mb-8 px-4 text-sm leading-relaxed">
-              {String(c.description)}
-            </p>
-
-            <div className="relative bg-muted/40 border border-dashed border-border rounded-xl p-6 mb-8 w-full text-left overflow-hidden">
-              <div className="absolute -left-3 top-1/2 w-6 h-6 bg-background rounded-full transform -translate-y-1/2 border-r border-border border-dashed" />
-              <div className="absolute -right-3 top-1/2 w-6 h-6 bg-background rounded-full transform -translate-y-1/2 border-l border-border border-dashed" />
-
-              <div className="flex items-center gap-2 mb-4 pb-4 border-b border-border/50">
-                <Receipt className="w-5 h-5 text-primary" />
-                <span className="font-display font-semibold text-sm text-foreground uppercase tracking-wider">
-                  Detalle de Transacción
-                </span>
+          <div className="mt-7 rounded-2xl border border-border/70 bg-muted/30 p-5">
+            <div className="flex items-center gap-2 border-b border-border/60 pb-4">
+              <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <PiReceipt className="size-4" />
               </div>
 
-              <div className="space-y-3">
-                <div className="flex justify-between items-center font-body text-sm">
-                  <span className="text-muted-foreground">Estado</span>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                    Completado
-                  </span>
-                </div>
-                <div className="flex justify-between items-center font-body text-sm">
-                  <span className="text-muted-foreground">Fecha</span>
-                  <span className="text-foreground font-medium">{String(payment.date).split("T")[0]}</span>
-                </div>
-                <div className="flex justify-between items-center font-body pt-3 mt-3 border-t border-border/50">
-                  <span className="text-muted-foreground font-medium">Total pagado</span>
-                  <span className="font-display text-2xl font-bold text-foreground tracking-tight">
-                    ${payment.amount}
-                  </span>
-                </div>
+              <div>
+                <p className="text-sm font-semibold text-foreground">Detalle de la transacción</p>
+
+                <p className="text-xs text-muted-foreground">Pago procesado mediante Stripe</p>
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 w-full">
-              <Button
-                onClick={() => router.push(c.redirect)}
-                className="w-full font-body h-12 text-md transition-all hover:scale-[1.02]"
-                size="lg"
-              >
-                {c.redirectLabel}
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={() => router.push("/")}
-                className="w-full font-body text-muted-foreground hover:text-foreground"
-              >
-                <Home className="w-4 h-4 mr-2" />
-                Volver al inicio
-              </Button>
-            </div>
+            <dl className="mt-4 space-y-3 text-sm">
+              <PaymentRow label="Estado" value={payment.status === "REFUNDED" ? "Reembolsado" : "Completado"} />
+
+              <PaymentRow label="Fecha" value={formatDate(payment.date)} />
+
+              {payment.description && <PaymentRow label="Concepto" value={payment.description} />}
+
+              {payment.customerEmail && <PaymentRow label="Correo" value={payment.customerEmail} />}
+
+              <div className="flex items-end justify-between gap-4 border-t border-border/60 pt-4">
+                <dt className="text-muted-foreground">Total</dt>
+
+                <dd className="text-xl font-semibold tracking-tight text-foreground">
+                  {formatCurrency(payment.amount, payment.currency)}
+                </dd>
+              </div>
+            </dl>
+          </div>
+
+          <div className="mt-6 flex flex-col gap-2 sm:flex-row">
+            <Button className="flex-1" onClick={() => router.push(redirectPath)}>
+              {redirectLabel}
+              <PiArrowRight />
+            </Button>
+
+            <Button variant="outline" className="flex-1" onClick={() => router.push("/dashboard")}>
+              <PiHouse />
+              Ir al dashboard
+            </Button>
           </div>
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 }
+
+interface PaymentStateProps {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  action?: React.ReactNode;
+}
+
+const PaymentState = ({ title, description, icon, action }: PaymentStateProps) => {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-muted/20 px-4 py-10">
+      <Card className="w-full max-w-md">
+        <CardContent className="flex flex-col items-center p-6 text-center sm:p-8">
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+            {icon}
+          </div>
+
+          <h1 className="mt-5 text-xl font-semibold tracking-tight text-foreground">{title}</h1>
+
+          <p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">{description}</p>
+
+          {action && <div className="mt-6">{action}</div>}
+        </CardContent>
+      </Card>
+    </main>
+  );
+};
+
+interface PaymentRowProps {
+  label: string;
+  value: string;
+}
+
+const PaymentRow = ({ label, value }: PaymentRowProps) => {
+  return (
+    <div className="flex items-start justify-between gap-4">
+      <dt className="shrink-0 text-muted-foreground">{label}</dt>
+
+      <dd className="text-right font-medium text-foreground">{value}</dd>
+    </div>
+  );
+};

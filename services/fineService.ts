@@ -25,9 +25,13 @@ export const FineService = {
     );
   },
 
-  pay: async (fineId: string): Promise<ApiResponse<InitiatePaymentResponse>> => {
+  pay: async (fineId: string): Promise<InitiatePaymentResponse> => {
     const response = await api.post<ApiResponse<InitiatePaymentResponse>>(`/fines/${fineId}/pay`);
 
-    return response.data;
+    if (!response.data.data) {
+      throw new Error(response.data.message || "No se pudo iniciar el pago de la multa");
+    }
+
+    return response.data.data;
   },
 };

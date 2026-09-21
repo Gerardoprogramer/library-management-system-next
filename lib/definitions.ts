@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import type { Dispatch, ElementType, SetStateAction } from "react";
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -39,7 +39,7 @@ export type Genre = {
 export type navLinkstype = {
   label: string;
   path: string;
-  icon: React.ElementType;
+  icon: ElementType;
 };
 
 export type BookSummary = {

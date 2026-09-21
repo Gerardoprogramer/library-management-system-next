@@ -6,7 +6,7 @@ export const SubscriptionService = {
     const response = await api.get<ApiResponse<Subscription>>("/subscription");
 
     if (!response.data.data) {
-      throw new Error("El usuario no tiene subscripción");
+      throw new Error(response.data.message || "El usuario no tiene una suscripción activa");
     }
 
     return response.data.data;
@@ -16,7 +16,7 @@ export const SubscriptionService = {
     const response = await api.patch<ApiResponse<Subscription>>(`/subscription/${id}`, { reason });
 
     if (!response.data.data) {
-      throw new Error("El usuario no tiene subscripción");
+      throw new Error(response.data.message || "No se pudo cancelar la suscripción");
     }
 
     return response.data.data;
@@ -34,7 +34,7 @@ export const SubscriptionService = {
     });
 
     if (!response.data.data) {
-      throw new Error("No se pudo crear la subscripción");
+      throw new Error(response.data.message || "No se pudo crear la suscripción");
     }
 
     return response.data.data;

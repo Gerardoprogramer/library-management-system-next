@@ -1,44 +1,36 @@
-import { useSyncExternalStore } from "react";
+"use client";
+
 import { PiFunnel } from "react-icons/pi";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-type Option = {
+interface Option {
   id: string;
   name: string;
-};
+}
 
-interface SelectItemProps {
+interface CustomSelectProps {
   options: Option[];
   headline: string;
   selectedItem: string;
   setSelectedItem: (item: string) => void;
 }
 
-const subscribe = () => () => {};
-
-export const CustomSelect = ({ options, headline, selectedItem, setSelectedItem }: SelectItemProps) => {
-  const mounted = useSyncExternalStore(
-    subscribe,
-    () => true,
-    () => false
-  );
-
-  if (!mounted) return null;
-
+export const CustomSelect = ({ options, headline, selectedItem, setSelectedItem }: CustomSelectProps) => {
   return (
     <Select value={selectedItem} onValueChange={setSelectedItem}>
-      <SelectTrigger className="h-11 w-full min-w-44 rounded-xl">
-        <PiFunnel className="mr-2 size-4.5 shrink-0 text-muted-foreground" />
+      <SelectTrigger aria-label={headline} className="h-11 w-full min-w-44 rounded-xl">
+        <PiFunnel className="mr-2 size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+
         <SelectValue placeholder={headline} />
       </SelectTrigger>
 
       <SelectContent>
         <SelectItem value="all">{headline}</SelectItem>
 
-        {options.map((item) => (
-          <SelectItem key={item.id} value={item.id}>
-            {item.name}
+        {options.map((option) => (
+          <SelectItem key={option.id} value={option.id}>
+            {option.name}
           </SelectItem>
         ))}
       </SelectContent>
