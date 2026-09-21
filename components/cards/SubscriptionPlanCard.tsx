@@ -1,20 +1,31 @@
+"use client";
+
+import { useState } from "react";
+import { PiBooks, PiCheckCircle, PiClock, PiCreditCard } from "react-icons/pi";
+
+import { PaymentDialog } from "@/components/dialog/PaymentDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, CreditCard } from "lucide-react";
-import { SubscriptionPlan } from "@/lib/definitions";
-import { PaymentDialog } from "../dialog/PaymentDialog";
-import { useState } from "react";
 import { useSubscribeActions } from "@/hooks/mutations/useSubscribeActions";
+import type { SubscriptionPlan } from "@/lib/definitions";
 
 interface Props {
   plan: SubscriptionPlan;
   isCurrent?: boolean;
 }
 
-export const SubscriptionPlanCard = ({ plan, isCurrent }: Props) => {
+const formatPrice = (price: number, currency: string) =>
+  new Intl.NumberFormat("es-CR", {
+    style: "currency",
+    currency,
+  }).format(price / 100);
+
+export const SubscriptionPlanCard = ({ plan, isCurrent = false }: Props) => {
   const [payDialog, setPayDialog] = useState(false);
+
   const [autoRenew, setAutoRenew] = useState(true);
+
   const { isLoading, subscribeMutation } = useSubscribeActions(setPayDialog);
 
   const handlePayment = () => {
@@ -26,59 +37,93 @@ export const SubscriptionPlanCard = ({ plan, isCurrent }: Props) => {
   };
 
   return (
-    <Card
-      className={`relative ${isCurrent ? "border-primary ring-1 ring-primary/20" : ""} ${plan.featured ? "shadow-lg" : ""}`}
-    >
-      {plan.badgeText && (
-        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2">
-          <Badge className="font-body text-xs">{plan.badgeText}</Badge>
-        </div>
-      )}
-      <CardContent className="p-5 pt-6">
-        <h3 className="font-display text-lg font-semibold text-foreground mb-1">{plan.name}</h3>
-        <p className="font-body text-sm text-muted-foreground mb-4">{plan.description}</p>
-        <p className="font-display text-3xl font-bold text-foreground mb-4">
-          ${(plan.price / 100).toFixed(2)}
-          <span className="font-body text-sm font-normal text-muted-foreground">/mes</span>
-        </p>
-        <div className="space-y-2 mb-4">
-          <div className="flex items-center gap-2 font-body text-sm text-muted-foreground">
-            <CheckCircle className="w-4 h-4 text-primary" />
-            Hasta {plan.maxBooksAllowed} libros simultáneos
-          </div>
-          <div className="flex items-center gap-2 font-body text-sm text-muted-foreground">
-            <CheckCircle className="w-4 h-4 text-primary" />
-            {plan.maxDaysPerBook} días por libro
-          </div>
-          <div className="flex items-center gap-2 font-body text-sm text-muted-foreground">
-            <CheckCircle className="w-4 h-4 text-primary" />
-            {plan.durationDays} días de duración
-          </div>
-        </div>
-        <Button
-          onClick={() => setPayDialog(true)}
-          className="w-full font-body gap-1.5"
-          variant={isCurrent ? "secondary" : "default"}
-        >
-          {isCurrent ? (
-            "Plan actual"
-          ) : (
-            <>
-              <CreditCard className="w-4 h-4" /> Seleccionar
-            </>
-          )}
-        </Button>
-      </CardContent>
+    <>
+      <Card className={plan.featured ? "relative h-full border-primary/30 shadow-sm" : "relative h-full"}>
+        <CardContent className="flex h-full flex-col p-5 sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h3 className="text-lg font-semibold tracking-tight text-foreground">{plan.name}</h3>
 
-      <PaymentDialog
-        payDialog={payDialog}
-        setPayDialog={setPayDialog}
-        selectedPlan={plan}
-        isLoading={isLoading}
-        handlePayment={handlePayment}
-        autoRenew={autoRenew}
-        setAutoRenew={setAutoRenew}
-      />
-    </Card>
+              <p className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                {plan.durationDays} días
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {isCurrent && <Badge>Plan actual</Badge>}
+
+              {!isCurrent && plan.badgeText && <Badge variant="secondary">{plan.badgeText}</Badge>}
+            </div>
+          </div>
+
+          <p className="mt-4 min-h-12 text-sm leading-6 text-muted-foreground">{plan.description}</p>
+
+          <div className="mt-5">
+            <p className="text-3xl font-semibold tracking-tight text-foreground">
+              {formatPrice(plan.price, plan.currency)}
+            </p>
+
+            <p className="mt-1 text-xs text-muted-foreground">por {plan.durationDays} días</p>
+          </div>
+
+          <div className="my-6 space-y-3 border-y border-border/60 py-5">
+            <PlanFeature icon={PiBooks} text={`Hasta ${plan.maxBooksAllowed} libros simultáneos`} />
+
+            <PlanFeature icon={PiClock} text={`${plan.maxDaysPerBook} días por libro`} />
+
+            <PlanFeature icon={PiCheckCircle} text={`${plan.durationDays} días de vigencia`} />
+          </div>
+
+          <Button
+            type="button"
+            className="mt-auto w-full"
+            variant={isCurrent ? "secondary" : "default"}
+            disabled={isCurrent || !plan.active || isLoading}
+            onClick={() => setPayDialog(true)}
+          >
+            {isCurrent ? (
+              <>
+                <PiCheckCircle />
+                Plan actual
+              </>
+            ) : !plan.active ? (
+              "No disponible"
+            ) : (
+              <>
+                <PiCreditCard />
+                Seleccionar plan
+              </>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {!isCurrent && (
+        <PaymentDialog
+          payDialog={payDialog}
+          setPayDialog={setPayDialog}
+          selectedPlan={plan}
+          isLoading={isLoading}
+          handlePayment={handlePayment}
+          autoRenew={autoRenew}
+          setAutoRenew={setAutoRenew}
+        />
+      )}
+    </>
   );
 };
+
+interface PlanFeatureProps {
+  icon: React.ElementType;
+  text: string;
+}
+
+const PlanFeature = ({ icon: Icon, text }: PlanFeatureProps) => (
+  <div className="flex items-center gap-3 text-sm text-muted-foreground">
+    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+      <Icon className="size-4" />
+    </div>
+
+    <span>{text}</span>
+  </div>
+);

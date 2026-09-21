@@ -1,20 +1,36 @@
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CreditCard, Loader2, CheckCircle2 } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
-import { SubscriptionPlan } from "@/lib/definitions";
-import { Switch } from "../ui/switch";
-import { Label } from "../ui/label";
+"use client";
 
-interface PaymentDialogProps {
+import type { Dispatch, SetStateAction } from "react";
+import { PiCheckCircle, PiCreditCard, PiLockKey, PiSpinnerGap } from "react-icons/pi";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import type { SubscriptionPlan } from "@/lib/definitions";
+
+interface Props {
   payDialog: boolean;
   setPayDialog: Dispatch<SetStateAction<boolean>>;
   autoRenew: boolean;
   setAutoRenew: Dispatch<SetStateAction<boolean>>;
-  selectedPlan?: SubscriptionPlan;
+  selectedPlan: SubscriptionPlan;
   isLoading: boolean;
   handlePayment: () => void;
 }
+
+const formatPrice = (price: number, currency: string) =>
+  new Intl.NumberFormat("es-CR", {
+    style: "currency",
+    currency,
+  }).format(price / 100);
 
 export const PaymentDialog = ({
   payDialog,
@@ -24,90 +40,116 @@ export const PaymentDialog = ({
   selectedPlan,
   isLoading,
   handlePayment,
-}: PaymentDialogProps) => {
+}: Props) => {
+  const handleOpenChange = (open: boolean) => {
+    if (isLoading && !open) {
+      return;
+    }
+
+    setPayDialog(open);
+  };
+
   return (
-    <Dialog open={payDialog} onOpenChange={setPayDialog}>
-      <DialogContent className="max-w-sm border-none shadow-lg">
+    <Dialog open={payDialog} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-display text-xl">Confirmar Suscripción</DialogTitle>
+          <div className="mb-1 flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <PiCreditCard className="size-5" />
+          </div>
+
+          <DialogTitle>Confirmar suscripción</DialogTitle>
+
+          <DialogDescription>Revisá el plan antes de continuar al pago seguro con Stripe.</DialogDescription>
         </DialogHeader>
 
-        {isLoading ? (
-          <div className="flex flex-col items-center py-10 gap-4">
-            <div className="relative">
-              <Loader2 className="w-12 h-12 text-primary animate-spin" />
-              <CreditCard className="w-5 h-5 text-primary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        <div className="space-y-5">
+          <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                  Plan seleccionado
+                </p>
+
+                <h3 className="mt-2 text-lg font-semibold text-foreground">{selectedPlan.name}</h3>
+
+                <p className="mt-1 text-sm text-muted-foreground">{selectedPlan.durationDays} días de vigencia</p>
+              </div>
+
+              {selectedPlan.badgeText && (
+                <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                  {selectedPlan.badgeText}
+                </span>
+              )}
             </div>
-            <div className="text-center space-y-1">
-              <p className="font-body font-medium text-foreground">Preparando tu pago</p>
-              <p className="font-body text-xs text-muted-foreground px-6">
-                Estamos generando tu sesión segura en Stripe. No cierres esta ventana.
+
+            <div className="mt-5 flex items-end justify-between gap-4 border-t border-border/60 pt-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Hasta {selectedPlan.maxBooksAllowed} libros simultáneos</p>
+
+                <p className="mt-1 text-sm text-muted-foreground">{selectedPlan.maxDaysPerBook} días por préstamo</p>
+              </div>
+
+              <p className="shrink-0 text-xl font-semibold tracking-tight text-foreground">
+                {formatPrice(selectedPlan.price, selectedPlan.currency)}
               </p>
             </div>
           </div>
-        ) : (
-          <>
-            <div className="bg-muted/30 rounded-xl p-4 space-y-3 border border-border/50">
-              <div className="flex justify-between items-center">
-                <span className="text-muted-foreground text-xs uppercase tracking-wider font-semibold">
-                  Plan Seleccionado
-                </span>
-                <span className="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">
-                  {selectedPlan?.durationDays} Días
-                </span>
-              </div>
 
-              <div className="flex justify-between items-end">
-                <div>
-                  <h4 className="font-display text-lg font-bold text-foreground leading-none">{selectedPlan?.name}</h4>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Hasta {selectedPlan?.maxBooksAllowed} libros simultáneos
-                  </p>
-                </div>
-                <div className="text-right">
-                  <span className="font-display text-xl font-bold text-foreground">
-                    ${selectedPlan ? (selectedPlan.price / 100).toFixed(2) : "0.00"}
-                  </span>
-                </div>
-              </div>
+          <div className="flex items-center justify-between gap-4 rounded-xl border border-border/70 p-4">
+            <div className="min-w-0">
+              <Label htmlFor="auto-renew" className="text-sm font-medium">
+                Renovación automática
+              </Label>
 
-              <div className="h-px bg-border/60 my-2" />
-
-              {/* Opción de Auto-renovación para el CreateSubscriptionRequest */}
-              <div className="flex items-center justify-between py-1">
-                <div className="space-y-0.5">
-                  <Label htmlFor="renew" className="text-sm font-medium">
-                    Renovación automática
-                  </Label>
-                  <p className="text-[11px] text-muted-foreground italic">Puedes cancelarla en cualquier momento</p>
-                </div>
-                <Switch id="renew" checked={autoRenew} onCheckedChange={setAutoRenew} />
-              </div>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                Permití que el sistema intente renovar el plan automáticamente al finalizar su vigencia.
+              </p>
             </div>
 
-            <div className="flex items-start gap-2 px-1 text-[11px] font-body text-muted-foreground leading-tight">
-              <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0 mt-0.5" />
-              <span>
-                Al hacer clic en pagar, serás redirigido a la plataforma oficial de Stripe para completar la transacción
-                de forma segura.
-              </span>
-            </div>
+            <Switch
+              id="auto-renew"
+              checked={autoRenew}
+              onCheckedChange={setAutoRenew}
+              disabled={isLoading}
+              className="shrink-0"
+            />
+          </div>
 
-            <DialogFooter className="gap-2 sm:gap-0">
-              <Button
-                variant="ghost"
-                onClick={() => setPayDialog(false)}
-                className="font-body text-muted-foreground hover:text-foreground"
-                disabled={isLoading}
-              >
-                Cancelar
-              </Button>
-              <Button onClick={() => handlePayment()} className="font-body gap-2 shadow-md px-6" disabled={isLoading}>
-                <CreditCard className="w-4 h-4" />
-                Pagar Ahora
-              </Button>
-            </DialogFooter>
-          </>
+          <div className="flex items-start gap-3 text-xs leading-5 text-muted-foreground">
+            <PiLockKey className="mt-0.5 size-4 shrink-0 text-primary" />
+
+            <p>
+              Al continuar serás redirigido a Stripe para completar el pago. Los datos de pago se procesan en la
+              plataforma de Stripe.
+            </p>
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} disabled={isLoading}>
+            Volver
+          </Button>
+
+          <Button type="button" onClick={handlePayment} disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <PiSpinnerGap className="animate-spin" />
+                Preparando pago...
+              </>
+            ) : (
+              <>
+                <PiCreditCard />
+                Continuar a Stripe
+              </>
+            )}
+          </Button>
+        </DialogFooter>
+
+        {isLoading && (
+          <div className="flex items-center justify-center gap-2 border-t border-border/60 pt-4 text-xs text-muted-foreground">
+            <PiCheckCircle className="size-4 text-primary" />
+            Creando una sesión de pago segura…
+          </div>
         )}
       </DialogContent>
     </Dialog>
