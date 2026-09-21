@@ -290,3 +290,58 @@ export interface PaymentDetails {
   plan?: string;
   paymentId?: string;
 }
+
+export type FineStatus = "PENDING" | "PARTIALLY_PAID" | "PAID" | "WAIVED";
+
+export type FineType = "OVERDUE" | "DAMAGE" | "LOSS" | "PROCESSING";
+
+export interface Fine {
+  id: string;
+  userId: string;
+  bookLoanId: string;
+  type: FineType;
+  amount: number;
+  currency: string;
+  status: FineStatus;
+  reason: string;
+  notes: string | null;
+  waivedByUserId: string | null;
+  waiverReason: string | null;
+  paidAt: string | null;
+  processedByUserId: string | null;
+  transactionId: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type PaymentStatus = "PENDING" | "SUCCESS" | "FAILED" | "CANCELLED" | "REFUNDED";
+
+export type PaymentType = "FINE" | "MEMBERSHIP" | "LOST_BOOK_PENALTY" | "DAMAGED_BOOK_PENALTY" | "REFUND";
+
+export interface Payment {
+  id: string;
+  paymentType: PaymentType;
+  paymentStatus: PaymentStatus;
+  paymentGateway: "STRIPE";
+  amount: number;
+  currency: string;
+  transactionId: string | null;
+  checkoutSessionId: string | null;
+  paymentIntentId: string | null;
+  chargeId: string | null;
+  refundId: string | null;
+  description: string;
+  failureReason: string | null;
+  initiatedAt: string | null;
+  completedAt: string | null;
+  refundedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InitiatePaymentResponse {
+  paymentId: string;
+  paymentStatus: PaymentStatus;
+  checkoutUrl: string;
+  checkoutSessionId: string;
+}
