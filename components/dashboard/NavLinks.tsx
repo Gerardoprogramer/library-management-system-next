@@ -13,16 +13,22 @@ interface NavLinksProps {
 export const NavLinks = ({ links }: NavLinksProps) => {
   const pathname = usePathname();
 
+  const activePath = links
+    .filter((item) => pathname === item.path || pathname.startsWith(`${item.path}/`))
+    .sort((a, b) => b.path.length - a.path.length)[0]?.path;
+
   return (
     <div className="space-y-1">
       {links.map((item) => {
-        const isActive = pathname === item.path || pathname.startsWith(`${item.path}/`);
+        const isActive = item.path === activePath;
+
         const Icon = item.icon;
 
         return (
           <Link
             href={item.path}
             key={item.path}
+            aria-current={isActive ? "page" : undefined}
             className={cn(
               "group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200",
               isActive

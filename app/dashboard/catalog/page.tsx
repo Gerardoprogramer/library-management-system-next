@@ -1,17 +1,13 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
+
 import { CatalogClient } from "@/components/catalog/CatalogClient";
 
 export const metadata: Metadata = {
-  title: "Catálogo de Libros | Biblioteca Obsidian",
+  title: "Catálogo",
   description:
-    "Explora nuestra colección completa de conocimiento digital, notas interconectadas y recursos de tecnología.",
-  openGraph: {
-    title: "Catálogo de Libros | Gestión de Conocimiento",
-    description: "Busca entre cientos de recursos y notas inspiradas en la metodología de Obsidian.",
-    images: ["/og-catalogo.png"],
-  },
+    "Explorá la colección de libros de Biblioteca Obsidian y buscá por título, autor, ISBN, género o disponibilidad.",
   alternates: {
-    canonical: "https://obsidian-delta-kohl.vercel.app/dashboard/catalog",
+    canonical: "/dashboard/catalog",
   },
 };
 

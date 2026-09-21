@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PiArrowRight, PiBooks, PiCheckCircle, PiSparkle } from "react-icons/pi";
+import type { ElementType } from "react";
 
 import { Button } from "@/components/ui/button";
 import heroImage from "@/public/library-hero.jpg";
@@ -71,7 +72,7 @@ export const HeroSection = () => {
 };
 
 interface HeroFeatureProps {
-  icon: React.ElementType;
+  icon: ElementType;
   text: string;
 }
 

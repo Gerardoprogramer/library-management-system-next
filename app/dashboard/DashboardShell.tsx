@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { PiList } from "react-icons/pi";
 
@@ -23,14 +24,16 @@ const routeTitles = [
   { path: "/dashboard/admin", title: "Panel administrativo" },
 ];
 
-export default function DashboardShell({ children }: { children: React.ReactNode }) {
+export default function DashboardShell({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+
   const { data: user } = useCurrentUser();
 
   const pageTitle =
-    routeTitles.find((route) => pathname === route.path || pathname.startsWith(`${route.path}/`))?.title ??
-    "Biblioteca";
+    routeTitles
+      .filter((route) => pathname === route.path || pathname.startsWith(`${route.path}/`))
+      .sort((a, b) => b.path.length - a.path.length)[0]?.title ?? "Biblioteca";
 
   const initials = user?.fullName
     ? user.fullName

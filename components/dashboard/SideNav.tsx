@@ -56,7 +56,7 @@ export const SideNav = ({ isOpen, setIsOpen }: SideNavProps) => {
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-5">
+        <nav className="flex-1 overflow-y-auto px-3 py-5" onClick={() => setIsOpen(false)}>
           <div className="mb-6">
             <p className="mb-2 px-3 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/70">
               Biblioteca

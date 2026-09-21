@@ -16,6 +16,7 @@ import {
   PiXCircle,
 } from "react-icons/pi";
 import type { navLinkstype, statusLoan, selectOptions, typeLoans, reservationStatus } from "./definitions";
+import type { ElementType } from "react";
 
 export const userNav: navLinkstype[] = [
   { label: "Catálogo", path: "/dashboard/catalog", icon: PiBookOpen },
@@ -49,7 +50,7 @@ export const statusLoanConfig: Record<
   statusLoan,
   {
     label: string;
-    icon: React.ElementType;
+    icon: ElementType;
     variant: "default" | "secondary" | "destructive" | "outline";
   }
 > = {
@@ -100,7 +101,7 @@ export const statusConfig: Record<
   reservationStatus,
   {
     label: string;
-    icon: React.ElementType;
+    icon: ElementType;
     variant: "default" | "secondary" | "destructive" | "outline";
   }
 > = {
