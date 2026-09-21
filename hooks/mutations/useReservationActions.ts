@@ -13,7 +13,9 @@ export const useReservationActions = (bookId: string) => {
       showToast.success("Reserva realizada con éxito");
 
       queryClient.invalidateQueries({ queryKey: ["reservations"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "reservations"] });
       queryClient.invalidateQueries({ queryKey: ["book", bookId] });
+      queryClient.invalidateQueries({ queryKey: ["book-user-status", bookId] });
     },
 
     onError: (error) => {

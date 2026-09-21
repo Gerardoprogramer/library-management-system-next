@@ -16,7 +16,10 @@ export const useLoanActions = (bookId: string) => {
         onClick: () => router.push("/dashboard/loans"),
       });
       queryClient.invalidateQueries({ queryKey: ["loans"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "loans"] });
       queryClient.invalidateQueries({ queryKey: ["book", bookId] });
+      queryClient.invalidateQueries({ queryKey: ["book-user-status", bookId] });
+      queryClient.invalidateQueries({ queryKey: ["books"] });
     },
     onError: (error) => showToast.apiError(error),
   });

@@ -201,6 +201,12 @@ export interface checkoutLoan {
   notes?: string;
 }
 
+export interface renewLoan {
+  loanId: string;
+  extensionDays: number;
+  notes?: string;
+}
+
 export interface reserve {
   bookId?: string;
   notes?: string;
