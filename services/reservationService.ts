@@ -35,4 +35,9 @@ export const reservationService = {
     const response = await api.post<ApiResponse<void>>("/reservation", reserveData);
     return response.data;
   },
+  cancel: async (reservationId: string): Promise<ApiResponse<reservationBook>> => {
+    const response = await api.delete<ApiResponse<reservationBook>>(`/reservation/${reservationId}`);
+
+    return response.data;
+  },
 };

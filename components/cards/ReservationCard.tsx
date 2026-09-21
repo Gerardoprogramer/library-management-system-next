@@ -1,15 +1,29 @@
-import { Card, CardContent } from "../ui/card";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
-import { reservationBook } from "@/lib/definitions";
-import { ArrowRight, XCircle, BookOpen, Bell, Info } from "lucide-react";
-import { statusConfig } from "@/lib/data";
-import { formatDate } from "@/lib/date-utils";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { useQueryParams } from "@/hooks/Utilidades/useQueryParams";
+import { useState } from "react";
+import { PiArrowRight, PiBell, PiInfo, PiXCircle } from "react-icons/pi";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useCancelReservation } from "@/hooks/mutations/useCancelReservation";
 import { useCurrentUrl } from "@/hooks/Utilidades/useCurrentUrl";
+import { useQueryParams } from "@/hooks/Utilidades/useQueryParams";
+import { statusConfig } from "@/lib/data";
+import { formatDate } from "@/lib/date-utils";
+import type { reservationBook } from "@/lib/definitions";
 import { createSlug } from "@/lib/slug-utils";
 
 interface Props {
@@ -17,148 +31,193 @@ interface Props {
 }
 
 export const ReservationCard = ({ data }: Props) => {
-  const config = statusConfig[data.status];
-  const canCancel = data.status === "PENDING" || data.status === "AVAILABLE";
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+
   const queryParams = useQueryParams();
   const currentUrl = useCurrentUrl();
 
+  const { cancelReservation, isCancelling } = useCancelReservation(data.bookId);
+
+  const config = statusConfig[data.status];
+
+  const canCancel = data.status === "PENDING" || data.status === "AVAILABLE";
+
+  const bookHref = {
+    pathname: `/dashboard/book/${createSlug(data.bookId, data.bookTitle)}`,
+    query: {
+      ...queryParams,
+      from: currentUrl,
+    },
+  };
+
+  const handleCancel = () => {
+    cancelReservation(data.id, {
+      onSuccess: () => {
+        setCancelDialogOpen(false);
+      },
+    });
+  };
+
   return (
-    <Card
-      className={`overflow-hidden transition-all ${data.status === "AVAILABLE" ? "border-primary/50 ring-1 ring-primary/20" : ""}`}
-    >
-      <CardContent className="p-0">
-        <div className="flex flex-col sm:flex-row">
-          <Link
-            href={{
-              pathname: `/dashboard/book/${createSlug(data.bookId, data.bookTitle)}`,
-              query: { ...queryParams, from: currentUrl },
-            }}
-            className="relative w-full sm:w-32 md:w-40 aspect-2/3 sm:aspect-auto shrink-0 overflow-hidden shadow-xl"
-          >
-            <Image
-              src={data.bookCoverImageUrl}
-              alt={data.bookTitle}
-              fill
-              className="object-cover transition-transform duration-500 hover:scale-110"
-              sizes="(max-width: 640px) 100vw, 160px"
-              priority={false}
-            />
-          </Link>
-          <div className="flex-1 p-4 sm:p-5 min-w-0">
-            <div className="flex items-start justify-between gap-2 mb-3">
-              <div className="min-w-0">
-                <Link
-                  href={{
-                    pathname: `/dashboard/book/${createSlug(data.bookId, data.bookTitle)}`,
-                    query: { ...queryParams, from: currentUrl },
-                  }}
-                >
-                  <h3 className="font-display text-base font-semibold text-foreground line-clamp-1 cursor-pointer hover:text-primary transition-colors">
-                    {data.bookTitle}
-                  </h3>
-                </Link>
-                <p className="font-body text-sm text-muted-foreground">{data.author}</p>
+    <>
+      <Card className={data.status === "AVAILABLE" ? "overflow-hidden border-primary/30" : "overflow-hidden"}>
+        <CardContent className="p-0">
+          <div className="flex flex-col sm:flex-row">
+            <Link
+              href={bookHref}
+              aria-label={`Ver ${data.bookTitle}`}
+              className="group relative aspect-3/4 w-full shrink-0 overflow-hidden bg-muted sm:w-32 md:w-36"
+            >
+              <Image
+                src={data.bookCoverImageUrl}
+                alt={`Portada de ${data.bookTitle}`}
+                fill
+                sizes="(max-width: 640px) 100vw, 144px"
+                className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+              />
+            </Link>
+
+            <div className="flex min-w-0 flex-1 flex-col p-5 sm:p-6">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div className="min-w-0">
+                  <Link href={bookHref} className="inline-block max-w-full">
+                    <h3 className="line-clamp-2 text-base font-semibold leading-6 tracking-tight text-foreground transition-colors hover:text-primary sm:text-lg">
+                      {data.bookTitle}
+                    </h3>
+                  </Link>
+
+                  <p className="mt-1 text-sm text-muted-foreground">{data.author}</p>
+                </div>
+
+                <Badge variant={config.variant} className="shrink-0">
+                  <config.icon />
+                  {config.label}
+                </Badge>
               </div>
-              <Badge variant={config.variant} className="font-body gap-1 shrink-0">
-                <config.icon className="w-3 h-3" /> {config.label}
-              </Badge>
-            </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
-              <div>
-                <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Reservado</p>
-                <p className="font-body text-sm text-foreground">{formatDate(data.reservedAt)}</p>
+              <div className="mt-5 grid grid-cols-2 gap-x-4 gap-y-5 md:grid-cols-4">
+                <ReservationMeta label="Reservado" value={formatDate(data.reservedAt)} />
+
+                {data.status === "PENDING" && data.queuePosition != null && (
+                  <ReservationMeta label="Posición" value={`#${data.queuePosition} en cola`} />
+                )}
+
+                {data.availableAt && <ReservationMeta label="Disponible desde" value={formatDate(data.availableAt)} />}
+
+                {data.status === "AVAILABLE" && data.availableUntil && (
+                  <ReservationMeta label="Retirar antes de" value={formatDate(data.availableUntil)} highlight />
+                )}
+
+                {data.fulfilledAt && <ReservationMeta label="Completada" value={formatDate(data.fulfilledAt)} />}
+
+                {data.cancelledAt && <ReservationMeta label="Cancelada" value={formatDate(data.cancelledAt)} />}
               </div>
-              {data.queuePosition != null && data.status === "PENDING" && (
-                <div>
-                  <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Posición</p>
-                  <p className="font-body text-sm text-foreground font-semibold">#{data.queuePosition} en cola</p>
-                </div>
-              )}
-              {data.availableAt && (
-                <div>
-                  <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">
-                    Disponible desde
-                  </p>
-                  <p className="font-body text-sm text-foreground">{formatDate(data.availableAt)}</p>
-                </div>
-              )}
-              {data.availableUntil && data.status === "AVAILABLE" && (
-                <div>
-                  <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">
-                    Recoger antes de
-                  </p>
-                  <p className="font-body text-sm text-primary font-semibold">{formatDate(data.availableUntil)}</p>
-                </div>
-              )}
-              {data.fulfilledAt && (
-                <div>
-                  <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Recogido</p>
-                  <p className="font-body text-sm text-foreground">{formatDate(data.fulfilledAt)}</p>
-                </div>
-              )}
-              {data.cancelledAt && (
-                <div>
-                  <p className="font-body text-[11px] text-muted-foreground uppercase tracking-wider">Cancelada</p>
-                  <p className="font-body text-sm text-foreground">{formatDate(data.cancelledAt)}</p>
-                </div>
-              )}
-            </div>
 
-            {data.status === "AVAILABLE" && data.notificationSent && (
-              <div className="flex items-center gap-2 text-primary bg-primary/10 rounded-md px-3 py-1.5 mb-3">
-                <Bell className="w-3.5 h-3.5 shrink-0" />
-                <span className="font-body text-xs font-medium">
-                  Notificación enviada — recoge tu libro antes del {formatDate(data.availableUntil)}
-                </span>
-              </div>
-            )}
-
-            {data.notes && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center gap-1.5 text-muted-foreground mb-3 cursor-help">
-                      <Info className="w-3.5 h-3.5" />
-                      <span className="font-body text-xs line-clamp-1">{data.notes}</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="font-body text-xs max-w-60">{data.notes}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
-
-            <div className="flex items-center gap-2">
               {data.status === "AVAILABLE" && (
-                <Button size="sm" className="font-body text-xs gap-1.5">
-                  <BookOpen className="w-3 h-3" /> Recoger libro
-                </Button>
+                <Alert variant="warning" className="mt-5">
+                  <PiBell />
+
+                  <AlertTitle>Libro disponible para retiro</AlertTitle>
+
+                  <AlertDescription>
+                    Tu reserva ya está disponible.
+                    {data.availableUntil && (
+                      <>
+                        {" "}
+                        Acercate a la biblioteca antes del{" "}
+                        <span className="font-medium text-foreground">{formatDate(data.availableUntil)}</span>.
+                      </>
+                    )}
+                  </AlertDescription>
+                </Alert>
               )}
-              {canCancel && (
-                <Button variant="outline" size="sm" className="font-body text-xs gap-1.5">
-                  <XCircle className="w-3 h-3" /> Cancelar
-                </Button>
+
+              {data.notes && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        className="mt-4 flex max-w-sm items-center gap-2 text-left text-xs text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        <PiInfo className="size-4 shrink-0" />
+
+                        <span className="truncate">{data.notes}</span>
+                      </button>
+                    </TooltipTrigger>
+
+                    <TooltipContent side="bottom" className="max-w-xs">
+                      {data.notes}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
-              <Link
-                href={{
-                  pathname: `/dashboard/book/${createSlug(data.bookId, data.bookTitle)}`,
-                  query: { ...queryParams, from: currentUrl },
-                }}
-              >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="font-body text-xs h-8 gap-1 hover:bg-white/5 text-muted-foreground hover:text-foreground"
-                >
-                  Ver libro <ArrowRight className="w-3 h-3" />
+
+              <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-border/60 pt-4">
+                {canCancel && (
+                  <Button type="button" variant="outline" size="sm" onClick={() => setCancelDialogOpen(true)}>
+                    <PiXCircle />
+                    Cancelar reserva
+                  </Button>
+                )}
+
+                <Button asChild variant="ghost" size="sm">
+                  <Link href={bookHref}>
+                    Ver libro
+                    <PiArrowRight />
+                  </Link>
                 </Button>
-              </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+
+      <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <div className="mb-1 flex size-10 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
+              <PiXCircle className="size-5" />
+            </div>
+
+            <DialogTitle>Cancelar reserva</DialogTitle>
+
+            <DialogDescription>
+              Vas a cancelar tu reserva de «{data.bookTitle}». Esta acción no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setCancelDialogOpen(false)} disabled={isCancelling}>
+              Volver
+            </Button>
+
+            <Button type="button" variant="destructive" onClick={handleCancel} disabled={isCancelling}>
+              <PiXCircle />
+
+              {isCancelling ? "Cancelando..." : "Cancelar reserva"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+interface ReservationMetaProps {
+  label: string;
+  value: string | undefined;
+  highlight?: boolean;
+}
+
+const ReservationMeta = ({ label, value, highlight = false }: ReservationMetaProps) => {
+  return (
+    <div className="min-w-0">
+      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
+
+      <p className={highlight ? "mt-1 text-sm font-semibold text-primary" : "mt-1 text-sm font-medium text-foreground"}>
+        {value ?? "—"}
+      </p>
+    </div>
   );
 };
