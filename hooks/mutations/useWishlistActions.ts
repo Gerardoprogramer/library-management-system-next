@@ -1,54 +1,107 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { WishListService } from "@/services/wishlistService";
-import { showToast } from "@/lib/toast-utils";
+
 import type { BookDetail, BookSummary, PageResponse } from "@/lib/definitions";
+import { showToast } from "@/lib/toast-utils";
+import { WishListService } from "@/services/wishlistService";
+
+interface WishlistMutation {
+  bookId: string;
+  isInWishlist: boolean;
+}
 
 export const useWishlistActions = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ bookId, isInWishlist }: { bookId: string; isInWishlist: boolean }) =>
+    mutationFn: ({ bookId, isInWishlist }: WishlistMutation) =>
       isInWishlist ? WishListService.remove(bookId) : WishListService.add(bookId),
 
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: ["books"] });
-      await queryClient.cancelQueries({ queryKey: ["book", variables.bookId] });
+      await Promise.all([
+        queryClient.cancelQueries({
+          queryKey: ["books"],
+        }),
+        queryClient.cancelQueries({
+          queryKey: ["book", variables.bookId],
+        }),
+      ]);
 
-      const previousBooks = queryClient.getQueryData(["books"]);
-      const previousBookDetail = queryClient.getQueryData(["book", variables.bookId]);
+      const previousBooks = queryClient.getQueriesData<PageResponse<BookSummary>>({
+        queryKey: ["books"],
+      });
+
+      const previousBookDetail = queryClient.getQueryData<BookDetail>(["book", variables.bookId]);
 
       const newValue = !variables.isInWishlist;
 
-      queryClient.setQueryData(["book", variables.bookId], (old: BookDetail | undefined) => {
-        if (!old) return old;
-        return { ...old, isWishList: newValue };
-      });
+      queryClient.setQueryData<BookDetail>(["book", variables.bookId], (previous) => {
+        if (!previous) {
+          return previous;
+        }
 
-      queryClient.setQueriesData<PageResponse<BookSummary>>({ queryKey: ["books"], exact: false }, (old) => {
-        if (!old) return old;
         return {
-          ...old,
-          content: old.content.map((book) => (book.id === variables.bookId ? { ...book, isWishList: newValue } : book)),
+          ...previous,
+          isWishList: newValue,
         };
       });
 
-      return { previousBooks, previousBookDetail };
+      queryClient.setQueriesData<PageResponse<BookSummary>>(
+        {
+          queryKey: ["books"],
+        },
+        (previous) => {
+          if (!previous) {
+            return previous;
+          }
+
+          return {
+            ...previous,
+            content: previous.content.map((book) =>
+              book.id === variables.bookId
+                ? {
+                    ...book,
+                    isWishList: newValue,
+                  }
+                : book
+            ),
+          };
+        }
+      );
+
+      return {
+        previousBooks,
+        previousBookDetail,
+      };
     },
 
-    onError: (err, variables, context) => {
-      if (context?.previousBooks) {
-        queryClient.setQueryData(["books"], context.previousBooks);
-      }
+    onError: (error, variables, context) => {
+      context?.previousBooks.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, data);
+      });
+
       if (context?.previousBookDetail) {
         queryClient.setQueryData(["book", variables.bookId], context.previousBookDetail);
       }
-      showToast.apiError(err);
+
+      showToast.apiError(error);
     },
 
-    onSettled: (data, error, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["books"] });
-      queryClient.invalidateQueries({ queryKey: ["book", variables.bookId] });
-      queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+    onSettled: (_data, _error, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["books"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["book", variables.bookId],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["wishlist"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["dashboard", "wishlist"],
+      });
     },
   });
 };

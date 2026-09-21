@@ -1,41 +1,53 @@
-import { reservationService } from "@/services/reservationService";
 import { useQuery } from "@tanstack/react-query";
+
 import { useUrlFilters } from "@/hooks/Utilidades/useUrlFilters";
-import { PageResponse, reservationBook } from "@/lib/definitions";
+import type { PageResponse, reservationBook } from "@/lib/definitions";
+import { reservationService } from "@/services/reservationService";
 
 export const useReservation = () => {
   const { get, set } = useUrlFilters();
+
   const status = get("status", "all");
-  const availableOnly = get("availableOnly") === "true";
+  const activeOnly = get("activeOnly") === "true";
   const page = Number(get("ReservationPage", "1"));
 
   const { data: reservations, isLoading } = useQuery<PageResponse<reservationBook>>({
-    queryKey: ["reservations", { status, availableOnly, page }],
+    queryKey: [
+      "reservations",
+      {
+        status,
+        activeOnly,
+        page,
+      },
+    ],
+
     queryFn: () =>
-      reservationService.getReservations(undefined, status === "all" ? undefined : status, availableOnly, page - 1),
-    placeholderData: (prev) => prev,
+      reservationService.getReservations(undefined, status === "all" ? undefined : status, activeOnly, page - 1),
+
+    placeholderData: (previous) => previous,
     staleTime: 1000 * 60 * 5,
   });
 
-  const setStatus = (s: string) => {
+  const setStatus = (newStatus: string) => {
     set({
-      status: s,
+      status: newStatus,
       ReservationPage: "1",
     });
   };
 
-  const toggleAvailableOnly = () =>
+  const toggleActiveOnly = () => {
     set({
-      availableOnly: !availableOnly,
+      activeOnly: !activeOnly,
       ReservationPage: "1",
     });
+  };
 
   return {
     reservations,
-    setStatus,
     status,
-    toggleAvailableOnly,
-    availableOnly,
+    activeOnly,
     isLoading,
+    setStatus,
+    toggleActiveOnly,
   };
 };
