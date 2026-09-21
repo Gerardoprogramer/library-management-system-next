@@ -1,12 +1,22 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "../ui/dialog";
-import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Star } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { PiStar } from "react-icons/pi";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useReviewForm } from "@/hooks/ui/useReviewForm";
 import type { Review } from "@/lib/definitions";
 import { reviewSchema } from "@/schemas/review.schema";
-import { useState } from "react";
-import { useReviewForm } from "@/hooks/ui/useReviewForm";
 
 interface Props {
   isOpen: boolean;
@@ -18,29 +28,65 @@ interface Props {
   mode: "create" | "edit";
 }
 
-const StarRating = ({ value, onChange }: { value: number; onChange: (v: number) => void }) => (
-  <div className="flex gap-1">
-    {Array.from({ length: 5 }).map((_, i) => (
-      <button
-        key={i}
-        type="button"
-        onClick={() => onChange(i + 1)}
-        className="focus:outline-none transition-transform active:scale-110"
-      >
-        <Star
-          className={`w-5 h-5 transition-colors ${i < value ? "fill-primary text-primary" : "text-muted-foreground hover:text-primary/50"}`}
-        />
-      </button>
-    ))}
-  </div>
-);
+interface StarRatingProps {
+  value: number;
+  onChange: (value: number) => void;
+}
+
+const StarRating = ({ value, onChange }: StarRatingProps) => {
+  return (
+    <div className="flex items-center gap-1" role="radiogroup" aria-label="Calificación">
+      {Array.from({ length: 5 }).map((_, index) => {
+        const rating = index + 1;
+        const selected = rating <= value;
+
+        return (
+          <button
+            key={rating}
+            type="button"
+            role="radio"
+            aria-checked={rating === value}
+            aria-label={`${rating} ${rating === 1 ? "estrella" : "estrellas"}`}
+            onClick={() => onChange(rating)}
+            className="rounded-md p-1 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <PiStar
+              className={
+                selected
+                  ? "size-6 fill-current text-primary"
+                  : "size-6 text-muted-foreground/40 transition-colors hover:text-primary/60"
+              }
+            />
+          </button>
+        );
+      })}
+    </div>
+  );
+};
 
 export const ReviewFormDialog = ({ isOpen, setIsOpen, bookTitle, handleSave, isPending, mode, review }: Props) => {
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const { formRating, formText, formTitle, setFormRating, setFormText, setFormTitle } = useReviewForm(review);
 
+  const config = {
+    create: {
+      title: "Escribir reseña",
+      description: `Compartí tu opinión sobre «${bookTitle}».`,
+      button: "Publicar reseña",
+    },
+    edit: {
+      title: "Editar reseña",
+      description: `Modificá tu reseña de «${bookTitle}».`,
+      button: "Guardar cambios",
+    },
+  };
+
   const handleOpenChange = (open: boolean) => {
+    if (isPending && !open) {
+      return;
+    }
+
     if (!open) {
       setValidationError(null);
     }
@@ -48,86 +94,105 @@ export const ReviewFormDialog = ({ isOpen, setIsOpen, bookTitle, handleSave, isP
     setIsOpen(open);
   };
 
-  const onValidateAndSave = () => {
+  const handleSubmit = () => {
     const result = reviewSchema.safeParse({
-      title: formTitle,
-      reviewText: formText,
+      title: formTitle.trim(),
+      reviewText: formText.trim(),
       rating: formRating,
     });
 
     if (!result.success) {
-      setValidationError(result.error.issues[0].message);
+      setValidationError(result.error.issues[0]?.message ?? "Revisá los datos ingresados.");
       return;
     }
 
     setValidationError(null);
-    handleSave({ rating: formRating, title: formTitle, reviewText: formText });
-  };
 
-  const config = {
-    create: {
-      title: "Escribir reseña",
-      description: `Comparte tu opinión sobre "${bookTitle}".`,
-      button: "Publicar reseña",
-    },
-    edit: {
-      title: "Editar reseña",
-      description: `Modifica tu reseña de "${bookTitle}".`,
-      button: "Guardar cambios",
-    },
+    handleSave({
+      rating: result.data.rating,
+      title: result.data.title,
+      reviewText: result.data.reviewText,
+    });
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md max-w-[95vw] overflow-hidden">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-display">{config[mode].title}</DialogTitle>
-          <DialogDescription className="font-body text-sm">{config[mode].description}</DialogDescription>
+          <div className="mb-1 flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <PiStar className="size-5" />
+          </div>
+
+          <DialogTitle>{config[mode].title}</DialogTitle>
+
+          <DialogDescription>{config[mode].description}</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-2">
-          <div>
-            <label className="font-body text-sm text-foreground mb-1.5 block">Calificación</label>
+        <div className="space-y-5">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Calificación</label>
+
             <StarRating value={formRating} onChange={setFormRating} />
           </div>
 
-          <div>
-            <label className="font-body text-sm text-foreground mb-1.5 block">Título (opcional)</label>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between gap-3">
+              <label htmlFor="review-title" className="text-sm font-medium text-foreground">
+                Título <span className="font-normal text-muted-foreground">(opcional)</span>
+              </label>
+
+              <span className="text-xs text-muted-foreground">{formTitle.length}/255</span>
+            </div>
+
             <Input
+              id="review-title"
               value={formTitle}
-              onChange={(e) => setFormTitle(e.target.value)}
+              maxLength={255}
+              onChange={(event) => setFormTitle(event.target.value)}
               placeholder="Ej: Una lectura imprescindible"
-              className="font-body w-full min-w-0"
             />
           </div>
 
-          <div>
-            <div className="flex justify-between items-center mb-1.5">
-              <label className="font-body text-sm text-foreground block">Reseña</label>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between gap-3">
+              <label htmlFor="review-text" className="text-sm font-medium text-foreground">
+                Reseña
+              </label>
+
               <span
-                className={`text-[10px] ${formText.length >= 255 ? "text-destructive font-bold" : "text-muted-foreground"}`}
+                className={
+                  formText.length >= 1900 ? "text-xs font-medium text-destructive" : "text-xs text-muted-foreground"
+                }
               >
-                {formText.length} / 255
+                {formText.length}/2000
               </span>
             </div>
+
             <Textarea
+              id="review-text"
               value={formText}
-              onChange={(e) => setFormText(e.target.value.slice(0, 255))}
+              maxLength={2000}
+              onChange={(event) => setFormText(event.target.value)}
               placeholder="¿Qué te pareció este libro?"
-              rows={4}
-              className={`font-body resize-none w-full min-w-0 break-all ${validationError ? "border-destructive" : ""}`}
+              className={validationError ? "min-h-32 resize-y border-destructive" : "min-h-32 resize-y"}
             />
+
             {validationError && (
-              <p className="text-[12px] text-destructive mt-1 font-medium italic">{validationError}</p>
+              <p role="alert" className="text-xs font-medium text-destructive">
+                {validationError}
+              </p>
             )}
           </div>
         </div>
 
-        <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={() => handleOpenChange(false)} className="font-body">
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} disabled={isPending}>
             Cancelar
           </Button>
-          <Button onClick={onValidateAndSave} disabled={!formText.trim() || isPending} className="font-display">
+
+          <Button type="button" onClick={handleSubmit} disabled={isPending}>
+            <PiStar />
+
             {isPending ? "Procesando..." : config[mode].button}
           </Button>
         </DialogFooter>
