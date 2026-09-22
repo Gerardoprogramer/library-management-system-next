@@ -70,6 +70,12 @@ export default function LoginPage() {
               Crear cuenta
             </Link>
           </p>
+
+          <p className="text-center text-sm text-muted-foreground">
+            <Link href="/auth/forgot-password" className="font-medium text-primary underline-offset-4 hover:underline">
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </p>
         </form>
       </AuthCard>
     </>

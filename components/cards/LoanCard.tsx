@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { PiArrowRight, PiArrowsClockwise, PiInfo, PiWarning } from "react-icons/pi";
+import { PiArrowRight, PiArrowsClockwise, PiCheck, PiInfo, PiWarning } from "react-icons/pi";
 
 import { RenewLoanDialog } from "@/components/dialog/RenewLoanDialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useRenewLoan } from "@/hooks/mutations/useRenewLoan";
+import { useCheckinLoan } from "@/hooks/mutations/useCheckinLoan";
 import { useCurrentUrl } from "@/hooks/Utilidades/useCurrentUrl";
 import { useQueryParams } from "@/hooks/Utilidades/useQueryParams";
 import { statusLoanConfig, typeLoanConfig } from "@/lib/data";
@@ -31,6 +32,7 @@ export const LoanCard = ({ loan, maxDaysPerBook = 0 }: Props) => {
   const currentUrl = useCurrentUrl();
 
   const { performRenewal, isRenewing } = useRenewLoan(loan.bookId);
+  const { performCheckin, isCheckingIn } = useCheckinLoan(loan.bookId);
 
   const statusConfig = statusLoanConfig[loan.status];
   const typeConfig = typeLoanConfig[loan.type];
@@ -167,6 +169,19 @@ export const LoanCard = ({ loan, maxDaysPerBook = 0 }: Props) => {
                   <Button type="button" size="sm" onClick={() => setRenewDialogOpen(true)}>
                     <PiArrowsClockwise />
                     Renovar préstamo
+                  </Button>
+                )}
+
+                {loan.status === "CHECKED_OUT" && !loan.returnDate && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    disabled={isCheckingIn}
+                    onClick={() => performCheckin(loan.id)}
+                  >
+                    <PiCheck />
+                    {isCheckingIn ? "Devolviendo..." : "Devolver libro"}
                   </Button>
                 )}
 

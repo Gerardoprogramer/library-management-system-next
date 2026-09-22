@@ -39,7 +39,9 @@ Crea un archivo .env.local en la raíz del proyecto:
 BACKEND_URL=http://localhost:8080
 ```
 
-En producción, reemplaza `BACKEND_URL` por la URL pública del backend. El backend de biblioteca expone sus rutas bajo `/api/v1`; el proxy de Next.js añade ese prefijo automáticamente.
+En producción, configura `BACKEND_URL` como variable de entorno del servicio de Next.js y fuerza un nuevo deploy. Debe ser únicamente el origen del backend, por ejemplo `https://tu-backend.example.com`, sin añadir `/api/v1`; el proxy agrega ese prefijo automáticamente.
+
+Para producción, el backend debe tener `COOKIE_SECURE=true`, `COOKIE_SAME_SITE=None` y `CORS_ALLOWED_ORIGIN_PATTERNS` con el dominio público del frontend. Si frontend y backend se consumen únicamente mediante este proxy, las peticiones del navegador siguen siendo same-origin y no requieren llamar directamente al backend.
 
 ### Endpoints de usuario integrados
 
@@ -50,6 +52,7 @@ Además de autenticación, catálogo, préstamos, reservas, reseñas, wishlist, 
 - iniciar pagos (`POST /api/payment/initiate`);
 - consultar el estado de un pago (`GET /api/payment/:paymentId/status`);
 - recuperación y restablecimiento de contraseña (`POST /api/auth/forgot-password` y `POST /api/auth/reset-password`).
+- operaciones administrativas protegidas por rol (`/api/admin/**`) para usuarios, libros, géneros, préstamos, reservas, multas, pagos y suscripciones.
 
 ## 📦 Instalación y Desarrollo
 

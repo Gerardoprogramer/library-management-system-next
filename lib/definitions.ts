@@ -192,6 +192,7 @@ export interface checkoutLoan {
 
 export interface checkinLoan {
   loanId: string;
+  status?: statusLoan;
   notes?: string;
 }
 
@@ -354,4 +355,20 @@ export interface InitiatePaymentResponse {
   paymentStatus: PaymentStatus;
   checkoutUrl: string;
   checkoutSessionId: string;
+}
+
+export type AdminBookInput = Record<string, unknown>;
+export type AdminGenreInput = Record<string, unknown>;
+export type AdminSubscriptionPlanInput = Record<string, unknown>;
+export type AdminFineInput = Record<string, unknown>;
+export type AdminReservationSearch = Record<string, unknown>;
+export type AdminLoanSearch = Record<string, unknown>;
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  password: string;
 }
