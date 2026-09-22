@@ -49,7 +49,6 @@ export async function backendProxy(
       method: options.method || request.method,
       headers,
       cache: "no-store",
-      signal: AbortSignal.timeout(15_000),
     };
 
     if (options.body !== undefined) {
@@ -62,7 +61,30 @@ export async function backendProxy(
       }
     }
 
-    const backendResponse = await fetch(backendUrl.toString(), fetchOptions);
+    let backendResponse: Response | undefined;
+    let lastError: unknown;
+
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        backendResponse = await fetch(backendUrl.toString(), {
+          ...fetchOptions,
+          signal: AbortSignal.timeout(15_000),
+        });
+        break;
+      } catch (error) {
+        lastError = error;
+
+        if (attempt === 0) {
+          await new Promise((resolve) => setTimeout(resolve, 1_000));
+        }
+      }
+    }
+
+    if (!backendResponse) {
+      throw lastError instanceof Error
+        ? lastError
+        : new Error("No se pudo conectar con el backend");
+    }
 
     const data = backendResponse.status !== 204 ? await backendResponse.json().catch(() => null) : null;
 
