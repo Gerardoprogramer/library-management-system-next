@@ -12,7 +12,18 @@ export async function backendProxy(
 
     const { searchParams } = new URL(request.url);
 
-    const backendUrl = new URL(`${process.env.BACKEND_URL}/api/v1${endpoint}`);
+    const configuredBackendUrl = process.env.BACKEND_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL;
+
+    if (!configuredBackendUrl) {
+      throw new Error("Falta BACKEND_URL en las variables de entorno de Vercel");
+    }
+
+    const backendBaseUrl = configuredBackendUrl.trim().replace(/\/+$/, "");
+    const backendUrl = new URL(
+      backendBaseUrl.endsWith("/api/v1")
+        ? `${backendBaseUrl}${endpoint}`
+        : `${backendBaseUrl}/api/v1${endpoint}`
+    );
 
     searchParams.forEach((value, key) => backendUrl.searchParams.append(key, value));
 
@@ -51,7 +62,18 @@ export async function backendProxy(
       status: backendResponse.status,
     });
 
-    const setCookies = backendResponse.headers.getSetCookie();
+    const headersWithSetCookie = backendResponse.headers as Headers & {
+      getSetCookie?: () => string[];
+    };
+    const setCookies = headersWithSetCookie.getSetCookie?.() ?? [];
+
+    if (setCookies.length === 0) {
+      const setCookie = backendResponse.headers.get("set-cookie");
+
+      if (setCookie) {
+        setCookies.push(setCookie);
+      }
+    }
 
     for (const cookie of setCookies) {
       response.headers.append("Set-Cookie", cookie);
@@ -64,7 +86,7 @@ export async function backendProxy(
     return NextResponse.json(
       {
         success: false,
-        message: "Error de comunicación",
+        message: error instanceof Error ? error.message : "Error de comunicación con el backend",
       },
       {
         status: 500,

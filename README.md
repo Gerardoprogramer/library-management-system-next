@@ -39,7 +39,7 @@ Crea un archivo .env.local en la raíz del proyecto:
 BACKEND_URL=http://localhost:8080
 ```
 
-En producción, configura `BACKEND_URL` como variable de entorno del servicio de Next.js y fuerza un nuevo deploy. Debe ser únicamente el origen del backend, por ejemplo `https://tu-backend.example.com`, sin añadir `/api/v1`; el proxy agrega ese prefijo automáticamente.
+En producción, configura `BACKEND_URL` como variable de entorno del servicio de Next.js y fuerza un nuevo deploy. El proxy acepta el origen (`https://tu-backend.example.com`) o una URL que ya incluya `/api/v1`. También reconoce `NEXT_PUBLIC_BACKEND_URL` como alternativa, aunque se recomienda `BACKEND_URL`.
 
 Para producción, el backend debe tener `COOKIE_SECURE=true`, `COOKIE_SAME_SITE=None` y `CORS_ALLOWED_ORIGIN_PATTERNS` con el dominio público del frontend. Si frontend y backend se consumen únicamente mediante este proxy, las peticiones del navegador siguen siendo same-origin y no requieren llamar directamente al backend.
 
