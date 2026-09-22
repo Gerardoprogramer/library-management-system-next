@@ -7,6 +7,8 @@ import {
   PiClock,
   PiCreditCard,
   PiCrown,
+  PiBooks,
+  PiFolderSimple,
   PiHeart,
   PiPackage,
   PiShieldCheck,
@@ -32,6 +34,12 @@ export const adminNav: navLinkstype[] = [
   { label: "Panel admin", path: "/dashboard/admin", icon: PiShieldCheck },
   { label: "Usuarios", path: "/dashboard/admin/usuarios", icon: PiUsersThree },
   { label: "Estadísticas", path: "/dashboard/admin/stats", icon: PiChartBar },
+  { label: "Libros", path: "/dashboard/admin/libros", icon: PiBooks },
+  { label: "Géneros", path: "/dashboard/admin/generos", icon: PiFolderSimple },
+  { label: "Préstamos y reservas", path: "/dashboard/admin/operaciones", icon: PiClock },
+  { label: "Multas", path: "/dashboard/admin/multas", icon: PiWarning },
+  { label: "Pagos y reembolsos", path: "/dashboard/admin/pagos", icon: PiCreditCard },
+  { label: "Suscripciones y planes", path: "/dashboard/admin/suscripciones", icon: PiCrown },
 ];
 
 export const typeLoanConfig: Record<typeLoans, { label: string }> = {
