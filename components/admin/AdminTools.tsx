@@ -4,7 +4,15 @@ import { type FormEvent, type ReactNode } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PiArrowUpRight, PiBookOpenText, PiChartBar, PiCreditCard, PiFolderSimple, PiGear, PiUsersThree } from "react-icons/pi";
+import {
+  PiArrowUpRight,
+  PiBookOpenText,
+  PiChartBar,
+  PiCreditCard,
+  PiFolderSimple,
+  PiGear,
+  PiUsersThree,
+} from "react-icons/pi";
 import type { IconType } from "react-icons";
 
 export function AdminPage({ title, description, children }: { title: string; description?: string; children: ReactNode }) {
@@ -47,6 +55,8 @@ export function AdminNav() {
     { href: "/dashboard/admin/operaciones", label: "Operaciones", icon: PiGear },
     { href: "/dashboard/admin/multas", label: "Multas", icon: PiArrowUpRight },
     { href: "/dashboard/admin/pagos", label: "Pagos", icon: PiCreditCard },
+    { href: "/dashboard/admin/stats", label: "Estadísticas", icon: PiChartBar },
+    { href: "/dashboard/admin/suscripciones", label: "Suscripciones", icon: PiCreditCard },
     { href: "/dashboard/admin/usuarios", label: "Usuarios", icon: PiUsersThree },
   ];
 
@@ -56,10 +66,19 @@ export function AdminNav() {
         const isActive = pathname === href || (href !== "/dashboard/admin" && pathname.startsWith(`${href}/`));
 
         return (
-        <Link key={href} href={href} aria-current={isActive ? "page" : undefined} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2.5 font-medium transition ${isActive ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:bg-primary/8 hover:text-foreground"}`}>
-          <Icon className="size-4" />
-          {label}
-        </Link>
+          <Link
+            key={href}
+            href={href}
+            aria-current={isActive ? "page" : undefined}
+            className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2.5 font-medium transition ${
+              isActive
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "text-muted-foreground hover:bg-primary/8 hover:text-foreground"
+            }`}
+          >
+            <Icon className="size-4" />
+            {label}
+          </Link>
         );
       })}
     </nav>
