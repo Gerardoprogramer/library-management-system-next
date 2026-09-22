@@ -12,13 +12,19 @@ export async function backendProxy(
 
     const { searchParams } = new URL(request.url);
 
-    const configuredBackendUrl = process.env.BACKEND_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL;
+    const configuredBackendUrl =
+      process.env.BACKEND_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL;
 
     if (!configuredBackendUrl) {
       throw new Error("Falta BACKEND_URL en las variables de entorno de Vercel");
     }
 
     const backendBaseUrl = configuredBackendUrl.trim().replace(/\/+$/, "");
+
+    if (!backendBaseUrl) {
+      throw new Error("BACKEND_URL no puede estar vacío");
+    }
+
     const backendUrl = new URL(
       backendBaseUrl.endsWith("/api/v1")
         ? `${backendBaseUrl}${endpoint}`
@@ -27,10 +33,11 @@ export async function backendProxy(
 
     searchParams.forEach((value, key) => backendUrl.searchParams.append(key, value));
 
-    const headers = new Headers({
-      "Content-Type": "application/json",
-      Cookie: cookieHeader,
-    });
+    const headers = new Headers({ "Content-Type": "application/json" });
+
+    if (cookieHeader) {
+      headers.set("Cookie", cookieHeader);
+    }
 
     const csrfToken = request.headers.get("X-XSRF-TOKEN");
 
@@ -42,6 +49,7 @@ export async function backendProxy(
       method: options.method || request.method,
       headers,
       cache: "no-store",
+      signal: AbortSignal.timeout(15_000),
     };
 
     if (options.body !== undefined) {
