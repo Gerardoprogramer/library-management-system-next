@@ -6,8 +6,9 @@ import { PiChartBar, PiUsersThree } from "react-icons/pi";
 import { useCurrentUser } from "@/hooks/queries/useCurrentUser";
 import { adminService } from "@/services/adminService";
 import { bookService } from "@/services/bookService";
+import { AdminNav, AdminPage } from "@/components/admin/AdminTools";
 
-export default function AdminPage() {
+export default function AdminDashboardPage() {
   const { data: user } = useCurrentUser();
   const users = useQuery({
     queryKey: ["admin", "users"],
@@ -21,25 +22,21 @@ export default function AdminPage() {
   });
 
   return (
-    <div className="space-y-8">
-      <section>
-        <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Administración</p>
-        <h2 className="mt-2 text-3xl font-semibold tracking-tight">Panel administrativo</h2>
-        <p className="mt-2 text-sm text-muted-foreground">Resumen operativo de la biblioteca.</p>
-      </section>
+    <AdminPage title="Panel administrativo" description="Una vista rápida del estado actual de tu biblioteca.">
+      <AdminNav />
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <article className="rounded-2xl border border-border/70 bg-card p-5">
-          <PiUsersThree className="size-5 text-primary" />
+        <article className="surface p-5">
+          <div className="flex size-10 items-center justify-center rounded-xl bg-primary/12 text-primary"><PiUsersThree className="size-5" /></div>
           <p className="mt-5 text-sm text-muted-foreground">Usuarios registrados</p>
           <p className="mt-1 text-3xl font-semibold">{users.isLoading ? "..." : (users.data?.length ?? 0)}</p>
         </article>
-        <article className="rounded-2xl border border-border/70 bg-card p-5">
-          <PiChartBar className="size-5 text-primary" />
+        <article className="surface p-5">
+          <div className="flex size-10 items-center justify-center rounded-xl bg-primary/12 text-primary"><PiChartBar className="size-5" /></div>
           <p className="mt-5 text-sm text-muted-foreground">Libros activos</p>
           <p className="mt-1 text-3xl font-semibold">{stats.isLoading ? "..." : (stats.data?.totalActiveBooks ?? 0)}</p>
         </article>
       </div>
-    </div>
+    </AdminPage>
   );
 }

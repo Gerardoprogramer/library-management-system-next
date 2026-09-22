@@ -3,9 +3,29 @@
 import { type FormEvent, type ReactNode } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { PiArrowUpRight, PiBookOpenText, PiChartBar, PiCreditCard, PiFolderSimple, PiGear, PiUsersThree } from "react-icons/pi";
+import type { IconType } from "react-icons";
 
 export function AdminPage({ title, description, children }: { title: string; description?: string; children: ReactNode }) {
-  return <div className="space-y-8"><header><p className="eyebrow">Administración</p><h2 className="page-heading mt-2">{title}</h2>{description && <p className="page-description">{description}</p>}</header>{children}</div>;
+  return (
+    <div className="space-y-7">
+      <header className="surface relative overflow-hidden p-6 sm:p-7">
+        <div className="absolute right-0 top-0 size-40 translate-x-1/3 -translate-y-1/3 rounded-full bg-primary/10 blur-2xl" />
+        <div className="relative flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+          <div>
+            <p className="eyebrow">Centro de control</p>
+            <h2 className="page-heading mt-2">{title}</h2>
+            {description && <p className="page-description">{description}</p>}
+          </div>
+          <div className="hidden size-12 items-center justify-center rounded-2xl bg-primary/12 text-primary ring-1 ring-primary/15 sm:flex">
+            <PiGear className="size-6" />
+          </div>
+        </div>
+      </header>
+      {children}
+    </div>
+  );
 }
 
 export function AdminForm({ children, onSubmit, submitLabel = "Guardar" }: { children: ReactNode; onSubmit: (values: Record<string, string>) => void; submitLabel?: string }) {
@@ -19,7 +39,31 @@ export function Field({ name, label, type = "text", required = false, onChange }
 }
 
 export function AdminNav() {
-  return <nav aria-label="Secciones de administración" className="flex flex-wrap gap-2 text-sm">{[["/dashboard/admin/libros", "Libros"], ["/dashboard/admin/generos", "Géneros"], ["/dashboard/admin/operaciones", "Préstamos y reservas"], ["/dashboard/admin/multas", "Multas"], ["/dashboard/admin/pagos", "Pagos y reembolsos"], ["/dashboard/admin/suscripciones", "Suscripciones y planes"]].map(([href, label]) => <Link key={href} href={href} className="rounded-xl border border-border/70 bg-card px-3.5 py-2 font-medium text-muted-foreground transition hover:border-primary/30 hover:bg-primary/5 hover:text-foreground">{label}</Link>)}</nav>;
+  const pathname = usePathname();
+  const sections: Array<{ href: string; label: string; icon: IconType }> = [
+    { href: "/dashboard/admin", label: "Resumen", icon: PiChartBar },
+    { href: "/dashboard/admin/libros", label: "Libros", icon: PiBookOpenText },
+    { href: "/dashboard/admin/generos", label: "Géneros", icon: PiFolderSimple },
+    { href: "/dashboard/admin/operaciones", label: "Operaciones", icon: PiGear },
+    { href: "/dashboard/admin/multas", label: "Multas", icon: PiArrowUpRight },
+    { href: "/dashboard/admin/pagos", label: "Pagos", icon: PiCreditCard },
+    { href: "/dashboard/admin/usuarios", label: "Usuarios", icon: PiUsersThree },
+  ];
+
+  return (
+    <nav aria-label="Secciones de administración" className="surface flex gap-2 overflow-x-auto p-2 text-sm">
+      {sections.map(({ href, label, icon: Icon }) => {
+        const isActive = pathname === href || (href !== "/dashboard/admin" && pathname.startsWith(`${href}/`));
+
+        return (
+        <Link key={href} href={href} aria-current={isActive ? "page" : undefined} className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2.5 font-medium transition ${isActive ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:bg-primary/8 hover:text-foreground"}`}>
+          <Icon className="size-4" />
+          {label}
+        </Link>
+        );
+      })}
+    </nav>
+  );
 }
 
 export function useAdminMutation<T>(key: string, fn: (values: T) => Promise<unknown>) {

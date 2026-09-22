@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useCurrentUser } from "@/hooks/queries/useCurrentUser";
 import { adminService } from "@/services/adminService";
+import { AdminNav, AdminPage } from "@/components/admin/AdminTools";
 
 export default function AdminUsersPage() {
   const { data: user } = useCurrentUser();
@@ -14,13 +15,10 @@ export default function AdminUsersPage() {
   });
 
   return (
-    <div className="space-y-8">
-      <section>
-        <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Administración</p>
-        <h2 className="mt-2 text-3xl font-semibold tracking-tight">Usuarios</h2>
-      </section>
+    <AdminPage title="Usuarios" description="Consulta las cuentas registradas y sus permisos dentro de la biblioteca.">
+      <AdminNav />
 
-      <div className="overflow-hidden rounded-2xl border border-border/70 bg-card">
+      <div className="surface overflow-hidden">
         <div className="grid grid-cols-[1fr_1fr_auto] gap-4 border-b border-border/70 px-5 py-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
           <span>Nombre</span>
           <span>Correo</span>
@@ -40,6 +38,6 @@ export default function AdminUsersPage() {
           <p className="px-5 py-8 text-sm text-muted-foreground">No hay usuarios disponibles.</p>
         )}
       </div>
-    </div>
+    </AdminPage>
   );
 }
