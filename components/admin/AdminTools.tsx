@@ -15,11 +15,72 @@ import {
 } from "react-icons/pi";
 import type { IconType } from "react-icons";
 
+export function AdminMetric({
+  label,
+  value,
+  detail,
+  icon: Icon,
+  tone = "primary",
+}: {
+  label: string;
+  value: string | number;
+  detail?: string;
+  icon: IconType;
+  tone?: "primary" | "blue" | "green" | "orange";
+}) {
+  const tones = {
+    primary: "bg-primary/12 text-primary",
+    blue: "bg-sky-500/12 text-sky-600 dark:text-sky-400",
+    green: "bg-emerald-500/12 text-emerald-600 dark:text-emerald-400",
+    orange: "bg-orange-500/12 text-orange-600 dark:text-orange-400",
+  };
+
+  return (
+    <article className="surface group p-5 transition duration-200 hover:-translate-y-0.5 hover:shadow-md">
+      <div className="flex items-start justify-between gap-3">
+        <span className={`flex size-11 items-center justify-center rounded-2xl ${tones[tone]}`}>
+          <Icon className="size-5" />
+        </span>
+        <span className="text-xs text-muted-foreground">Actualizado ahora</span>
+      </div>
+      <p className="mt-5 text-sm text-muted-foreground">{label}</p>
+      <p className="mt-1 text-3xl font-semibold tracking-tight">{value}</p>
+      {detail && <p className="mt-2 text-xs text-muted-foreground">{detail}</p>}
+    </article>
+  );
+}
+
+export function AdminSection({
+  title,
+  description,
+  action,
+  children,
+}: {
+  title: string;
+  description?: string;
+  action?: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <section className="surface overflow-hidden">
+      <div className="flex flex-col gap-3 border-b border-border/70 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div>
+          <h3 className="font-semibold tracking-tight">{title}</h3>
+          {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
+        </div>
+        {action}
+      </div>
+      {children}
+    </section>
+  );
+}
+
 export function AdminPage({ title, description, children }: { title: string; description?: string; children: ReactNode }) {
   return (
     <div className="space-y-7">
-      <header className="surface relative overflow-hidden p-6 sm:p-7">
+      <header className="surface relative overflow-hidden p-6 sm:p-8">
         <div className="absolute right-0 top-0 size-40 translate-x-1/3 -translate-y-1/3 rounded-full bg-primary/10 blur-2xl" />
+        <div className="absolute bottom-0 left-1/2 h-px w-1/2 bg-linear-to-r from-transparent via-primary/30 to-transparent" />
         <div className="relative flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
             <p className="eyebrow">Centro de control</p>

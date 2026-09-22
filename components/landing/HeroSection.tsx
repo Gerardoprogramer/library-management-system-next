@@ -26,9 +26,10 @@ export const HeroSection = () => {
           className="object-cover"
         />
 
-        <div className="absolute inset-0 bg-background/82 dark:bg-background/90" />
+        <div className="absolute inset-0 bg-background/72 dark:bg-background/90" />
 
-        <div className="absolute inset-0 bg-linear-to-r from-background via-background/94 to-background/52" />
+        <div className="absolute inset-0 bg-linear-to-r from-background via-background/88 to-background/42" />
+        <div className="absolute -right-32 top-24 size-96 rounded-full bg-primary/12 blur-3xl" />
       </div>
 
       <div className="relative mx-auto grid w-full max-w-7xl items-center gap-14 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-24">
@@ -48,7 +49,7 @@ export const HeroSection = () => {
             <span className="text-primary"> organizada y accesible</span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
+          <p className="mt-6 max-w-2xl text-base leading-7 text-foreground/70 sm:text-lg">
             Encontrá tu próxima lectura, reservá ejemplares y llevá el control de tus préstamos sin vueltas.
           </p>
 
@@ -71,6 +72,16 @@ export const HeroSection = () => {
             <HeroFeature icon={PiCheckCircle} text="Préstamos y reservas" />
 
             <HeroFeature icon={PiSparkle} text="Reseñas y membresías" />
+          </div>
+
+          <div className="mt-8 flex max-w-xl items-center gap-4 rounded-2xl border border-primary/15 bg-card/75 p-4 shadow-lg shadow-primary/5 backdrop-blur-md">
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+              <PiBookOpenText className="size-5" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold">Una experiencia pensada para leer más</p>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">Descubre, reserva y organiza tus lecturas desde cualquier dispositivo.</p>
+            </div>
           </div>
 
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
