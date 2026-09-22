@@ -36,8 +36,20 @@ El proyecto implementa una arquitectura de **Proxy Inverso** en el cliente para 
 Crea un archivo .env.local en la raíz del proyecto:
 
 ```text
-BACKEND_URL=https://library-management-system-i1y4.onrender.com
+BACKEND_URL=http://localhost:8080
 ```
+
+En producción, reemplaza `BACKEND_URL` por la URL pública del backend. El backend de biblioteca expone sus rutas bajo `/api/v1`; el proxy de Next.js añade ese prefijo automáticamente.
+
+### Endpoints de usuario integrados
+
+Además de autenticación, catálogo, préstamos, reservas, reseñas, wishlist, multas y suscripciones, el frontend incluye proxy y servicios para:
+
+- estadísticas del catálogo (`GET /api/book/stats`);
+- devolución de préstamos (`POST /api/loans/checkin`);
+- iniciar pagos (`POST /api/payment/initiate`);
+- consultar el estado de un pago (`GET /api/payment/:paymentId/status`);
+- recuperación y restablecimiento de contraseña (`POST /api/auth/forgot-password` y `POST /api/auth/reset-password`).
 
 ## 📦 Instalación y Desarrollo
 

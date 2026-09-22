@@ -190,6 +190,11 @@ export interface checkoutLoan {
   notes?: string;
 }
 
+export interface checkinLoan {
+  loanId: string;
+  notes?: string;
+}
+
 export interface renewLoan {
   loanId: string;
   extensionDays: number;
@@ -278,6 +283,22 @@ export interface PaymentDetails {
   type: "MEMBERSHIP" | "FINE" | "LOST_BOOK_PENALTY" | "DAMAGED_BOOK_PENALTY" | "GENERAL";
   plan?: string;
   paymentId?: string;
+}
+
+export interface BookStats {
+  totalActiveBooks: number;
+  totalAvailableBooks: number;
+}
+
+export interface PaymentStatusDetails {
+  paymentId: string;
+  status: PaymentStatus;
+  successful: boolean;
+}
+
+export interface InitiatePaymentRequest {
+  payableId: string;
+  paymentType: PaymentType;
 }
 
 export type FineStatus = "PENDING" | "PARTIALLY_PAID" | "PAID" | "WAIVED";

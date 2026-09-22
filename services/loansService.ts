@@ -1,6 +1,6 @@
 import { api } from "@/lib/axios";
 
-import type { ApiResponse, checkoutLoan, meLoans, PageResponse, renewLoan } from "@/lib/definitions";
+import type { ApiResponse, checkinLoan, checkoutLoan, meLoans, PageResponse, renewLoan } from "@/lib/definitions";
 
 export const loansService = {
   getBookLoans: async (status?: string, page: number = 0): Promise<PageResponse<meLoans>> => {
@@ -30,6 +30,12 @@ export const loansService = {
 
   renew: async (renewData: renewLoan): Promise<ApiResponse<void>> => {
     const response = await api.post<ApiResponse<void>>("/loans/renew", renewData);
+
+    return response.data;
+  },
+
+  checkin: async (checkinData: checkinLoan): Promise<ApiResponse<meLoans>> => {
+    const response = await api.post<ApiResponse<meLoans>>("/loans/checkin", checkinData);
 
     return response.data;
   },
