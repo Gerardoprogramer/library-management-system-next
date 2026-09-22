@@ -30,6 +30,16 @@ export const PaymentService = {
     return response.data.data;
   },
 
+  getById: async (paymentId: string): Promise<Payment> => {
+    const response = await api.get<ApiResponse<Payment>>(`/payment/${paymentId}/details`);
+
+    if (!response.data.data) {
+      throw new Error(response.data.message || "No se pudo obtener el pago");
+    }
+
+    return response.data.data;
+  },
+
   getSuccessDetails: async (sessionId: string): Promise<PaymentDetails> => {
     const response = await api.get<ApiResponse<PaymentDetails>>(`/payment/${sessionId}`);
 

@@ -12,7 +12,13 @@ export async function backendProxy(
 
     const { searchParams } = new URL(request.url);
 
-    const backendUrl = new URL(`${process.env.BACKEND_URL}/api/v1${endpoint}`);
+    const backendBaseUrl = process.env.BACKEND_URL?.trim();
+
+    if (!backendBaseUrl) {
+      throw new Error("BACKEND_URL no está configurada");
+    }
+
+    const backendUrl = new URL(`${backendBaseUrl}/api/v1${endpoint}`);
 
     searchParams.forEach((value, key) => backendUrl.searchParams.append(key, value));
 

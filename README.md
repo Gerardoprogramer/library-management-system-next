@@ -50,6 +50,7 @@ Además de autenticación, catálogo, préstamos, reservas, reseñas, wishlist, 
 - iniciar pagos (`POST /api/payment/initiate`);
 - consultar el estado de un pago (`GET /api/payment/:paymentId/status`);
 - recuperación y restablecimiento de contraseña (`POST /api/auth/forgot-password` y `POST /api/auth/reset-password`).
+- operaciones administrativas protegidas por rol (`/api/admin/**`) para usuarios, libros, géneros, préstamos, reservas, multas, pagos y suscripciones.
 
 ## 📦 Instalación y Desarrollo
 
