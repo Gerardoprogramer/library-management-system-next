@@ -113,13 +113,22 @@ export async function backendProxy(
   } catch (error) {
     console.error(`[Proxy Error] ${endpoint}:`, error);
 
+    const isTimeout =
+      error instanceof Error &&
+      (error.name === "TimeoutError" || error.name === "AbortError");
+
     return NextResponse.json(
       {
         success: false,
-        message: error instanceof Error ? error.message : "Error de comunicación con el backend",
+        message: isTimeout
+          ? "El backend está iniciando. Inténtalo de nuevo en unos segundos."
+          : error instanceof Error
+            ? error.message
+            : "Error de comunicación con el backend",
       },
       {
-        status: 500,
+        status: isTimeout ? 503 : 500,
+        headers: isTimeout ? { "Retry-After": "5" } : undefined,
       }
     );
   }

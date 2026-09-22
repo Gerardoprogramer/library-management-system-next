@@ -21,6 +21,9 @@ export const api = axios.create({
 let csrfRequest: Promise<void> | null = null;
 let refreshRequest: Promise<void> | null = null;
 
+const CSRF_MAX_ATTEMPTS = 5;
+const CSRF_RETRY_DELAYS_MS = [2_000, 4_000, 8_000, 12_000];
+
 function getCookie(name: string): string | null {
   if (typeof document === "undefined") {
     return null;
@@ -53,12 +56,26 @@ async function ensureCsrfToken() {
   }
 
   if (!csrfRequest) {
-    csrfRequest = csrfClient
-      .get("/auth/csrf")
-      .then(() => undefined)
-      .finally(() => {
-        csrfRequest = null;
-      });
+    csrfRequest = (async () => {
+      for (let attempt = 0; attempt < CSRF_MAX_ATTEMPTS; attempt += 1) {
+        try {
+          await csrfClient.get("/auth/csrf");
+          return;
+        } catch (error) {
+          const status = axios.isAxiosError(error) ? error.response?.status : undefined;
+          const canRetry = status === 503 || !status;
+          const delay = CSRF_RETRY_DELAYS_MS[attempt];
+
+          if (!canRetry || attempt === CSRF_MAX_ATTEMPTS - 1 || delay === undefined) {
+            throw error;
+          }
+
+          await new Promise((resolve) => setTimeout(resolve, delay));
+        }
+      }
+    })().finally(() => {
+      csrfRequest = null;
+    });
   }
 
   await csrfRequest;
