@@ -30,19 +30,19 @@ export const SideNav = ({ isOpen, setIsOpen }: SideNavProps) => {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-border/70 bg-card/95 backdrop-blur-xl transition-transform duration-300 md:static md:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex w-[min(19rem,calc(100vw-2rem))] flex-col border-r border-border/70 bg-card/95 shadow-2xl shadow-black/10 backdrop-blur-xl transition-transform duration-300 md:static md:w-72 md:translate-x-0 md:shadow-none",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex h-20 items-center justify-between border-b border-border/70 px-5">
+        <div className="flex h-18 items-center justify-between border-b border-border/70 px-5">
           <div className="flex items-center gap-3">
             <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/15">
               <PiBookOpenText className="size-5" />
             </div>
 
             <div className="leading-tight">
-              <p className="font-semibold tracking-tight text-foreground">Biblioteca</p>
-              <p className="text-xs text-muted-foreground">Obsidian</p>
+              <p className="font-semibold tracking-tight text-foreground">Biblioteca Obsidian</p>
+              <p className="text-[11px] text-muted-foreground">Tu espacio de lectura</p>
             </div>
           </div>
 
@@ -80,7 +80,7 @@ export const SideNav = ({ isOpen, setIsOpen }: SideNavProps) => {
 
         <div className="border-t border-border/70 p-3">
           {user && (
-            <div className="mb-2 rounded-xl bg-muted/40 px-3 py-3">
+            <div className="mb-2 rounded-xl border border-border/60 bg-muted/35 px-3 py-3">
               <p className="truncate text-sm font-medium text-foreground">{user.fullName}</p>
               <p className="mt-0.5 truncate text-xs text-muted-foreground">{user.email}</p>
             </div>

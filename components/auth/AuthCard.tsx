@@ -5,5 +5,9 @@ interface AuthCardProps {
 }
 
 export function AuthCard({ children }: AuthCardProps) {
-  return <div className="space-y-5 rounded-2xl border border-border/70 bg-card p-6 shadow-xs sm:p-8">{children}</div>;
+  return (
+    <div className="surface space-y-5 p-6 shadow-xl shadow-primary/5 sm:p-8">
+      {children}
+    </div>
+  );
 }

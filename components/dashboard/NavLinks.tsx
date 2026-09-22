@@ -30,16 +30,16 @@ export const NavLinks = ({ links }: NavLinksProps) => {
             key={item.path}
             aria-current={isActive ? "page" : undefined}
             className={cn(
-              "group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200",
+              "group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
               isActive
-                ? "bg-primary/10 font-medium text-primary"
+                ? "bg-primary/12 font-medium text-primary shadow-sm ring-1 ring-primary/15"
                 : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
             )}
           >
             <span
               className={cn(
-                "flex size-8 shrink-0 items-center justify-center rounded-md transition-colors",
-                isActive ? "bg-primary/10 text-primary" : "text-muted-foreground group-hover:text-foreground"
+                "flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors",
+                isActive ? "bg-primary/15 text-primary" : "text-muted-foreground group-hover:text-foreground"
               )}
             >
               <Icon className="size-4.5" />

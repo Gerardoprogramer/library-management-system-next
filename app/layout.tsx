@@ -76,7 +76,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const theme = cookieStore.get("library-theme")?.value ?? "light";
 
   return (
-    <html lang="es" className={theme === "dark" ? "dark" : ""}>
+    <html lang="es" data-scroll-behavior="smooth" className={theme === "dark" ? "dark" : ""}>
       <body className={`${inter.variable} ${sourceSerif.variable} font-sans antialiased`}>
         <ThemeProvider initialTheme={theme as "light" | "dark"}>
           <Providers>{children}</Providers>

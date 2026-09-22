@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export const HeroSection = () => {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden pt-16">
+    <section className="relative flex min-h-dvh items-start overflow-hidden pt-16 lg:items-center">
       <div className="absolute inset-0">
         <Image
           src="/library-hero.jpg"
@@ -18,12 +18,12 @@ export const HeroSection = () => {
           className="object-cover"
         />
 
-        <div className="absolute inset-0 bg-background/85 dark:bg-background/88" />
+        <div className="absolute inset-0 bg-background/82 dark:bg-background/90" />
 
-        <div className="absolute inset-0 bg-linear-to-r from-background via-background/95 to-background/60" />
+        <div className="absolute inset-0 bg-linear-to-r from-background via-background/94 to-background/52" />
       </div>
 
-      <div className="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+      <div className="relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
         <div className="max-w-3xl">
           <div className="mb-6 flex items-center gap-2">
             <div className="flex size-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -35,7 +35,7 @@ export const HeroSection = () => {
             </span>
           </div>
 
-          <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          <h1 className="max-w-2xl text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-7xl">
             Tu biblioteca,
             <span className="text-primary"> organizada y accesible</span>
           </h1>

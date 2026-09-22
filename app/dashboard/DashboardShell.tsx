@@ -45,11 +45,11 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
     : "OB";
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex h-dvh overflow-hidden bg-background">
       <SideNav isOpen={isOpen} setIsOpen={setIsOpen} />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex h-20 shrink-0 items-center justify-between border-b border-border/70 bg-background/85 px-4 backdrop-blur-xl sm:px-6">
+        <header className="sticky top-0 z-20 flex h-18 shrink-0 items-center justify-between border-b border-border/70 bg-background/80 px-4 backdrop-blur-xl sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
@@ -61,11 +61,11 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
             </button>
 
             <div className="min-w-0">
-              <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              <p className="eyebrow hidden sm:block">
                 Biblioteca Obsidian
               </p>
 
-              <h1 className="truncate text-lg font-semibold tracking-tight text-foreground">{pageTitle}</h1>
+              <h1 className="truncate text-lg font-semibold tracking-tight text-foreground sm:text-xl">{pageTitle}</h1>
             </div>
           </div>
 
@@ -79,7 +79,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
         </header>
 
         <main className="min-h-0 flex-1 overflow-y-auto">
-          <div className="mx-auto w-full max-w-400 p-4 sm:p-6 lg:p-8">{children}</div>
+          <div className="mx-auto w-full max-w-400 px-4 py-5 sm:px-6 sm:py-7 lg:px-8 lg:py-8">{children}</div>
         </main>
       </div>
     </div>
