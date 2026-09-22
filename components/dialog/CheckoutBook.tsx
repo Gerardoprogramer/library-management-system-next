@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { BookMarked } from "lucide-react";
+import { PiBookBookmark } from "react-icons/pi";
 import { checkoutProps } from "@/lib/definitions";
 import { useState } from "react";
 
@@ -29,7 +29,7 @@ export const CheckoutBook = ({ checkout, checkoutDialogOpen, setCheckoutDialogOp
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="font-display flex items-center gap-2">
-            <BookMarked className="w-5 h-5 text-primary" /> Solicitar Préstamo
+            <PiBookBookmark className="size-5 text-primary" /> Solicitar Préstamo
           </DialogTitle>
           <DialogDescription className="font-body text-sm">
             Solicita el préstamo de «{checkout.title}». Tu plan permite hasta {checkout.maxDaysPerBook} días por libro.
@@ -83,7 +83,7 @@ export const CheckoutBook = ({ checkout, checkoutDialogOpen, setCheckoutDialogOp
             Cancelar
           </Button>
           <Button onClick={checkout.handleCheckout} disabled={isPending} className="font-display gap-2">
-            <BookMarked className="w-4 h-4" /> Confirmar Préstamo
+            <PiBookBookmark className="size-4" /> Confirmar Préstamo
           </Button>
         </DialogFooter>
       </DialogContent>

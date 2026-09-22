@@ -1,6 +1,6 @@
 import axios from "axios";
 import { toast } from "sonner";
-import { CheckCircle2, AlertCircle, Info, Ban } from "lucide-react";
+import { PiCheckCircle, PiInfo, PiProhibit, PiWarningCircle } from "react-icons/pi";
 
 type ApiErrorResponse = {
   message?: string;
@@ -10,7 +10,7 @@ export const showToast = {
   success: (title: string, description?: string, action?: { label: string; onClick: () => void }) => {
     toast.success(title, {
       description: description,
-      icon: <CheckCircle2 className="h-5 w-5 text-emerald-500" />,
+      icon: <PiCheckCircle className="size-5 text-emerald-500" />,
       className: "font-body border-l-4 border-l-emerald-500 bg-background",
       action: action,
     });
@@ -19,7 +19,7 @@ export const showToast = {
   warning: (title: string, description?: string) => {
     toast.warning(title, {
       description: description,
-      icon: <Ban className="h-5 w-5 text-amber-500" />,
+      icon: <PiProhibit className="size-5 text-amber-500" />,
       className: "font-body border-l-4 border-l-amber-500 bg-background",
       duration: 6000,
     });
@@ -28,7 +28,7 @@ export const showToast = {
   error: (title: string, description: string = "Inténtalo de nuevo más tarde.") => {
     toast.error(title, {
       description: description,
-      icon: <AlertCircle className="h-5 w-5 text-destructive" />,
+      icon: <PiWarningCircle className="size-5 text-destructive" />,
       className: "font-body border-l-4 border-l-destructive bg-background",
     });
   },
@@ -36,7 +36,7 @@ export const showToast = {
   info: (title: string, description?: string) => {
     toast.info(title, {
       description: description,
-      icon: <Info className="h-5 w-5 text-blue-500" />,
+      icon: <PiInfo className="size-5 text-blue-500" />,
       className: "font-body border-l-4 border-l-blue-500 bg-background",
     });
   },

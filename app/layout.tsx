@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Biblioteca Obsidian | Sistema de Gestión Bibliotecaria",
     description:
-      "Explora libros, préstamos, reservas, reseñas y suscripciones desde una plataforma bibliotecaria moderna.",
+      "Consulta el catálogo, reserva ejemplares y gestiona tus préstamos desde Biblioteca Obsidian.",
     images: ["/icon1.png"],
   },
 };

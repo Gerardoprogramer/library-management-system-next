@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { CalendarClock } from "lucide-react";
+import { PiCalendarCheck } from "react-icons/pi";
 import { reserveBook } from "@/lib/definitions";
 import { useQuery } from "@tanstack/react-query";
 import { reservationService } from "@/services/reservationService";
@@ -30,7 +30,7 @@ export const ReserveDialog = ({ reserve, reserveDialogOpen, setReserveDialogOpen
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="font-display flex items-center gap-2">
-            <CalendarClock className="w-5 h-5 text-primary" /> Reservar Libro
+            <PiCalendarCheck className="size-5 text-primary" /> Reservar Libro
           </DialogTitle>
           <DialogDescription className="font-body text-sm">
             No hay copias disponibles de «{reserve.title}». Serás notificado cuando esté disponible.
@@ -66,7 +66,7 @@ export const ReserveDialog = ({ reserve, reserveDialogOpen, setReserveDialogOpen
             Cancelar
           </Button>
           <Button onClick={reserve.handleReserve} disabled={isPending} className="font-display gap-2">
-            <CalendarClock className="w-4 h-4" /> Confirmar Reserva
+            <PiCalendarCheck className="size-4" /> Confirmar Reserva
           </Button>
         </DialogFooter>
       </DialogContent>

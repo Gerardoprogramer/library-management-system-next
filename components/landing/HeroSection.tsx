@@ -41,7 +41,7 @@ export const HeroSection = () => {
           </h1>
 
           <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-            Explorá el catálogo, gestioná préstamos, reservas, reseñas, suscripciones y pagos desde una sola plataforma.
+            Encontrá tu próxima lectura, reservá ejemplares y llevá el control de tus préstamos sin vueltas.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
