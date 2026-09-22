@@ -45,15 +45,15 @@ export const CatalogClient = () => {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-border/70 bg-card p-5 sm:p-6">
+      <section className="surface p-5 sm:p-6">
         <div className="mb-6">
           <p className="text-sm font-medium text-primary">Colección</p>
 
-          <h2 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+          <h2 className="page-heading mt-1">
             Encontrá tu próxima lectura
           </h2>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+          <p className="page-description">
             Buscá por título, autor o ISBN y filtrá la colección según género y disponibilidad.
           </p>
         </div>
@@ -77,7 +77,7 @@ export const CatalogClient = () => {
             setSelectedItem={setGenre}
           />
 
-          <div className="flex h-11 items-center justify-between gap-3 rounded-xl border border-input bg-background px-4 lg:justify-start">
+          <div className="flex h-11 items-center justify-between gap-3 rounded-xl border border-input bg-background/70 px-4 lg:justify-start">
             <div>
               <Label htmlFor="available" className="cursor-pointer text-sm font-medium">
                 Solo disponibles
@@ -126,7 +126,7 @@ export const CatalogClient = () => {
             )}
           </>
         ) : (
-          <div className="flex min-h-80 flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/40 px-6 text-center">
+          <div className="surface-muted flex min-h-80 flex-col items-center justify-center border-dashed px-6 text-center">
             <div className="flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
               <PiBooks className="size-7" />
             </div>

@@ -76,7 +76,7 @@ export const BooksGrid = ({ book, href, handleWishlistToggle }: BookGridProps) =
   );
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
       <button
         type="button"
         onClick={(event) => {
@@ -85,7 +85,7 @@ export const BooksGrid = ({ book, href, handleWishlistToggle }: BookGridProps) =
           handleWishlistToggle(id, isWishList);
         }}
         aria-label={isWishList ? `Eliminar ${title} de la wishlist` : `Agregar ${title} a la wishlist`}
-        className="absolute left-3 top-3 z-10 flex size-9 items-center justify-center rounded-full border border-white/10 bg-background/90 text-muted-foreground shadow-sm backdrop-blur-md transition-colors hover:text-destructive"
+        className="absolute left-3 top-3 z-10 flex size-9 items-center justify-center rounded-full border border-white/15 bg-background/90 text-muted-foreground shadow-md backdrop-blur-md transition-all hover:scale-105 hover:text-destructive"
       >
         {isWishList ? <PiHeartFill className="size-4.5 text-destructive" /> : <PiHeart className="size-4.5" />}
       </button>
