@@ -12,16 +12,7 @@ export async function backendProxy(
 
     const { searchParams } = new URL(request.url);
 
-    const backendBaseUrl = process.env.BACKEND_URL?.trim().replace(/\/+$/, "");
-
-    if (!backendBaseUrl) {
-      throw new Error("BACKEND_URL no está configurada en el entorno de producción");
-    }
-
-    const backendPath = backendBaseUrl.endsWith("/api/v1")
-      ? endpoint
-      : `/api/v1${endpoint}`;
-    const backendUrl = new URL(`${backendBaseUrl}${backendPath}`);
+    const backendUrl = new URL(`${process.env.BACKEND_URL}/api/v1${endpoint}`);
 
     searchParams.forEach((value, key) => backendUrl.searchParams.append(key, value));
 
@@ -54,16 +45,7 @@ export async function backendProxy(
 
     const backendResponse = await fetch(backendUrl.toString(), fetchOptions);
 
-    const responseText = backendResponse.status !== 204 ? await backendResponse.text() : "";
-    let data: unknown = null;
-
-    if (responseText) {
-      try {
-        data = JSON.parse(responseText);
-      } catch {
-        data = { success: false, message: responseText };
-      }
-    }
+    const data = backendResponse.status !== 204 ? await backendResponse.json().catch(() => null) : null;
 
     const response = NextResponse.json(data, {
       status: backendResponse.status,
@@ -77,14 +59,12 @@ export async function backendProxy(
 
     return response;
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Error desconocido";
-
-    console.error(`[Proxy Error] ${endpoint}: ${message}`);
+    console.error(`[Proxy Error] ${endpoint}:`, error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "No se pudo conectar con el backend",
+        message: "Error de comunicación",
       },
       {
         status: 500,
