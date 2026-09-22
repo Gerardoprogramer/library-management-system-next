@@ -1,7 +1,35 @@
 import { api } from "@/lib/axios";
-import type { ApiResponse, PageResponse, Payment, PaymentDetails } from "@/lib/definitions";
+import type {
+  ApiResponse,
+  InitiatePaymentRequest,
+  InitiatePaymentResponse,
+  PageResponse,
+  Payment,
+  PaymentDetails,
+  PaymentStatusDetails,
+} from "@/lib/definitions";
 
 export const PaymentService = {
+  initiate: async (payment: InitiatePaymentRequest): Promise<InitiatePaymentResponse> => {
+    const response = await api.post<ApiResponse<InitiatePaymentResponse>>("/payment/initiate", payment);
+
+    if (!response.data.data) {
+      throw new Error(response.data.message || "No se pudo iniciar el pago");
+    }
+
+    return response.data.data;
+  },
+
+  getStatus: async (paymentId: string): Promise<PaymentStatusDetails> => {
+    const response = await api.get<ApiResponse<PaymentStatusDetails>>(`/payment/${paymentId}/status`);
+
+    if (!response.data.data) {
+      throw new Error(response.data.message || "No se pudo obtener el estado del pago");
+    }
+
+    return response.data.data;
+  },
+
   getSuccessDetails: async (sessionId: string): Promise<PaymentDetails> => {
     const response = await api.get<ApiResponse<PaymentDetails>>(`/payment/${sessionId}`);
 

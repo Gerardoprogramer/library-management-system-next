@@ -4,14 +4,13 @@ import { PiArrowRight, PiBooks, PiCheckCircle, PiSparkle } from "react-icons/pi"
 import type { ElementType } from "react";
 
 import { Button } from "@/components/ui/button";
-import heroImage from "@/public/library-hero.jpg";
 
 export const HeroSection = () => {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden pt-16">
       <div className="absolute inset-0">
         <Image
-          src={heroImage}
+          src="/library-hero.jpg"
           alt="Biblioteca con estanterías llenas de libros"
           fill
           priority

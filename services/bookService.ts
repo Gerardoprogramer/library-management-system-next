@@ -1,5 +1,5 @@
 import { api } from "@/lib/axios";
-import type { BookSummary, ApiResponse, PageResponse, BookDetail } from "@/lib/definitions";
+import type { BookSummary, ApiResponse, PageResponse, BookDetail, BookStats } from "@/lib/definitions";
 
 export const bookService = {
   search: async (params?: {
@@ -32,6 +32,16 @@ export const bookService = {
 
     if (!response.data.data) {
       throw new Error(response.data.message || "Libro no encontrado");
+    }
+
+    return response.data.data;
+  },
+
+  stats: async (): Promise<BookStats> => {
+    const response = await api.get<ApiResponse<BookStats>>("/book/stats");
+
+    if (!response.data.data) {
+      throw new Error(response.data.message || "No se pudieron obtener las estadísticas");
     }
 
     return response.data.data;
