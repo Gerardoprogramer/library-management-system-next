@@ -9,7 +9,7 @@ export const reservationService = {
     page: number = 0
   ): Promise<PageResponse<reservationBook>> => {
     const response = await api.get<ApiResponse<PageResponse<reservationBook>>>(`/reservation/me`, {
-      params: { bookid, status, activeOnly, page },
+      params: { bookId: bookid, status, activeOnly, page },
     });
 
     return (
