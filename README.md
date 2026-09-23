@@ -80,4 +80,21 @@ pnpm run dev
 pnpm run build
 ```
 
+### Validación de calidad
+
+Los comandos principales para validar cambios antes de publicar son:
+
+```text
+pnpm format:check
+pnpm lint
+pnpm exec tsc --noEmit
+pnpm test
+pnpm test:e2e
+pnpm run build
+```
+
+Los tests unitarios usan Vitest. Los flujos críticos del navegador usan Playwright y
+requieren Chromium instalado con `pnpm exec playwright install chromium`. El workflow
+de GitHub Actions instala el navegador automáticamente y ejecuta todas las validaciones.
+
 Desarrollado por Gerardo Alonso Martínez Monge - Full Stack Software Engineer.
