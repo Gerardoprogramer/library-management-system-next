@@ -1,6 +1,6 @@
 "use client";
 
-import { PiBookOpenText, PiSignOut, PiX } from "react-icons/pi";
+import { PiBookOpenText, PiShieldCheck, PiSignOut, PiX } from "react-icons/pi";
 
 import { NavLinks } from "@/components/dashboard/NavLinks";
 import { useLogout } from "@/hooks/auth/useLogout";
@@ -66,13 +66,15 @@ export const SideNav = ({ isOpen, setIsOpen }: SideNavProps) => {
           </div>
 
           {user?.isAdmin && (
-            <div>
-              <div className="mb-5 h-px bg-border/70" />
-
-              <p className="mb-2 px-3 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground/70">
-                Administración
-              </p>
-
+            <div className="mt-6 rounded-2xl border border-primary/15 bg-primary/5 p-2">
+              <div className="mb-2 flex items-center gap-2 px-2 py-1.5">
+                <span className="flex size-7 items-center justify-center rounded-lg bg-primary/12 text-primary">
+                  <PiShieldCheck className="size-4" />
+                </span>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+                  Administración
+                </p>
+              </div>
               <NavLinks links={adminNav} />
             </div>
           )}
