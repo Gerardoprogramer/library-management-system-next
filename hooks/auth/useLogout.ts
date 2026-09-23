@@ -20,8 +20,7 @@ export const useLogout = () => {
 
       showToast.info("Sesión cerrada", "Esperamos verte pronto por aquí.");
 
-      router.push("/");
-      router.refresh();
+      router.replace("/");
     } catch {
       showToast.error("Error al salir", "No se pudo cerrar la sesión correctamente.");
     } finally {
