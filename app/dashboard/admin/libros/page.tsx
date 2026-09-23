@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { AdminNav, AdminPage, AdminSection, Field } from "@/components/admin/AdminTools";
+import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import type { AdminBookInput, BookSummary, Genre } from "@/lib/definitions";
 import { adminService } from "@/services/adminService";
 import { bookService } from "@/services/bookService";
@@ -26,6 +27,7 @@ export default function AdminBooksPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [editing, setEditing] = useState<BookSummary | null>(null);
   const [form, setForm] = useState<AdminBookInput>(emptyForm);
+  const [deactivatingBook, setDeactivatingBook] = useState<BookSummary | null>(null);
   const books = useQuery({
     queryKey: ["admin", "books", searchTerm],
     queryFn: () => bookService.search({ size: 50, searchTerm }),
@@ -71,6 +73,17 @@ export default function AdminBooksPage() {
   return (
     <AdminPage title="Libros" description="Gestiona el catálogo, sus existencias y el estado de cada título.">
       <AdminNav />
+      <AdminActionDialog
+        open={Boolean(deactivatingBook)}
+        onOpenChange={(open) => !open && setDeactivatingBook(null)}
+        title="Desactivar libro"
+        description={`¿Quieres desactivar ${deactivatingBook?.title ?? "este libro"}?`}
+        confirmLabel="Desactivar"
+        onConfirm={() => {
+          if (deactivatingBook) deleteMutation.mutate({ id: deactivatingBook.id, hard: false });
+          setDeactivatingBook(null);
+        }}
+      />
       <div className="grid gap-6 lg:grid-cols-[minmax(340px,0.9fr)_1.1fr]">
         <AdminSection
           title={editing ? "Editar libro" : "Añadir libro"}
@@ -210,8 +223,7 @@ export default function AdminBooksPage() {
                 <button
                   type="button"
                   onClick={() => {
-                    if (window.confirm(`¿Desactivar ${book.title}?`))
-                      deleteMutation.mutate({ id: book.id, hard: false });
+                    setDeactivatingBook(book);
                   }}
                   className="rounded-lg border border-destructive/30 px-3 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10"
                 >

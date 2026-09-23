@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { AdminNav, AdminPage, AdminSection, Field } from "@/components/admin/AdminTools";
+import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import { adminService } from "@/services/adminService";
 import { genreService } from "@/services/genreService";
 import type { AdminGenreInput, Genre } from "@/lib/definitions";
@@ -15,6 +16,7 @@ export default function AdminGenresPage() {
   const genres = useQuery({ queryKey: ["admin", "genres"], queryFn: genreService.genres });
   const [editing, setEditing] = useState<Genre | null>(null);
   const [form, setForm] = useState<AdminGenreInput>(emptyForm);
+  const [deactivatingGenre, setDeactivatingGenre] = useState<Genre | null>(null);
   const mutation = useMutation({
     mutationFn: () => (editing ? adminService.updateGenre(editing.id, form) : adminService.createGenre(form)),
     onSuccess: () => {
@@ -52,6 +54,17 @@ export default function AdminGenresPage() {
   return (
     <AdminPage title="Géneros" description="Organiza el catálogo con categorías claras y fáciles de mantener.">
       <AdminNav />
+      <AdminActionDialog
+        open={Boolean(deactivatingGenre)}
+        onOpenChange={(open) => !open && setDeactivatingGenre(null)}
+        title="Desactivar género"
+        description={`¿Quieres desactivar ${deactivatingGenre?.name ?? "este género"}?`}
+        confirmLabel="Desactivar"
+        onConfirm={() => {
+          if (deactivatingGenre) deleteMutation.mutate({ id: deactivatingGenre.id, hard: false });
+          setDeactivatingGenre(null);
+        }}
+      />
       <div className="grid gap-6 lg:grid-cols-[minmax(300px,0.8fr)_1.2fr]">
         <AdminSection
           title={editing ? "Editar género" : "Nuevo género"}
@@ -159,8 +172,7 @@ export default function AdminGenresPage() {
                 <button
                   type="button"
                   onClick={() => {
-                    if (window.confirm(`¿Desactivar ${genre.name}?`))
-                      deleteMutation.mutate({ id: genre.id, hard: false });
+                    setDeactivatingGenre(genre);
                   }}
                   className="rounded-lg border border-destructive/30 px-3 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10"
                 >

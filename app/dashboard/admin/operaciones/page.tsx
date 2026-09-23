@@ -4,12 +4,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { AdminForm, AdminNav, AdminPage, AdminSection, Field } from "@/components/admin/AdminTools";
+import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import { adminService } from "@/services/adminService";
 import type { meLoans, reservationBook } from "@/lib/definitions";
 
 export default function AdminOperationsPage() {
   const client = useQueryClient();
   const [reservationUserId, setReservationUserId] = useState("");
+  const [fulfillingReservationId, setFulfillingReservationId] = useState<string | null>(null);
   const loans = useQuery({
     queryKey: ["admin", "loans"],
     queryFn: () => adminService.searchLoans({ page: 0, size: 50 }),
@@ -37,6 +39,23 @@ export default function AdminOperationsPage() {
       description="Busca operaciones, asigna préstamos y atiende reservas pendientes."
     >
       <AdminNav />
+      <AdminActionDialog
+        open={Boolean(fulfillingReservationId)}
+        onOpenChange={(open) => !open && setFulfillingReservationId(null)}
+        title="Convertir reserva en préstamo"
+        description="Define cuántos días tendrá el préstamo para esta reserva disponible."
+        confirmLabel="Convertir en préstamo"
+        inputLabel="Días de préstamo"
+        inputType="number"
+        defaultValue="14"
+        validate={(value) => Number(value) > 0}
+        onConfirm={(value) => {
+          if (fulfillingReservationId) {
+            fulfill.mutate({ id: fulfillingReservationId, days: Number(value) });
+          }
+          setFulfillingReservationId(null);
+        }}
+      />
       <div className="flex justify-end">
         <button
           type="button"
@@ -117,10 +136,7 @@ export default function AdminOperationsPage() {
               {reservation.status === "AVAILABLE" && (
                 <button
                   type="button"
-                  onClick={() => {
-                    const days = Number(window.prompt("¿Cuántos días tendrá el préstamo?", "14"));
-                    if (days > 0) fulfill.mutate({ id: reservation.id, days });
-                  }}
+                  onClick={() => setFulfillingReservationId(reservation.id)}
                   className="mt-3 rounded-lg border border-primary/30 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/10"
                 >
                   Convertir en préstamo

@@ -1,11 +1,14 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 
 import { AdminNav, AdminPage, AdminSection } from "@/components/admin/AdminTools";
+import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import { adminService } from "@/services/adminService";
 
 export default function AdminPaymentsPage() {
+  const [paymentIdToRefund, setPaymentIdToRefund] = useState<string | null>(null);
   const refund = useMutation({
     mutationFn: (paymentId: string) => adminService.refundPayment(paymentId),
   });
@@ -13,6 +16,17 @@ export default function AdminPaymentsPage() {
   return (
     <AdminPage title="Pagos y reembolsos" description="Procesa reembolsos de transacciones confirmadas.">
       <AdminNav />
+      <AdminActionDialog
+        open={Boolean(paymentIdToRefund)}
+        onOpenChange={(open) => !open && setPaymentIdToRefund(null)}
+        title="Confirmar reembolso"
+        description="El reembolso procesará la transacción en el proveedor de pagos."
+        confirmLabel="Procesar reembolso"
+        onConfirm={() => {
+          if (paymentIdToRefund) refund.mutate(paymentIdToRefund);
+          setPaymentIdToRefund(null);
+        }}
+      />
       <AdminSection
         title="Solicitar reembolso"
         description="Solo se aceptan identificadores UUID de pagos completados."
@@ -22,7 +36,7 @@ export default function AdminPaymentsPage() {
           onSubmit={(event) => {
             event.preventDefault();
             const paymentId = new FormData(event.currentTarget).get("paymentId")?.toString().trim() ?? "";
-            if (paymentId && window.confirm("¿Confirmas procesar este reembolso?")) refund.mutate(paymentId);
+            if (paymentId) setPaymentIdToRefund(paymentId);
           }}
         >
           <label className="block space-y-2 text-sm">

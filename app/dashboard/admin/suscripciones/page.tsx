@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { AdminForm, AdminNav, AdminPage, AdminSection, Field } from "@/components/admin/AdminTools";
+import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import type { AdminSubscriptionPlanInput, Currency, SubscriptionPlan } from "@/lib/definitions";
 import { adminService } from "@/services/adminService";
 import { SubscriptionPlanService } from "@/services/subscriptionPlanService";
@@ -27,6 +28,7 @@ export default function AdminSubscriptionsPage() {
   const client = useQueryClient();
   const [editing, setEditing] = useState<SubscriptionPlan | null>(null);
   const [form, setForm] = useState<AdminSubscriptionPlanInput>(initial);
+  const [deletingPlan, setDeletingPlan] = useState<SubscriptionPlan | null>(null);
   const plans = useQuery({
     queryKey: ["admin", "subscription-plans"],
     queryFn: SubscriptionPlanService.subscriptionPlans,
@@ -69,6 +71,17 @@ export default function AdminSubscriptionsPage() {
   return (
     <AdminPage title="Suscripciones y planes" description="Administra planes, precios y membresías activas.">
       <AdminNav />
+      <AdminActionDialog
+        open={Boolean(deletingPlan)}
+        onOpenChange={(open) => !open && setDeletingPlan(null)}
+        title="Eliminar plan"
+        description={`Esta acción eliminará ${deletingPlan?.name ?? "este plan"} de forma permanente.`}
+        confirmLabel="Eliminar plan"
+        onConfirm={() => {
+          if (deletingPlan) remove.mutate(deletingPlan.id);
+          setDeletingPlan(null);
+        }}
+      />
       <div className="flex justify-end">
         <button
           type="button"
@@ -109,7 +122,7 @@ export default function AdminSubscriptionsPage() {
                 <button
                   type="button"
                   onClick={() => {
-                    if (window.confirm(`¿Eliminar ${plan.name}?`)) remove.mutate(plan.id);
+                    setDeletingPlan(plan);
                   }}
                   className="rounded-lg border border-destructive/30 px-3 py-1.5 text-xs font-medium text-destructive hover:bg-destructive/10"
                 >

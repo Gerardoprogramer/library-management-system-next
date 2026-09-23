@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { AdminForm, AdminNav, AdminPage, AdminSection, Field } from "@/components/admin/AdminTools";
+import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import { adminService } from "@/services/adminService";
 import type { Fine, FineStatus } from "@/lib/definitions";
 
@@ -11,6 +12,7 @@ export default function AdminFinesPage() {
   const client = useQueryClient();
   const [status, setStatus] = useState<FineStatus | "">("");
   const [userId, setUserId] = useState("");
+  const [waivingFineId, setWaivingFineId] = useState<string | null>(null);
   const fines = useQuery({
     queryKey: ["admin", "fines", status, userId],
     queryFn: () =>
@@ -24,6 +26,20 @@ export default function AdminFinesPage() {
   return (
     <AdminPage title="Multas" description="Registra cargos, consulta su estado y aplica exenciones con trazabilidad.">
       <AdminNav />
+      <AdminActionDialog
+        open={Boolean(waivingFineId)}
+        onOpenChange={(open) => !open && setWaivingFineId(null)}
+        title="Eximir multa"
+        description="Registra el motivo de la exención para mantener trazabilidad administrativa."
+        confirmLabel="Eximir multa"
+        inputLabel="Motivo"
+        inputPlaceholder="Describe el motivo"
+        validate={(value) => value.trim().length > 0}
+        onConfirm={(reason) => {
+          if (waivingFineId) waive.mutate({ fineId: waivingFineId, reason: reason.trim() });
+          setWaivingFineId(null);
+        }}
+      />
       <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
         <AdminSection title="Registrar multa" description="Todos los campos requeridos coinciden con el backend.">
           <AdminForm
@@ -118,10 +134,7 @@ export default function AdminFinesPage() {
               {fine.status === "PENDING" && (
                 <button
                   type="button"
-                  onClick={() => {
-                    const reason = window.prompt("Motivo de la exención", "");
-                    if (reason !== null) waive.mutate({ fineId: fine.id, reason });
-                  }}
+                  onClick={() => setWaivingFineId(fine.id)}
                   className="mt-3 rounded-lg border border-primary/30 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/10"
                 >
                   Eximir multa
