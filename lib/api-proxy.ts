@@ -12,8 +12,7 @@ export async function backendProxy(
 
     const { searchParams } = new URL(request.url);
 
-    const configuredBackendUrl =
-      process.env.BACKEND_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL;
+    const configuredBackendUrl = process.env.BACKEND_URL ?? process.env.NEXT_PUBLIC_BACKEND_URL;
 
     if (!configuredBackendUrl) {
       throw new Error("Falta BACKEND_URL en las variables de entorno de Vercel");
@@ -26,9 +25,7 @@ export async function backendProxy(
     }
 
     const backendUrl = new URL(
-      backendBaseUrl.endsWith("/api/v1")
-        ? `${backendBaseUrl}${endpoint}`
-        : `${backendBaseUrl}/api/v1${endpoint}`
+      backendBaseUrl.endsWith("/api/v1") ? `${backendBaseUrl}${endpoint}` : `${backendBaseUrl}/api/v1${endpoint}`
     );
 
     searchParams.forEach((value, key) => backendUrl.searchParams.append(key, value));
@@ -81,16 +78,15 @@ export async function backendProxy(
     }
 
     if (!backendResponse) {
-      throw lastError instanceof Error
-        ? lastError
-        : new Error("No se pudo conectar con el backend");
+      throw lastError instanceof Error ? lastError : new Error("No se pudo conectar con el backend");
     }
 
     const data = backendResponse.status !== 204 ? await backendResponse.json().catch(() => null) : null;
 
-    const response = NextResponse.json(data, {
-      status: backendResponse.status,
-    });
+    const response =
+      backendResponse.status === 204
+        ? new NextResponse(null, { status: 204 })
+        : NextResponse.json(data, { status: backendResponse.status });
 
     const headersWithSetCookie = backendResponse.headers as Headers & {
       getSetCookie?: () => string[];
@@ -113,9 +109,7 @@ export async function backendProxy(
   } catch (error) {
     console.error(`[Proxy Error] ${endpoint}:`, error);
 
-    const isTimeout =
-      error instanceof Error &&
-      (error.name === "TimeoutError" || error.name === "AbortError");
+    const isTimeout = error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError");
 
     return NextResponse.json(
       {

@@ -28,8 +28,8 @@ export const loansService = {
     return response.data;
   },
 
-  renew: async (renewData: renewLoan): Promise<ApiResponse<void>> => {
-    const response = await api.post<ApiResponse<void>>("/loans/renew", renewData);
+  renew: async (renewData: renewLoan): Promise<ApiResponse<meLoans>> => {
+    const response = await api.post<ApiResponse<meLoans>>("/loans/renew", renewData);
 
     return response.data;
   },
