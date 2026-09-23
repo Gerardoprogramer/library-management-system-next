@@ -31,4 +31,90 @@ test.describe("public and authentication flows", () => {
 
     await expect(page).toHaveURL(/\/auth\/login\?reason=session_expired/);
   });
+
+  test("returns authenticated users to the landing page after logout", async ({ page, context }) => {
+    await context.addCookies([
+      {
+        name: "access_token",
+        value: "e2e-access-token",
+        url: "http://127.0.0.1:3100",
+      },
+    ]);
+
+    await page.route("**/api/users/me", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          success: true,
+          message: "Usuario actual",
+          data: {
+            id: "user-1",
+            email: "reader@example.com",
+            fullName: "Reader",
+            isAdmin: false,
+            lastLogin: "",
+          },
+        }),
+      });
+    });
+    await page.route("**/api/auth/csrf", async (route) => {
+      await route.fulfill({
+        status: 200,
+        headers: { "set-cookie": "XSRF-TOKEN=e2e-csrf; Path=/" },
+        contentType: "application/json",
+        body: JSON.stringify({ success: true, data: "e2e-csrf" }),
+      });
+    });
+    await page.route("**/api/auth/logout", async (route) => {
+      await route.fulfill({
+        status: 200,
+        headers: {
+          "set-cookie": "access_token=; Max-Age=0; Path=/, refresh_token=; Max-Age=0; Path=/",
+        },
+        contentType: "application/json",
+        body: JSON.stringify({ success: true, message: "Sesión cerrada", data: null }),
+      });
+    });
+
+    await page.goto("/dashboard");
+    await expect(page.getByRole("button", { name: "Cerrar sesión" })).toBeVisible();
+
+    await page.getByRole("button", { name: "Cerrar sesión" }).click();
+
+    await expect(page).toHaveURL("/");
+    await expect(page.getByRole("link", { name: /iniciar sesión/i }).first()).toBeVisible();
+  });
+
+  test("redirects authenticated non-admin users away from admin routes", async ({ page, context }) => {
+    await context.addCookies([
+      {
+        name: "access_token",
+        value: "e2e-access-token",
+        url: "http://127.0.0.1:3100",
+      },
+    ]);
+
+    await page.route("**/api/users/me", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          success: true,
+          message: "Usuario actual",
+          data: {
+            id: "user-1",
+            email: "reader@example.com",
+            fullName: "Reader",
+            isAdmin: false,
+            lastLogin: "",
+          },
+        }),
+      });
+    });
+
+    await page.goto("/dashboard/admin");
+
+    await expect(page).toHaveURL("/dashboard?reason=access_denied");
+  });
 });
