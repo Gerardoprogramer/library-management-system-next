@@ -6,6 +6,7 @@ import { useState } from "react";
 import { AdminForm, AdminNav, AdminPage, AdminPagination, AdminSection, Field } from "@/components/admin/AdminTools";
 import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import { adminService } from "@/services/adminService";
+import { bookService } from "@/services/bookService";
 import type { meLoans, reservationBook } from "@/lib/definitions";
 
 export default function AdminOperationsPage() {
@@ -14,6 +15,14 @@ export default function AdminOperationsPage() {
   const [loansPage, setLoansPage] = useState(0);
   const [reservationsPage, setReservationsPage] = useState(0);
   const [fulfillingReservationId, setFulfillingReservationId] = useState<string | null>(null);
+  const users = useQuery({
+    queryKey: ["admin", "users", "checkout-options"],
+    queryFn: adminService.users,
+  });
+  const books = useQuery({
+    queryKey: ["admin", "books", "checkout-options"],
+    queryFn: () => bookService.search({ page: 0, size: 100, availableOnly: true }),
+  });
   const loans = useQuery({
     queryKey: ["admin", "loans", loansPage],
     queryFn: () => adminService.searchLoans({ page: loansPage, size: 10 }),
@@ -79,11 +88,50 @@ export default function AdminOperationsPage() {
           }
         >
           <div className="grid gap-3 sm:grid-cols-2">
-            <Field name="userId" label="ID de usuario" required />
-            <Field name="bookId" label="ID de libro" required />
+            <label className="block space-y-2 text-sm">
+              <span className="font-medium">Usuario</span>
+              <select
+                name="userId"
+                required
+                defaultValue=""
+                className="h-11 w-full rounded-xl border border-input bg-background/70 px-3"
+              >
+                <option value="" disabled>
+                  {users.isLoading ? "Cargando usuarios..." : "Selecciona un usuario"}
+                </option>
+                {users.data?.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.fullName} · {user.email}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="block space-y-2 text-sm">
+              <span className="font-medium">Libro disponible</span>
+              <select
+                name="bookId"
+                required
+                defaultValue=""
+                className="h-11 w-full rounded-xl border border-input bg-background/70 px-3"
+              >
+                <option value="" disabled>
+                  {books.isLoading ? "Cargando libros..." : "Selecciona un libro"}
+                </option>
+                {books.data?.content.map((book) => (
+                  <option key={book.id} value={book.id}>
+                    {book.title} · {book.author}
+                  </option>
+                ))}
+              </select>
+            </label>
             <Field name="checkoutDays" label="Días de préstamo" type="number" required />
             <Field name="notes" label="Notas" />
           </div>
+          {(users.isError || books.isError) && (
+            <p role="alert" className="text-sm text-destructive">
+              No se pudieron cargar las opciones de usuarios o libros.
+            </p>
+          )}
         </AdminForm>
       </AdminSection>
       <div className="grid gap-6 lg:grid-cols-2">
@@ -123,12 +171,21 @@ export default function AdminOperationsPage() {
               setReservationsPage(0);
             }}
           >
-            <input
+            <select
               name="userId"
               required
-              placeholder="ID de usuario"
+              defaultValue=""
               className="h-10 min-w-0 flex-1 rounded-lg border border-input bg-background px-3 text-sm"
-            />
+            >
+              <option value="" disabled>
+                {users.isLoading ? "Cargando usuarios..." : "Selecciona un usuario"}
+              </option>
+              {users.data?.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.fullName} · {user.email}
+                </option>
+              ))}
+            </select>
             <button className="rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground">Buscar</button>
           </form>
           {!reservationUserId && (
