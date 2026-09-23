@@ -6,17 +6,41 @@ import { useState } from "react";
 import { AdminForm, AdminNav, AdminPage, AdminPagination, AdminSection, Field } from "@/components/admin/AdminTools";
 import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import { adminService } from "@/services/adminService";
-import type { Fine, FineStatus } from "@/lib/definitions";
+import type { Currency, Fine, FineStatus, FineType } from "@/lib/definitions";
 
 export default function AdminFinesPage() {
   const client = useQueryClient();
   const [status, setStatus] = useState<FineStatus | "">("");
-  const [userId, setUserId] = useState("");
+  const [filterUserId, setFilterUserId] = useState("");
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [selectedLoanId, setSelectedLoanId] = useState("");
   const [page, setPage] = useState(0);
   const [waivingFineId, setWaivingFineId] = useState<string | null>(null);
+
+  const users = useQuery({
+    queryKey: ["admin", "users", "fine-options"],
+    queryFn: adminService.users,
+  });
+
+  const userLoans = useQuery({
+    queryKey: ["admin", "loans", "fine-options", selectedUserId],
+    queryFn: () =>
+      adminService.searchLoans({
+        userId: selectedUserId,
+        page: 0,
+        size: 100,
+      }),
+    enabled: Boolean(selectedUserId),
+  });
   const fines = useQuery({
-    queryKey: ["admin", "fines", status, userId, page],
-    queryFn: () => adminService.fines({ page, size: 10, ...(status ? { status } : {}), ...(userId ? { userId } : {}) }),
+    queryKey: ["admin", "fines", status, filterUserId, page],
+    queryFn: () =>
+      adminService.fines({
+        page,
+        size: 10,
+        ...(status ? { status } : {}),
+        ...(filterUserId ? { userId: filterUserId } : {}),
+      }),
   });
   const waive = useMutation({
     mutationFn: ({ fineId, reason }: { fineId: string; reason: string }) => adminService.waiveFine({ fineId, reason }),
@@ -43,16 +67,89 @@ export default function AdminFinesPage() {
       <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
         <AdminSection title="Registrar multa" description="Todos los campos requeridos coinciden con el backend.">
           <AdminForm
-            onSubmit={(values) =>
-              adminService.createFine({
-                ...values,
+            onSubmit={async (values) => {
+              await adminService.createFine({
+                userId: values.userId,
+                bookLoanId: values.bookLoanId,
+                type: values.type as FineType,
                 amount: Number(values.amount),
-                currency: values.currency as "USD" | "CRC" | "EUR",
-              })
-            }
+                currency: values.currency as Currency,
+                reason: values.reason,
+                notes: values.notes || undefined,
+              });
+
+              await client.invalidateQueries({
+                queryKey: ["admin", "fines"],
+              });
+
+              setSelectedUserId("");
+              setSelectedLoanId("");
+            }}
           >
-            <Field name="userId" label="ID de usuario" required />
-            <Field name="bookLoanId" label="ID de préstamo" required />
+            <label className="block space-y-2 text-sm">
+              <span className="font-medium">
+                Usuario<span className="ml-1 text-primary">*</span>
+              </span>
+
+              <select
+                name="userId"
+                required
+                value={selectedUserId}
+                disabled={users.isLoading}
+                onChange={(event) => {
+                  setSelectedUserId(event.target.value);
+                  setSelectedLoanId("");
+                }}
+                className="h-11 w-full rounded-xl border border-input bg-background px-3 disabled:opacity-50"
+              >
+                <option value="">{users.isLoading ? "Cargando usuarios..." : "Selecciona un usuario"}</option>
+
+                {users.data?.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.fullName} · {user.email}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="block space-y-2 text-sm">
+              <span className="font-medium">
+                Préstamo<span className="ml-1 text-primary">*</span>
+              </span>
+
+              <select
+                name="bookLoanId"
+                required
+                value={selectedLoanId}
+                disabled={!selectedUserId || userLoans.isLoading}
+                onChange={(event) => setSelectedLoanId(event.target.value)}
+                className="h-11 w-full rounded-xl border border-input bg-background px-3 disabled:opacity-50"
+              >
+                <option value="">
+                  {!selectedUserId
+                    ? "Selecciona primero un usuario"
+                    : userLoans.isLoading
+                      ? "Cargando préstamos..."
+                      : "Selecciona un préstamo"}
+                </option>
+
+                {userLoans.data?.content.map((loan) => (
+                  <option key={loan.id} value={loan.id}>
+                    {loan.bookTitle} · {loan.status}
+                  </option>
+                ))}
+              </select>
+
+              {selectedUserId && userLoans.isSuccess && userLoans.data?.content.length === 0 && (
+                <p className="text-sm text-muted-foreground">Este usuario no tiene préstamos registrados.</p>
+              )}
+
+              {userLoans.isError && (
+                <p role="alert" className="text-sm text-destructive">
+                  No se pudieron cargar los préstamos del usuario.
+                </p>
+              )}
+            </label>
             <label className="block space-y-2 text-sm">
               <span className="font-medium">Tipo</span>
               <select name="type" required className="h-11 w-full rounded-xl border border-input bg-background px-3">
@@ -99,19 +196,27 @@ export default function AdminFinesPage() {
               >
                 <option value="">Todos los estados</option>
                 <option value="PENDING">Pendientes</option>
+                <option value="PARTIALLY_PAID">Parcialmente pagadas</option>
                 <option value="PAID">Pagadas</option>
                 <option value="WAIVED">Eximidas</option>
               </select>
-              <input
+              <select
                 aria-label="Filtrar por usuario"
-                value={userId}
+                value={filterUserId}
                 onChange={(event) => {
-                  setUserId(event.target.value);
+                  setFilterUserId(event.target.value);
                   setPage(0);
                 }}
-                placeholder="ID usuario"
-                className="h-9 w-28 rounded-lg border border-input bg-background px-2 text-sm"
-              />
+                className="h-9 max-w-56 rounded-lg border border-input bg-background px-2 text-sm"
+              >
+                <option value="">Todos los usuarios</option>
+
+                {users.data?.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.fullName}
+                  </option>
+                ))}
+              </select>
             </div>
           }
         >
@@ -130,7 +235,7 @@ export default function AdminFinesPage() {
                 <div>
                   <p className="font-medium">{fine.reason || fine.type}</p>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {fine.status} · Usuario {fine.userId}
+                    {fine.status} · {users.data?.find((user) => user.id === fine.userId)?.fullName ?? "Usuario"}
                   </p>
                 </div>
                 <span className="font-semibold">

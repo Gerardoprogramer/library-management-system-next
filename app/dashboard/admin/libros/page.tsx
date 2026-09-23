@@ -175,20 +175,9 @@ export default function AdminBooksPage() {
               />
             </div>
             <Field name="publisher" label="Editorial" value={form.publisher ?? ""} onChange={update} />
-            <Field
-              name="language"
-              label="Idioma"
-              value={form.language ?? ""}
-              onChange={update}
-            />
+            <Field name="language" label="Idioma" value={form.language ?? ""} onChange={update} />
 
-            <Field
-              name="price"
-              label="Precio"
-              type="number"
-              value={String(form.price ?? 0)}
-              onChange={update}
-            />
+            <Field name="price" label="Precio" type="number" value={String(form.price ?? 0)} onChange={update} />
 
             <label className="block space-y-2 text-sm">
               <span className="font-medium">Descripción</span>
