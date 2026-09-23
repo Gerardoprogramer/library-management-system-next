@@ -75,7 +75,15 @@ export function AdminSection({
   );
 }
 
-export function AdminPage({ title, description, children }: { title: string; description?: string; children: ReactNode }) {
+export function AdminPage({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description?: string;
+  children: ReactNode;
+}) {
   return (
     <div className="space-y-7">
       <header className="surface relative overflow-hidden p-6 sm:p-8">
@@ -97,18 +105,42 @@ export function AdminPage({ title, description, children }: { title: string; des
   );
 }
 
-export function AdminForm({ children, onSubmit, submitLabel = "Guardar" }: { children: ReactNode; onSubmit: (values: Record<string, string>) => void; submitLabel?: string }) {
+export function AdminForm({
+  children,
+  onSubmit,
+  submitLabel = "Guardar",
+}: {
+  children: ReactNode;
+  onSubmit: (values: Record<string, string>) => void;
+  submitLabel?: string;
+}) {
   const mutation = useMutation({ mutationFn: async (values: Record<string, string>) => onSubmit(values) });
-  const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); const values = Object.fromEntries(new FormData(event.currentTarget).entries()) as Record<string, string>; mutation.mutate(values); };
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const values = Object.fromEntries(new FormData(event.currentTarget).entries()) as Record<string, string>;
+    mutation.mutate(values);
+  };
   return (
     <form onSubmit={submit} className="space-y-5 p-5 sm:p-6">
       <div className="space-y-4">{children}</div>
       <div className="flex flex-col gap-3 border-t border-border/60 pt-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-h-5 text-sm">
-          {mutation.isError && <p role="alert" className="text-destructive">{(mutation.error as Error).message}</p>}
-          {mutation.isSuccess && <p role="status" className="text-emerald-600">Operación completada.</p>}
+          {mutation.isError && (
+            <p role="alert" className="text-destructive">
+              {(mutation.error as Error).message}
+            </p>
+          )}
+          {mutation.isSuccess && (
+            <p role="status" className="text-emerald-600">
+              Operación completada.
+            </p>
+          )}
         </div>
-        <button type="submit" disabled={mutation.isPending} className="rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition hover:brightness-105 disabled:opacity-50">
+        <button
+          type="submit"
+          disabled={mutation.isPending}
+          className="rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition hover:brightness-105 disabled:opacity-50"
+        >
           {mutation.isPending ? "Guardando..." : submitLabel}
         </button>
       </div>
@@ -116,8 +148,41 @@ export function AdminForm({ children, onSubmit, submitLabel = "Guardar" }: { chi
   );
 }
 
-export function Field({ name, label, type = "text", required = false, onChange }: { name: string; label: string; type?: string; required?: boolean; onChange?: (name: string, value: string) => void }) {
-  return <label className="block space-y-2 text-sm"><span className="flex items-center gap-1 font-medium">{label}{required && <span className="text-primary" aria-hidden="true">*</span>}</span><input name={name} type={type} required={required} onChange={(event) => onChange?.(name, event.target.value)} className="h-11 w-full rounded-xl border border-input bg-background/70 px-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" /></label>;
+export function Field({
+  name,
+  label,
+  type = "text",
+  required = false,
+  value,
+  onChange,
+}: {
+  name: string;
+  label: string;
+  type?: string;
+  required?: boolean;
+  value?: string;
+  onChange?: (name: string, value: string) => void;
+}) {
+  return (
+    <label className="block space-y-2 text-sm">
+      <span className="flex items-center gap-1 font-medium">
+        {label}
+        {required && (
+          <span className="text-primary" aria-hidden="true">
+            *
+          </span>
+        )}
+      </span>
+      <input
+        name={name}
+        type={type}
+        required={required}
+        value={value}
+        onChange={(event) => onChange?.(name, event.target.value)}
+        className="h-11 w-full rounded-xl border border-input bg-background/70 px-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+      />
+    </label>
+  );
 }
 
 export function AdminNav() {
@@ -144,25 +209,29 @@ export function AdminNav() {
         <PiGear className="size-5 text-primary" />
       </div>
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-      {sections.map(({ href, label, icon: Icon }) => {
-        const isActive = pathname === href || (href !== "/dashboard/admin" && pathname.startsWith(`${href}/`));
+        {sections.map(({ href, label, icon: Icon }) => {
+          const isActive = pathname === href || (href !== "/dashboard/admin" && pathname.startsWith(`${href}/`));
 
-        return (
-          <Link
-            key={href}
-            href={href}
-            aria-current={isActive ? "page" : undefined}
-            className={`inline-flex min-h-12 items-center gap-3 rounded-xl border px-3.5 py-2.5 text-left font-medium transition ${
-              isActive
-                ? "border-primary/20 bg-primary/10 text-primary shadow-sm"
-                : "border-transparent text-muted-foreground hover:border-border hover:bg-muted/60 hover:text-foreground"
-            }`}
-          >
-            <span className={`flex size-8 shrink-0 items-center justify-center rounded-lg ${isActive ? "bg-primary/15" : "bg-muted"}`}><Icon className="size-4" /></span>
-            <span className="truncate">{label}</span>
-          </Link>
-        );
-      })}
+          return (
+            <Link
+              key={href}
+              href={href}
+              aria-current={isActive ? "page" : undefined}
+              className={`inline-flex min-h-12 items-center gap-3 rounded-xl border px-3.5 py-2.5 text-left font-medium transition ${
+                isActive
+                  ? "border-primary/20 bg-primary/10 text-primary shadow-sm"
+                  : "border-transparent text-muted-foreground hover:border-border hover:bg-muted/60 hover:text-foreground"
+              }`}
+            >
+              <span
+                className={`flex size-8 shrink-0 items-center justify-center rounded-lg ${isActive ? "bg-primary/15" : "bg-muted"}`}
+              >
+                <Icon className="size-4" />
+              </span>
+              <span className="truncate">{label}</span>
+            </Link>
+          );
+        })}
       </div>
     </nav>
   );

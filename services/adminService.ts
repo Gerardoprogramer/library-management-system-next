@@ -1,6 +1,7 @@
 import { api } from "@/lib/axios";
 import type {
   AdminBookInput,
+  AdminCheckoutInput,
   AdminFineInput,
   AdminGenreInput,
   AdminLoanSearch,
@@ -35,8 +36,7 @@ export const adminService = {
   createBook: (book: AdminBookInput) => adminRequest<BookDetail>(api.post("/admin/books", book)),
   bulkCreateBooks: (books: AdminBookInput[]) => adminRequest<BookDetail[]>(api.post("/admin/books/bulk", books)),
   updateBook: (id: string, book: AdminBookInput) => adminRequest<BookDetail>(api.put(`/admin/books/${id}`, book)),
-  deleteBook: (id: string, hard = false) =>
-    adminRequest<void>(api.delete(`/admin/books/${id}${hard ? "/hard" : ""}`)),
+  deleteBook: (id: string, hard = false) => adminRequest<void>(api.delete(`/admin/books/${id}${hard ? "/hard" : ""}`)),
 
   createGenre: (genre: AdminGenreInput) => adminRequest<Genre>(api.post("/admin/genres", genre)),
   updateGenre: (id: string, genre: AdminGenreInput) => adminRequest<Genre>(api.put(`/admin/genres/${id}`, genre)),
@@ -56,11 +56,12 @@ export const adminService = {
   fines: (params?: Record<string, string | number>) =>
     adminRequest<PageResponse<Fine>>(api.get("/admin/fines", { params })),
   createFine: (fine: AdminFineInput) => adminRequest<Fine>(api.post("/admin/fines", fine)),
-  waiveFine: (fine: AdminFineInput) => adminRequest<Fine>(api.post("/admin/fines/waive", fine)),
+  waiveFine: (fine: Pick<AdminFineInput, "fineId" | "reason">) =>
+    adminRequest<Fine>(api.post("/admin/fines/waive", fine)),
 
   searchLoans: (search: AdminLoanSearch) =>
     adminRequest<PageResponse<meLoans>>(api.post("/admin/book-loans/search", search)),
-  checkoutForUser: (userId: string, loan: Record<string, unknown>) =>
+  checkoutForUser: (userId: string, loan: AdminCheckoutInput) =>
     adminRequest<void>(api.post(`/admin/book-loans/users/${userId}/checkout`, loan)),
   updateOverdueLoans: () => adminRequest<number>(api.put("/admin/book-loans/overdue/update")),
 
@@ -68,7 +69,10 @@ export const adminService = {
     adminRequest<PageResponse<reservationBook>>(api.get("/admin/reservations", { params })),
   createReservationForUser: (userId: string, reservation: Record<string, unknown>) =>
     adminRequest<reservationBook>(api.post(`/admin/reservations/user/${userId}`, reservation)),
-  fulfillReservation: (id: string) => adminRequest<reservationBook>(api.post(`/admin/reservations/${id}/fulfill`)),
+  fulfillReservation: (id: string, checkoutDays: number) =>
+    adminRequest<reservationBook>(
+      api.post(`/admin/reservations/${id}/fulfill`, undefined, { params: { checkoutDays } })
+    ),
 
   refundPayment: (paymentId: string, payload?: Record<string, unknown>) =>
     adminRequest<Payment>(api.post(`/admin/payments/${paymentId}/refund`, payload)),

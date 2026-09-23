@@ -357,12 +357,83 @@ export interface InitiatePaymentResponse {
   checkoutSessionId: string;
 }
 
-export type AdminBookInput = Record<string, unknown>;
-export type AdminGenreInput = Record<string, unknown>;
-export type AdminSubscriptionPlanInput = Record<string, unknown>;
-export type AdminFineInput = Record<string, unknown>;
-export type AdminReservationSearch = Record<string, unknown>;
-export type AdminLoanSearch = Record<string, unknown>;
+export interface AdminBookInput {
+  isbn?: string;
+  title?: string;
+  author?: string;
+  genreId?: string;
+  publisher?: string;
+  publishedDate?: string;
+  language?: string;
+  pages?: number;
+  description?: string;
+  totalCopies?: number;
+  availableCopies?: number;
+  price?: number;
+  coverImageUrl?: string;
+  active?: boolean;
+}
+
+export interface AdminGenreInput {
+  code: string;
+  name: string;
+  description?: string;
+  displayOrder?: number;
+  active?: boolean;
+  parentGenreId?: string | null;
+}
+export type Currency = "USD" | "CRC" | "EUR";
+
+export interface AdminSubscriptionPlanInput {
+  planCode?: string;
+  name?: string;
+  description?: string;
+  durationDays?: number;
+  price?: number;
+  currency?: Currency;
+  maxBooksAllowed?: number;
+  maxDaysPerBook?: number;
+  displayOrder?: number;
+  active?: boolean;
+  featured?: boolean;
+  badgeText?: string;
+  adminNotes?: string;
+}
+
+export interface AdminFineInput {
+  userId?: string;
+  bookLoanId?: string;
+  fineId?: string;
+  type?: FineType;
+  amount?: number;
+  currency?: Currency;
+  reason?: string;
+  notes?: string;
+}
+export interface AdminReservationSearch {
+  userId: string;
+  bookId?: string;
+  status?: reservationStatus;
+  activeOnly?: boolean;
+  page?: number;
+  size?: number;
+}
+
+export interface AdminLoanSearch {
+  userId?: string;
+  bookId?: string;
+  status?: statusLoan;
+  overdueOnly?: boolean;
+  unpaidFinesOnly?: boolean;
+  page?: number;
+  size?: number;
+}
+
+export interface AdminCheckoutInput {
+  bookId: string;
+  checkoutDays: number;
+  notes?: string;
+}
 
 export interface ForgotPasswordRequest {
   email: string;
