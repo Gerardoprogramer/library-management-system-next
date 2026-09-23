@@ -237,6 +237,48 @@ export function AdminNav() {
   );
 }
 
+export function AdminPagination({
+  page,
+  totalPages,
+  totalElements,
+  onPageChange,
+}: {
+  page: number;
+  totalPages: number;
+  totalElements: number;
+  onPageChange: (page: number) => void;
+}) {
+  if (totalPages <= 1) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-col gap-3 border-t border-border/60 px-5 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-muted-foreground">
+        Página {page + 1} de {totalPages} · {totalElements} resultados
+      </p>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          disabled={page === 0}
+          onClick={() => onPageChange(page - 1)}
+          className="rounded-lg border border-border px-3 py-2 font-medium transition hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
+        >
+          Anterior
+        </button>
+        <button
+          type="button"
+          disabled={page >= totalPages - 1}
+          onClick={() => onPageChange(page + 1)}
+          className="rounded-lg border border-border px-3 py-2 font-medium transition hover:bg-muted disabled:pointer-events-none disabled:opacity-40"
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function useAdminMutation<T>(key: string, fn: (values: T) => Promise<unknown>) {
   const queryClient = useQueryClient();
   return useMutation({ mutationFn: fn, onSuccess: () => queryClient.invalidateQueries({ queryKey: [key] }) });

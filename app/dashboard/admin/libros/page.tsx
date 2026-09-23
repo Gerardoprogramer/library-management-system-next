@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { AdminNav, AdminPage, AdminSection, Field } from "@/components/admin/AdminTools";
+import { AdminNav, AdminPage, AdminPagination, AdminSection, Field } from "@/components/admin/AdminTools";
 import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import type { AdminBookInput, BookSummary, Genre } from "@/lib/definitions";
 import { adminService } from "@/services/adminService";
@@ -25,12 +25,13 @@ const emptyForm: AdminBookInput = {
 export default function AdminBooksPage() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(0);
   const [editing, setEditing] = useState<BookSummary | null>(null);
   const [form, setForm] = useState<AdminBookInput>(emptyForm);
   const [deactivatingBook, setDeactivatingBook] = useState<BookSummary | null>(null);
   const books = useQuery({
-    queryKey: ["admin", "books", searchTerm],
-    queryFn: () => bookService.search({ size: 50, searchTerm }),
+    queryKey: ["admin", "books", searchTerm, page],
+    queryFn: () => bookService.search({ page, size: 10, searchTerm }),
   });
   const genres = useQuery<Genre[]>({ queryKey: ["admin", "genres"], queryFn: genreService.genres });
   const mutation = useMutation({
@@ -183,7 +184,10 @@ export default function AdminBooksPage() {
             <input
               aria-label="Buscar libros"
               value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
+              onChange={(event) => {
+                setSearchTerm(event.target.value);
+                setPage(0);
+              }}
               placeholder="Buscar..."
               className="h-9 rounded-lg border border-input bg-background px-3 text-sm"
             />
@@ -232,6 +236,14 @@ export default function AdminBooksPage() {
               </div>
             </div>
           ))}
+          {books.data && (
+            <AdminPagination
+              page={page}
+              totalPages={books.data.totalPages}
+              totalElements={books.data.totalElements}
+              onPageChange={setPage}
+            />
+          )}
         </AdminSection>
       </div>
     </AdminPage>

@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { AdminForm, AdminNav, AdminPage, AdminSection, Field } from "@/components/admin/AdminTools";
+import { AdminForm, AdminNav, AdminPage, AdminPagination, AdminSection, Field } from "@/components/admin/AdminTools";
 import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import { adminService } from "@/services/adminService";
 import type { meLoans, reservationBook } from "@/lib/definitions";
@@ -11,14 +11,16 @@ import type { meLoans, reservationBook } from "@/lib/definitions";
 export default function AdminOperationsPage() {
   const client = useQueryClient();
   const [reservationUserId, setReservationUserId] = useState("");
+  const [loansPage, setLoansPage] = useState(0);
+  const [reservationsPage, setReservationsPage] = useState(0);
   const [fulfillingReservationId, setFulfillingReservationId] = useState<string | null>(null);
   const loans = useQuery({
-    queryKey: ["admin", "loans"],
-    queryFn: () => adminService.searchLoans({ page: 0, size: 50 }),
+    queryKey: ["admin", "loans", loansPage],
+    queryFn: () => adminService.searchLoans({ page: loansPage, size: 10 }),
   });
   const reservations = useQuery({
-    queryKey: ["admin", "reservations", reservationUserId],
-    queryFn: () => adminService.reservations({ userId: reservationUserId, page: 0, size: 50 }),
+    queryKey: ["admin", "reservations", reservationUserId, reservationsPage],
+    queryFn: () => adminService.reservations({ userId: reservationUserId, page: reservationsPage, size: 10 }),
     enabled: Boolean(reservationUserId),
   });
   const update = useMutation({
@@ -103,6 +105,14 @@ export default function AdminOperationsPage() {
               </p>
             </div>
           ))}
+          {loans.data && (
+            <AdminPagination
+              page={loansPage}
+              totalPages={loans.data.totalPages}
+              totalElements={loans.data.totalElements}
+              onPageChange={setLoansPage}
+            />
+          )}
         </AdminSection>
         <AdminSection title="Reservas" description="Indica un usuario para consultar sus reservas.">
           <form
@@ -110,6 +120,7 @@ export default function AdminOperationsPage() {
             onSubmit={(event) => {
               event.preventDefault();
               setReservationUserId(new FormData(event.currentTarget).get("userId")?.toString().trim() ?? "");
+              setReservationsPage(0);
             }}
           >
             <input
@@ -144,6 +155,14 @@ export default function AdminOperationsPage() {
               )}
             </div>
           ))}
+          {reservations.data && (
+            <AdminPagination
+              page={reservationsPage}
+              totalPages={reservations.data.totalPages}
+              totalElements={reservations.data.totalElements}
+              onPageChange={setReservationsPage}
+            />
+          )}
         </AdminSection>
       </div>
     </AdminPage>
