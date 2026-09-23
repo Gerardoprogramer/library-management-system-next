@@ -15,7 +15,11 @@ export default function LoginPage() {
 
   return (
     <>
-      <AuthHeader subtitle="Iniciá sesión para continuar a tu biblioteca." />
+      <AuthHeader
+        eyebrow="Acceso a tu biblioteca"
+        subtitle="Volvé a tus lecturas."
+        description="Iniciá sesión para consultar tus préstamos, reservas y reseñas."
+      />
 
       <AuthCard>
         <form onSubmit={handleSubmit} className="space-y-5">

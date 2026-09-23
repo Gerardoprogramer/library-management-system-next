@@ -16,7 +16,11 @@ export default function RegisterPage() {
 
   return (
     <>
-      <AuthHeader subtitle="Creá tu cuenta para empezar a usar la biblioteca." />
+      <AuthHeader
+        eyebrow="Nueva cuenta"
+        subtitle="Empezá tu recorrido lector."
+        description="Crea tu cuenta para descubrir libros, reservar ejemplares y llevar tus préstamos."
+      />
 
       <AuthCard>
         <form onSubmit={handleSubmit} className="space-y-5">

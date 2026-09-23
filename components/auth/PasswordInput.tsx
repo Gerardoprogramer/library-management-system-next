@@ -27,6 +27,7 @@ export function PasswordInput({ value, onChange, id = "password", label = "Contr
         <Input
           id={id}
           type={showPassword ? "text" : "password"}
+          autoComplete={id.includes("register") ? "new-password" : "current-password"}
           placeholder="••••••••"
           className="pl-10 pr-10"
           value={value}
