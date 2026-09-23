@@ -8,6 +8,7 @@ vi.mock("@/lib/axios", () => ({
   api: {
     get: vi.fn(),
     post: vi.fn(),
+    patch: vi.fn(),
     delete: vi.fn(),
   },
 }));
@@ -48,6 +49,75 @@ describe("domain services", () => {
       totalElements: 0,
       totalPages: 0,
       empty: true,
+    });
+  });
+
+  it("sends the complete checkout payload", async () => {
+    vi.mocked(api.post).mockResolvedValueOnce({
+      data: { success: true, message: "Préstamo creado", data: null },
+    });
+
+    await loansService.checkout({ bookId: "book-1", checkoutDays: 14, notes: "Para investigación" });
+
+    expect(api.post).toHaveBeenCalledWith("/loans/checkout", {
+      bookId: "book-1",
+      checkoutDays: 14,
+      notes: "Para investigación",
+    });
+  });
+
+  it("maps check-in and cancellation mutations to their BFF routes", async () => {
+    vi.mocked(api.post).mockResolvedValueOnce({
+      data: { success: true, message: "Libro devuelto", data: { id: "loan-1" } },
+    });
+    vi.mocked(api.delete).mockResolvedValueOnce({
+      data: { success: true, message: "Reserva cancelada", data: { id: "reservation-1" } },
+    });
+
+    await loansService.checkin({ loanId: "loan-1", notes: "Devuelto en mostrador" });
+    await reservationService.cancel("reservation-1");
+
+    expect(api.post).toHaveBeenCalledWith("/loans/checkin", {
+      loanId: "loan-1",
+      notes: "Devuelto en mostrador",
+    });
+    expect(api.delete).toHaveBeenCalledWith("/reservation/reservation-1");
+  });
+
+  it("starts fine payments and rejects responses without a checkout URL", async () => {
+    const payment = { checkoutUrl: "https://checkout.stripe.com/session-1", paymentId: "payment-1" };
+    vi.mocked(api.post).mockResolvedValueOnce({
+      data: { success: true, message: "Pago iniciado", data: payment },
+    });
+
+    await expect((await import("@/services/fineService")).FineService.pay("fine-1")).resolves.toEqual(payment);
+    expect(api.post).toHaveBeenCalledWith("/fines/fine-1/pay");
+
+    vi.mocked(api.post).mockResolvedValueOnce({
+      data: { success: false, message: "No disponible", data: null },
+    });
+
+    await expect((await import("@/services/fineService")).FineService.pay("fine-2")).rejects.toThrow("No disponible");
+  });
+
+  it("creates subscriptions with the selected plan and billing options", async () => {
+    const subscription = { checkoutUrl: "https://checkout.stripe.com/session-2", subscriptionId: "sub-1" };
+    vi.mocked(api.post).mockResolvedValueOnce({
+      data: { success: true, message: "Suscripción creada", data: subscription },
+    });
+
+    await expect(
+      (await import("@/services/SubscriptionService")).SubscriptionService.subscribeToPlan(
+        "plan-1",
+        true,
+        "Suscripción anual"
+      )
+    ).resolves.toEqual(subscription);
+
+    expect(api.post).toHaveBeenCalledWith("/subscription", {
+      subscriptionPlanId: "plan-1",
+      autoRenew: true,
+      notes: "Suscripción anual",
     });
   });
 });
