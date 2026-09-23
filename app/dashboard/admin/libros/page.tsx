@@ -29,6 +29,7 @@ export default function AdminBooksPage() {
   const [editing, setEditing] = useState<BookSummary | null>(null);
   const [form, setForm] = useState<AdminBookInput>(emptyForm);
   const [deactivatingBook, setDeactivatingBook] = useState<BookSummary | null>(null);
+  const [loadingBookId, setLoadingBookId] = useState<string | null>(null);
   const books = useQuery({
     queryKey: ["admin", "books", searchTerm, page],
     queryFn: () => bookService.search({ page, size: 10, searchTerm }),
@@ -59,16 +60,35 @@ export default function AdminBooksPage() {
       [key]: ["pages", "totalCopies", "availableCopies", "price"].includes(key) ? Number(value) : value,
     }));
   };
-  const startEditing = (book: BookSummary) => {
-    setEditing(book);
-    setForm({
-      title: book.title,
-      author: book.author,
-      genreId: genres.data?.find((genre) => genre.name === book.genreName)?.id ?? "",
-      pages: book.pages,
-      totalCopies: book.availableCopies,
-      availableCopies: book.availableCopies,
-    });
+  const startEditing = async (book: BookSummary) => {
+    try {
+      setLoadingBookId(book.id);
+
+      const detail = await bookService.book(book.id);
+
+      setEditing(book);
+
+      setForm({
+        isbn: detail.isbn,
+        title: detail.title,
+        author: detail.author,
+        genreId: detail.genreId,
+        publisher: detail.publisher,
+        publishedDate: detail.publishedDate?.slice(0, 10) ?? "",
+        language: detail.language,
+        pages: detail.pages,
+        description: detail.description,
+        totalCopies: detail.totalCopies,
+        availableCopies: detail.availableCopies,
+        price: detail.price,
+        coverImageUrl: detail.coverImageUrl,
+        active: detail.active,
+      });
+    } catch (error) {
+      console.error("No se pudo cargar el libro para edición", error);
+    } finally {
+      setLoadingBookId(null);
+    }
   };
 
   return (
@@ -113,7 +133,7 @@ export default function AdminBooksPage() {
               mutation.mutate();
             }}
           >
-            {!editing && <Field name="isbn" label="ISBN" required value={form.isbn ?? ""} onChange={update} />}
+            <Field name="isbn" label="ISBN" required value={form.isbn ?? ""} onChange={update} />
             <Field name="title" label="Título" required value={form.title ?? ""} onChange={update} />
             <Field name="author" label="Autor" required value={form.author ?? ""} onChange={update} />
             <label className="block space-y-2 text-sm">
@@ -155,6 +175,32 @@ export default function AdminBooksPage() {
               />
             </div>
             <Field name="publisher" label="Editorial" value={form.publisher ?? ""} onChange={update} />
+            <Field
+              name="language"
+              label="Idioma"
+              value={form.language ?? ""}
+              onChange={update}
+            />
+
+            <Field
+              name="price"
+              label="Precio"
+              type="number"
+              value={String(form.price ?? 0)}
+              onChange={update}
+            />
+
+            <label className="block space-y-2 text-sm">
+              <span className="font-medium">Descripción</span>
+
+              <textarea
+                name="description"
+                value={form.description ?? ""}
+                onChange={(event) => update("description", event.target.value)}
+                rows={4}
+                className="w-full rounded-xl border border-input bg-background/70 px-3 py-2 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              />
+            </label>
             <Field
               name="publishedDate"
               label="Fecha de publicación"
@@ -220,9 +266,10 @@ export default function AdminBooksPage() {
                 <button
                   type="button"
                   onClick={() => startEditing(book)}
-                  className="rounded-lg border px-3 py-1.5 text-xs font-medium hover:bg-muted"
+                  disabled={loadingBookId === book.id}
+                  className="rounded-lg border px-3 py-1.5 text-xs font-medium hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Editar
+                  {loadingBookId === book.id ? "Cargando..." : "Editar"}
                 </button>
                 <button
                   type="button"
