@@ -54,6 +54,34 @@ Además de autenticación, catálogo, préstamos, reservas, reseñas, wishlist, 
 - recuperación y restablecimiento de contraseña (`POST /api/auth/forgot-password` y `POST /api/auth/reset-password`).
 - operaciones administrativas protegidas por rol (`/api/admin/**`) para usuarios, libros, géneros, préstamos, reservas, multas, pagos y suscripciones.
 
+### Matriz de integración frontend → backend
+
+El navegador solo consume rutas `/api/**` del frontend. Cada route handler BFF
+traduce la ruta pública al recurso correspondiente del backend bajo `/api/v1`.
+
+| Dominio / pantalla                 | Servicio frontend                                | BFF del frontend                                                              | Recurso backend                              |
+| ---------------------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------- | -------------------------------------------- |
+| Autenticación y sesión             | `authService`, hooks de auth                     | `/api/auth/*`                                                                 | `/auth/*`                                    |
+| Catálogo y detalle de libros       | `bookService`                                    | `/api/book/*`                                                                 | `/books/*`                                   |
+| Géneros                            | `genreService`                                   | `/api/genres/*`                                                               | `/genres/*`                                  |
+| Préstamos del usuario              | `loansService`                                   | `/api/loans/*`                                                                | `/book-loans/*`                              |
+| Reservas del usuario               | `reservationService`                             | `/api/reservation/*`                                                          | `/reservations/*`                            |
+| Reseñas                            | `reviewService`                                  | `/api/reviews/*`                                                              | `/reviews/*`                                 |
+| Lista de deseos                    | `wishlistService`                                | `/api/wishlist/*`                                                             | `/wishlist/*`                                |
+| Multas y pago de multas            | `FineService`                                    | `/api/fines/*`                                                                | `/fines/*`                                   |
+| Pagos e historial                  | `PaymentService`                                 | `/api/payment/*`                                                              | `/payments/*`                                |
+| Planes y suscripción               | `SubscriptionPlanService`, `SubscriptionService` | `/api/subscription-plan*`, `/api/subscription/*`                              | `/subscription-plans/*`, `/subscriptions/*`  |
+| Administración de usuarios         | `adminService`                                   | `/api/admin/users`                                                            | `/admin/users`                               |
+| Administración de libros y géneros | `adminService`                                   | `/api/admin/books*`, `/api/admin/genres*`                                     | `/admin/books*`, `/admin/genres*`            |
+| Operaciones administrativas        | `adminService`                                   | `/api/admin/book-loans*`, `/api/admin/reservations*`                          | `/admin/book-loans*`, `/admin/reservations*` |
+| Multas, pagos y planes admin       | `adminService`                                   | `/api/admin/fines*`, `/api/admin/payments*`, `/api/admin/subscription-plans*` | Recursos administrativos equivalentes        |
+
+Las tareas internas sin pantalla propia también conservan su route handler:
+actualización de préstamos vencidos (`/api/admin/book-loans/overdue/update`),
+desactivación de suscripciones vencidas (`/api/admin/subscriptions/deactivate-expired`)
+y webhook de Stripe, que permanece como integración backend-to-backend y no se
+expone como acción del navegador.
+
 ## 📦 Instalación y Desarrollo
 
 1. Clonar el repositorio:
