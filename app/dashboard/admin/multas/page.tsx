@@ -6,7 +6,8 @@ import { useState } from "react";
 import { AdminForm, AdminNav, AdminPage, AdminPagination, AdminSection, Field } from "@/components/admin/AdminTools";
 import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import { adminService } from "@/services/adminService";
-import type { Currency, Fine, FineStatus, FineType } from "@/lib/definitions";
+import type { Fine, FineStatus } from "@/lib/definitions";
+import { adminFineSchema } from "@/schemas/admin.schema";
 
 export default function AdminFinesPage() {
   const client = useQueryClient();
@@ -68,15 +69,21 @@ export default function AdminFinesPage() {
         <AdminSection title="Registrar multa" description="Todos los campos requeridos coinciden con el backend.">
           <AdminForm
             onSubmit={async (values) => {
-              await adminService.createFine({
+              const result = adminFineSchema.safeParse({
                 userId: values.userId,
                 bookLoanId: values.bookLoanId,
-                type: values.type as FineType,
+                type: values.type,
                 amount: Number(values.amount),
-                currency: values.currency as Currency,
-                reason: values.reason,
+                currency: values.currency,
+                reason: values.reason || undefined,
                 notes: values.notes || undefined,
               });
+
+              if (!result.success) {
+                throw new Error(result.error.issues[0]?.message ?? "Los datos de la multa no son válidos");
+              }
+
+              await adminService.createFine(result.data);
 
               await client.invalidateQueries({
                 queryKey: ["admin", "fines"],
@@ -161,7 +168,7 @@ export default function AdminFinesPage() {
               </select>
             </label>
             <div className="grid gap-3 sm:grid-cols-2">
-              <Field name="amount" label="Importe" type="number" required />
+              <Field name="amount" label="Importe" type="number" min={0.01} step={0.01} required />
               <label className="block space-y-2 text-sm">
                 <span className="font-medium">Moneda</span>
                 <select
@@ -176,7 +183,7 @@ export default function AdminFinesPage() {
                 </select>
               </label>
             </div>
-            <Field name="reason" label="Motivo" required />
+            <Field name="reason" label="Motivo" />
             <Field name="notes" label="Notas" />
           </AdminForm>
         </AdminSection>
