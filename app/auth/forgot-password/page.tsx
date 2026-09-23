@@ -47,7 +47,9 @@ export default function ForgotPasswordPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label htmlFor="forgot-email" className="text-sm font-medium">Correo electrónico</label>
+              <label htmlFor="forgot-email" className="text-sm font-medium">
+                Correo electrónico
+              </label>
               <div className="relative">
                 <PiEnvelopeSimple className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input

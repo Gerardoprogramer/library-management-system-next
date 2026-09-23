@@ -61,9 +61,7 @@ export default function DashboardShell({ children }: { children: ReactNode }) {
             </button>
 
             <div className="min-w-0">
-              <p className="eyebrow hidden sm:block">
-                Biblioteca Obsidian
-              </p>
+              <p className="eyebrow hidden sm:block">Biblioteca Obsidian</p>
 
               <h1 className="truncate text-lg font-semibold tracking-tight text-foreground sm:text-xl">{pageTitle}</h1>
             </div>

@@ -12,8 +12,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,color-mix(in_oklab,var(--primary)_35%,transparent),transparent_24rem)]" />
           <div className="absolute bottom-0 right-0 size-72 rounded-full bg-primary/15 blur-3xl" />
           <div className="relative">
-            <Link href="/" className="inline-flex items-center gap-3 text-sm font-semibold text-white transition hover:text-primary">
-              <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">B</span>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-3 text-sm font-semibold text-white transition hover:text-primary"
+            >
+              <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                B
+              </span>
               Biblioteca Obsidian
             </Link>
             <p className="mt-16 max-w-sm text-4xl font-semibold leading-tight tracking-tight">
@@ -24,8 +29,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </p>
           </div>
           <div className="relative grid grid-cols-2 gap-3 text-sm">
-            <div className="rounded-2xl border border-white/10 bg-white/6 p-4"><p className="font-medium">Catálogo</p><p className="mt-1 text-xs text-white/55">Encuentra tu próxima lectura.</p></div>
-            <div className="rounded-2xl border border-white/10 bg-white/6 p-4"><p className="font-medium">Préstamos</p><p className="mt-1 text-xs text-white/55">Todo bajo control.</p></div>
+            <div className="rounded-2xl border border-white/10 bg-white/6 p-4">
+              <p className="font-medium">Catálogo</p>
+              <p className="mt-1 text-xs text-white/55">Encuentra tu próxima lectura.</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/6 p-4">
+              <p className="font-medium">Préstamos</p>
+              <p className="mt-1 text-xs text-white/55">Todo bajo control.</p>
+            </div>
           </div>
         </aside>
 

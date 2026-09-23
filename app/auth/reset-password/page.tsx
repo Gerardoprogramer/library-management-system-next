@@ -41,12 +41,16 @@ export default function ResetPasswordPage() {
         {completed ? (
           <div className="space-y-5 text-center">
             <p className="text-sm text-muted-foreground">Tu contraseña fue actualizada correctamente.</p>
-            <Button asChild className="w-full"><Link href="/auth/login">Iniciar sesión</Link></Button>
+            <Button asChild className="w-full">
+              <Link href="/auth/login">Iniciar sesión</Link>
+            </Button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label htmlFor="reset-token" className="text-sm font-medium">Token de recuperación</label>
+              <label htmlFor="reset-token" className="text-sm font-medium">
+                Token de recuperación
+              </label>
               <input
                 id="reset-token"
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"

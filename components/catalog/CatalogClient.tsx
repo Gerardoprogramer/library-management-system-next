@@ -49,9 +49,7 @@ export const CatalogClient = () => {
         <div className="mb-6">
           <p className="text-sm font-medium text-primary">Colección</p>
 
-          <h2 className="page-heading mt-1">
-            Encontrá tu próxima lectura
-          </h2>
+          <h2 className="page-heading mt-1">Encontrá tu próxima lectura</h2>
 
           <p className="page-description">
             Buscá por título, autor o ISBN y filtrá la colección según género y disponibilidad.

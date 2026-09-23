@@ -26,9 +26,26 @@ export default function AdminDashboardPage() {
       <AdminNav />
 
       <div className="grid gap-4 md:grid-cols-3">
-        <AdminMetric icon={PiUsersThree} label="Usuarios registrados" value={users.isLoading ? "..." : users.data?.length ?? 0} detail="Cuentas activas en la plataforma" tone="blue" />
-        <AdminMetric icon={PiBookOpenText} label="Libros activos" value={stats.isLoading ? "..." : stats.data?.totalActiveBooks ?? 0} detail="Títulos disponibles en el catálogo" />
-        <AdminMetric icon={PiChartBar} label="Disponibilidad" value={stats.isLoading ? "..." : stats.data?.totalAvailableBooks ?? 0} detail="Ejemplares listos para préstamo" tone="green" />
+        <AdminMetric
+          icon={PiUsersThree}
+          label="Usuarios registrados"
+          value={users.isLoading ? "..." : (users.data?.length ?? 0)}
+          detail="Cuentas activas en la plataforma"
+          tone="blue"
+        />
+        <AdminMetric
+          icon={PiBookOpenText}
+          label="Libros activos"
+          value={stats.isLoading ? "..." : (stats.data?.totalActiveBooks ?? 0)}
+          detail="Títulos disponibles en el catálogo"
+        />
+        <AdminMetric
+          icon={PiChartBar}
+          label="Disponibilidad"
+          value={stats.isLoading ? "..." : (stats.data?.totalAvailableBooks ?? 0)}
+          detail="Ejemplares listos para préstamo"
+          tone="green"
+        />
       </div>
 
       <AdminSection title="Resumen operativo" description="Accede rápidamente a las áreas que requieren atención.">

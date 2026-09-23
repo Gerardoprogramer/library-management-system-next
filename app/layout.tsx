@@ -65,8 +65,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Biblioteca Obsidian | Sistema de Gestión Bibliotecaria",
-    description:
-      "Consulta el catálogo, reserva ejemplares y gestiona tus préstamos desde Biblioteca Obsidian.",
+    description: "Consulta el catálogo, reserva ejemplares y gestiona tus préstamos desde Biblioteca Obsidian.",
     images: ["/icon1.png"],
   },
 };

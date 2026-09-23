@@ -8,10 +8,18 @@ interface AuthHeaderProps {
   eyebrow?: string;
 }
 
-export const AuthHeader = ({ subtitle, description, title = "Biblioteca Obsidian", eyebrow = "Tu biblioteca, siempre contigo" }: AuthHeaderProps) => {
+export const AuthHeader = ({
+  subtitle,
+  description,
+  title = "Biblioteca Obsidian",
+  eyebrow = "Tu biblioteca, siempre contigo",
+}: AuthHeaderProps) => {
   return (
     <div className="mb-7 w-full">
-      <Link href="/" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground">
+      <Link
+        href="/"
+        className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+      >
         <PiArrowLeft className="size-4" />
         Volver a la página principal
       </Link>

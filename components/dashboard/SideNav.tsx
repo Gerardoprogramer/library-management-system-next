@@ -71,9 +71,7 @@ export const SideNav = ({ isOpen, setIsOpen }: SideNavProps) => {
                 <span className="flex size-7 items-center justify-center rounded-lg bg-primary/12 text-primary">
                   <PiShieldCheck className="size-4" />
                 </span>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
-                  Administración
-                </p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">Administración</p>
               </div>
               <NavLinks links={adminNav} />
             </div>
