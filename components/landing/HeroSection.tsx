@@ -8,7 +8,6 @@ import {
   PiCheckCircle,
   PiClock,
   PiMagnifyingGlass,
-  PiSparkle,
   PiTrendUp,
 } from "react-icons/pi";
 import type { ElementType } from "react";
@@ -27,17 +26,17 @@ export const HeroSection = () => {
       <div className="mx-auto grid min-h-[calc(100dvh-4rem)] w-full max-w-7xl items-center gap-14 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20 lg:px-8 lg:py-24">
         <div className="relative z-10 max-w-2xl">
           <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/8 px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-            <PiSparkle className="size-4" />
-            Tu espacio para leer mejor
+            <PiBooks className="size-4" />
+            Gestión bibliotecaria
           </div>
 
           <h1 className="max-w-xl text-[clamp(2.8rem,6vw,5.7rem)] font-semibold leading-[0.98] tracking-[-0.055em] text-foreground">
-            Encontrá tu próxima
-            <span className="block text-primary">gran historia.</span>
+            Todo lo que buscas,
+            <span className="block text-primary">en tu biblioteca.</span>
           </h1>
 
           <p className="mt-7 max-w-lg text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-            Descubrí libros, reservá ejemplares y seguí tus préstamos desde un solo lugar. Una biblioteca más simple para que te concentres en leer.
+            Explorá el catálogo, reservá ejemplares y consultá tus préstamos desde un solo lugar. Encontrar y organizar tus lecturas debería ser sencillo.
           </p>
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -53,8 +52,8 @@ export const HeroSection = () => {
           </div>
 
           <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted-foreground">
-            <span className="inline-flex items-center gap-2"><PiCheckCircle className="size-4 text-primary" />Catálogo actualizado</span>
-            <span className="inline-flex items-center gap-2"><PiCheckCircle className="size-4 text-primary" />Reservas sin complicaciones</span>
+            <span className="inline-flex items-center gap-2"><PiCheckCircle className="size-4 text-primary" />Catálogo para explorar</span>
+            <span className="inline-flex items-center gap-2"><PiCheckCircle className="size-4 text-primary" />Préstamos en un solo lugar</span>
           </div>
         </div>
 
@@ -75,7 +74,7 @@ export const HeroSection = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/55">Biblioteca Obsidian</p>
-                    <p className="mt-2 text-2xl font-semibold tracking-tight">¿Qué querés leer hoy?</p>
+                    <p className="mt-2 text-2xl font-semibold tracking-tight">Encontrá tu próxima lectura</p>
                   </div>
                   <div className="flex size-11 items-center justify-center rounded-2xl bg-white/12 ring-1 ring-white/15">
                     <PiBookOpenText className="size-6 text-primary-foreground" />
@@ -111,7 +110,7 @@ export const HeroSection = () => {
 
             <div className="absolute -bottom-5 -left-5 flex items-center gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3 shadow-xl sm:-left-10">
               <span className="flex size-10 items-center justify-center rounded-xl bg-emerald-500/12 text-emerald-600 dark:text-emerald-400"><PiTrendUp className="size-5" /></span>
-              <div><p className="text-xs text-muted-foreground">Lecturas organizadas</p><p className="text-sm font-semibold">Todo bajo control</p></div>
+            <div><p className="text-xs text-muted-foreground">Tus lecturas</p><p className="text-sm font-semibold">Siempre organizadas</p></div>
             </div>
 
             <div className="absolute -right-3 -top-5 flex items-center gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3 shadow-xl sm:-right-8">
