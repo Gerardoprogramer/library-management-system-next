@@ -6,9 +6,9 @@ The application covers the main workflows of a library platform, including catal
 
 ## 🔗 Full Project
 
-* **Frontend:** https://github.com/Gerardoprogramer/library-management-system-next
-* **Backend:** https://github.com/Gerardoprogramer/Library-Management-System
-* **Live Demo:** https://obsidian-delta-kohl.vercel.app/
+- **Frontend:** https://github.com/Gerardoprogramer/library-management-system-next
+- **Backend:** https://github.com/Gerardoprogramer/Library-Management-System
+- **Live Demo:** https://obsidian-delta-kohl.vercel.app/
 
 ---
 
@@ -26,14 +26,14 @@ lib/api-proxy.ts
 
 This layer is responsible for:
 
-* building the appropriate backend URL;
-* forwarding `HttpOnly` cookies;
-* forwarding CSRF tokens through `X-XSRF-TOKEN`;
-* preserving query parameters;
-* propagating `Set-Cookie` headers returned by Spring Boot;
-* handling `204 No Content` responses;
-* enforcing communication timeouts;
-* normalizing communication errors between Next.js and Spring Boot.
+- building the appropriate backend URL;
+- forwarding `HttpOnly` cookies;
+- forwarding CSRF tokens through `X-XSRF-TOKEN`;
+- preserving query parameters;
+- propagating `Set-Cookie` headers returned by Spring Boot;
+- handling `204 No Content` responses;
+- enforcing communication timeouts;
+- normalizing communication errors between Next.js and Spring Boot.
 
 ### Cold Start Handling
 
@@ -144,19 +144,19 @@ Administrative authorization is additionally enforced through the authenticated 
 
 The frontend configures security headers across the application, including:
 
-* Content Security Policy (CSP)
-* `X-Content-Type-Options`
-* `Referrer-Policy`
-* `Permissions-Policy`
-* `X-Frame-Options`
+- Content Security Policy (CSP)
+- `X-Content-Type-Options`
+- `Referrer-Policy`
+- `Permissions-Policy`
+- `X-Frame-Options`
 
 The application also restricts:
 
-* external script execution;
-* frame embedding;
-* camera access;
-* microphone access;
-* geolocation access.
+- external script execution;
+- frame embedding;
+- camera access;
+- microphone access;
+- geolocation access.
 
 ---
 
@@ -206,78 +206,78 @@ The application also restricts:
 
 ### Authentication
 
-* User registration
-* Login
-* Logout
-* Automatic session refresh
-* Password recovery
-* Password reset
-* `HttpOnly` cookies
-* CSRF protection
-* Protected routes
+- User registration
+- Login
+- Logout
+- Automatic session refresh
+- Password recovery
+- Password reset
+- `HttpOnly` cookies
+- CSRF protection
+- Protected routes
 
 ### Catalog
 
-* Book listing
-* Search
-* Filters
-* Genres
-* Book details
-* Availability
-* Ratings
-* Wishlist
+- Book listing
+- Search
+- Filters
+- Genres
+- Book details
+- Availability
+- Ratings
+- Wishlist
 
 ### Loans
 
-* Active loans
-* Loan history
-* Book returns
-* Renewals
-* Loan statuses
-* Overdue-loan handling
+- Active loans
+- Loan history
+- Book returns
+- Renewals
+- Loan statuses
+- Overdue-loan handling
 
 ### Reservations
 
-* Create reservations
-* View reservations
-* Cancel reservations
-* Reservation status management
-* Integration with the backend reservation queue
+- Create reservations
+- View reservations
+- Cancel reservations
+- Reservation status management
+- Integration with the backend reservation queue
 
 ### Reviews
 
-* Create reviews
-* Update reviews
-* View ratings
-* Average book ratings
+- Create reviews
+- Update reviews
+- View ratings
+- Average book ratings
 
 ### Wishlist
 
-* Add books
-* Remove books
-* View personal wishlist
+- Add books
+- Remove books
+- View personal wishlist
 
 ### Fines
 
-* View fines
-* Fine status
-* Start fine payments
-* Stripe integration
+- View fines
+- Fine status
+- Start fine payments
+- Stripe integration
 
 ### Subscriptions
 
-* View available plans
-* Create subscriptions
-* View active membership
-* Cancel subscriptions
-* Display borrowing limits based on the selected plan
+- View available plans
+- Create subscriptions
+- View active membership
+- Cancel subscriptions
+- Display borrowing limits based on the selected plan
 
 ### Payments
 
-* Create payment sessions
-* Check payment status
-* Payment history
-* Stripe Checkout integration
+- Create payment sessions
+- Check payment status
+- Payment history
+- Stripe Checkout integration
 
 ---
 
@@ -287,55 +287,55 @@ Users with the `ADMIN` role have access to additional management functionality.
 
 ### Users
 
-* View users
+- View users
 
 ### Books
 
-* Create books
-* Edit books
-* Delete books
-* Manage availability
+- Create books
+- Edit books
+- Delete books
+- Manage availability
 
 ### Genres
 
-* Create genres
-* Edit genres
-* Delete genres
+- Create genres
+- Edit genres
+- Delete genres
 
 ### Loans
 
-* View loans
-* Create loans for users
-* Register returns
-* Update overdue loans
+- View loans
+- Create loans for users
+- Register returns
+- Update overdue loans
 
 ### Reservations
 
-* View reservations
-* Manage reservation states
-* Fulfill reservations
+- View reservations
+- Manage reservation states
+- Fulfill reservations
 
 ### Fines
 
-* Create fines
-* View fines
-* Manage fine states
+- Create fines
+- View fines
+- Manage fine states
 
 ### Payments
 
-* Administrative payment operations provided by the backend
+- Administrative payment operations provided by the backend
 
 ### Subscription Plans
 
-* Create plans
-* Edit plans
-* Delete plans
+- Create plans
+- Edit plans
+- Delete plans
 
 ### Subscriptions
 
-* View memberships
-* Manage subscriptions
-* Deactivate expired subscriptions
+- View memberships
+- Manage subscriptions
+- Deactivate expired subscriptions
 
 ---
 
@@ -440,10 +440,10 @@ When the frontend communicates with the backend through the BFF, browser request
 
 ### Requirements
 
-* Node.js 22+
-* pnpm 10+
-* Google Chrome for running Playwright locally
-* Running Spring Boot backend
+- Node.js 22+
+- pnpm 10+
+- Google Chrome for running Playwright locally
+- Running Spring Boot backend
 
 ### Clone the Repository
 
@@ -506,10 +506,10 @@ pnpm test
 
 The current test suite covers areas such as:
 
-* services;
-* authentication schemas;
-* Route Handlers;
-* administrative route protection.
+- services;
+- authentication schemas;
+- Route Handlers;
+- administrative route protection.
 
 ### End-to-End Tests
 
@@ -529,15 +529,15 @@ pnpm exec playwright test
 
 The E2E suite currently covers:
 
-* public landing page;
-* authentication navigation;
-* registration validation;
-* route protection;
-* logout;
-* administrative authorization;
-* authenticated catalog;
-* book search;
-* loan return flow.
+- public landing page;
+- authentication navigation;
+- registration validation;
+- route protection;
+- logout;
+- administrative authorization;
+- authenticated catalog;
+- book search;
+- loan return flow.
 
 The tests use controlled API responses to keep the suite deterministic and independent from external services.
 
@@ -596,12 +596,12 @@ The browser does not need to directly know or consume the Spring Boot API URL.
 
 Next.js acts as an intermediary and centralizes:
 
-* cookies;
-* CSRF handling;
-* errors;
-* timeouts;
-* header propagation;
-* backend configuration.
+- cookies;
+- CSRF handling;
+- errors;
+- timeouts;
+- header propagation;
+- backend configuration.
 
 ### Tokens Stored in HttpOnly Cookies
 
@@ -657,17 +657,17 @@ This frontend is part of a full-stack system.
 
 The backend is built with:
 
-* Java 21
-* Spring Boot 3.3.7
-* Spring Security
-* PostgreSQL
-* Spring Data JPA
-* Flyway
-* JWT
-* Stripe
-* Testcontainers
-* Docker
-* GitHub Actions
+- Java 21
+- Spring Boot 3.3.7
+- Spring Security
+- PostgreSQL
+- Spring Data JPA
+- Flyway
+- JWT
+- Stripe
+- Testcontainers
+- Docker
+- GitHub Actions
 
 Repository:
 
@@ -675,16 +675,16 @@ https://github.com/Gerardoprogramer/Library-Management-System
 
 The backend also implements:
 
-* refresh-token rotation;
-* SHA-256 hashing for stored refresh tokens;
-* pessimistic locking;
-* PostgreSQL integrity constraints;
-* Flyway migrations;
-* Stripe webhooks;
-* payment idempotency;
-* scheduled jobs;
-* unit tests;
-* PostgreSQL integration testing with Testcontainers.
+- refresh-token rotation;
+- SHA-256 hashing for stored refresh tokens;
+- pessimistic locking;
+- PostgreSQL integrity constraints;
+- Flyway migrations;
+- Stripe webhooks;
+- payment idempotency;
+- scheduled jobs;
+- unit tests;
+- PostgreSQL integration testing with Testcontainers.
 
 ---
 
@@ -710,8 +710,8 @@ The BFF architecture keeps the frontend and backend independently deployable wit
 
 Full Stack Software Engineer
 
-* Portfolio: https://www.gerardomartinez.dev/
-* GitHub: https://github.com/Gerardoprogramer
+- Portfolio: https://www.gerardomartinez.dev/
+- GitHub: https://github.com/Gerardoprogramer
 
 ---
 
@@ -721,15 +721,15 @@ The project is functional and covers the main workflows expected from a library 
 
 It includes:
 
-* independent frontend and backend applications;
-* authentication and authorization;
-* user and administrative workflows;
-* payments;
-* security controls;
-* concurrency handling;
-* database migrations;
-* automated testing;
-* continuous integration;
-* deployment configuration.
+- independent frontend and backend applications;
+- authentication and authorization;
+- user and administrative workflows;
+- payments;
+- security controls;
+- concurrency handling;
+- database migrations;
+- automated testing;
+- continuous integration;
+- deployment configuration.
 
 The main development phase is considered complete, and the repository is maintained as a portfolio project.
