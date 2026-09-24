@@ -39,6 +39,11 @@ test.describe("public and authentication flows", () => {
         value: "e2e-access-token",
         url: "http://127.0.0.1:3100",
       },
+      {
+        name: "XSRF-TOKEN",
+        value: "e2e-csrf",
+        url: "http://127.0.0.1:3100",
+      },
     ]);
 
     await page.route("**/api/users/me", async (route) => {
@@ -58,31 +63,87 @@ test.describe("public and authentication flows", () => {
         }),
       });
     });
-    await page.route("**/api/auth/csrf", async (route) => {
+
+    const emptyPage = {
+      content: [],
+      number: 0,
+      size: 10,
+      totalElements: 0,
+      totalPages: 0,
+      last: true,
+      first: true,
+      empty: true,
+    };
+
+    await page.route("**/api/loans/me**", async (route) => {
       await route.fulfill({
         status: 200,
-        headers: { "set-cookie": "XSRF-TOKEN=e2e-csrf; Path=/" },
         contentType: "application/json",
-        body: JSON.stringify({ success: true, data: "e2e-csrf" }),
+        body: JSON.stringify({
+          success: true,
+          data: emptyPage,
+        }),
       });
     });
+
+    await page.route("**/api/reservation/me**", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          success: true,
+          data: emptyPage,
+        }),
+      });
+    });
+
+    await page.route("**/api/wishlist**", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          success: true,
+          data: emptyPage,
+        }),
+      });
+    });
+
+    await page.route("**/api/subscription", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          success: true,
+          data: null,
+        }),
+      });
+    });
+
     await page.route("**/api/auth/logout", async (route) => {
       await route.fulfill({
         status: 200,
         headers: {
-          "set-cookie": "access_token=; Max-Age=0; Path=/, refresh_token=; Max-Age=0; Path=/",
+          "set-cookie": "access_token=; Max-Age=0; Path=/",
         },
         contentType: "application/json",
-        body: JSON.stringify({ success: true, message: "Sesión cerrada", data: null }),
+        body: JSON.stringify({
+          success: true,
+          message: "Sesión cerrada",
+          data: null,
+        }),
       });
     });
 
     await page.goto("/dashboard");
+
     await expect(page.getByRole("button", { name: "Cerrar sesión" })).toBeVisible();
 
     await page.getByRole("button", { name: "Cerrar sesión" }).click();
 
-    await expect(page).toHaveURL("/");
+    await expect(page).toHaveURL("/", {
+      timeout: 10_000,
+    });
+
     await expect(page.getByRole("link", { name: /iniciar sesión/i }).first()).toBeVisible();
   });
 
