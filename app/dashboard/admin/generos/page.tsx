@@ -8,6 +8,7 @@ import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import { adminService } from "@/services/adminService";
 import { genreService } from "@/services/genreService";
 import type { AdminGenreInput, Genre } from "@/lib/definitions";
+import { adminGenreSchema } from "@/schemas/admin.schema";
 
 const emptyForm: AdminGenreInput = { code: "", name: "", description: "", displayOrder: 0, parentGenreId: null };
 
@@ -18,9 +19,21 @@ export default function AdminGenresPage() {
   const [form, setForm] = useState<AdminGenreInput>(emptyForm);
   const [deactivatingGenre, setDeactivatingGenre] = useState<Genre | null>(null);
   const mutation = useMutation({
-    mutationFn: () => (editing ? adminService.updateGenre(editing.id, form) : adminService.createGenre(form)),
+    mutationFn: () => {
+      const result = adminGenreSchema.safeParse(form);
+
+      if (!result.success) {
+        throw new Error(result.error.issues[0]?.message ?? "Los datos del género no son válidos");
+      }
+
+      return editing ? adminService.updateGenre(editing.id, result.data) : adminService.createGenre(result.data);
+    },
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "genres"] });
+      queryClient.invalidateQueries({
+        queryKey: ["admin", "genres"],
+      });
+
       setEditing(null);
       setForm(emptyForm);
     },
@@ -100,6 +113,8 @@ export default function AdminGenresPage() {
               name="displayOrder"
               label="Orden de visualización"
               type="number"
+              min={0}
+              step={1}
               value={String(form.displayOrder ?? 0)}
               onChange={update}
             />
@@ -107,7 +122,12 @@ export default function AdminGenresPage() {
               <span className="font-medium">Género padre</span>
               <select
                 value={form.parentGenreId ?? ""}
-                onChange={(event) => update("parentGenreId", event.target.value)}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    parentGenreId: event.target.value || null,
+                  }))
+                }
                 className="h-11 w-full rounded-xl border border-input bg-background/70 px-3"
               >
                 <option value="">Sin género padre</option>
