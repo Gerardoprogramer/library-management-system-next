@@ -120,7 +120,6 @@ export default function AdminBooksPage() {
         pages: detail.pages,
         description: detail.description,
         totalCopies: detail.totalCopies,
-        availableCopies: detail.availableCopies,
         price: detail.price,
         coverImageUrl: detail.coverImageUrl,
         active: detail.active,

@@ -79,13 +79,13 @@ export default function AdminOperationsPage() {
       </div>
       <AdminSection title="Registrar préstamo" description="Asigna un libro directamente a un usuario.">
         <AdminForm
-          onSubmit={(values) =>
-            adminService.checkoutForUser(values.userId, {
+          onSubmit={async (values) => {
+            await adminService.checkoutForUser(values.userId, {
               bookId: values.bookId,
               checkoutDays: Number(values.checkoutDays),
               notes: values.notes,
-            })
-          }
+            });
+          }}
         >
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="block space-y-2 text-sm">

@@ -111,7 +111,7 @@ export function AdminForm({
   submitLabel = "Guardar",
 }: {
   children: ReactNode;
-  onSubmit: (values: Record<string, string>) => void;
+  onSubmit: (values: Record<string, string>) => void | Promise<void>;
   submitLabel?: string;
 }) {
   const mutation = useMutation({ mutationFn: async (values: Record<string, string>) => onSubmit(values) });

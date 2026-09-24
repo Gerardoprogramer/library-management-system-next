@@ -136,7 +136,11 @@ export default function AdminSubscriptionsPage() {
           title={editing ? "Editar plan" : "Crear plan"}
           description="Define límites y precio de una membresía."
         >
-          <AdminForm onSubmit={() => save.mutate()}>
+          <AdminForm
+            onSubmit={async () => {
+              await save.mutateAsync();
+            }}
+          >
             {!editing && (
               <Field name="planCode" label="Código" required value={form.planCode ?? ""} onChange={update} />
             )}
