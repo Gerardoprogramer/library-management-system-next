@@ -1,9 +1,9 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-import { AdminForm, AdminNav, AdminPage, AdminSection, Field } from "@/components/admin/AdminTools";
+import { AdminForm, AdminNav, AdminPage, AdminPagination, AdminSection, Field } from "@/components/admin/AdminTools";
 import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import type { AdminSubscriptionPlanInput, Currency, SubscriptionPlan } from "@/lib/definitions";
 import { adminService } from "@/services/adminService";
@@ -30,13 +30,22 @@ export default function AdminSubscriptionsPage() {
   const [editing, setEditing] = useState<SubscriptionPlan | null>(null);
   const [form, setForm] = useState<AdminSubscriptionPlanInput>(initial);
   const [deletingPlan, setDeletingPlan] = useState<SubscriptionPlan | null>(null);
+  const [subscriptionPage, setSubscriptionPage] = useState(0);
   const plans = useQuery({
     queryKey: ["admin", "subscription-plans"],
     queryFn: SubscriptionPlanService.subscriptionPlans,
   });
   const subscriptions = useQuery({
-    queryKey: ["admin", "subscriptions"],
-    queryFn: () => adminService.subscriptions({ page: 0, size: 50 }),
+    queryKey: ["admin", "subscriptions", subscriptionPage],
+    queryFn: () =>
+      adminService.subscriptions({
+        page: subscriptionPage,
+        size: 9,
+      }),
+  });
+  const users = useQuery({
+    queryKey: ["admin", "users"],
+    queryFn: adminService.users,
   });
   const save = useMutation({
     mutationFn: async () => {
@@ -100,6 +109,8 @@ export default function AdminSubscriptionsPage() {
       badgeText: plan.badgeText,
     });
   };
+
+  const usersById = useMemo(() => new Map((users.data ?? []).map((user) => [user.id, user])), [users.data]);
 
   return (
     <AdminPage title="Suscripciones y planes" description="Administra planes, precios y membresías activas.">
@@ -293,20 +304,51 @@ export default function AdminSubscriptionsPage() {
         </AdminSection>
       </div>
       <AdminSection
-        title="Membresías activas"
-        description={`${subscriptions.data?.totalElements ?? 0} registros recientes.`}
+        title="Membresías"
+        description={`${subscriptions.data?.totalElements ?? 0} membresías registradas.`}
       >
+        {subscriptions.isLoading && <p className="px-5 py-8 text-sm text-muted-foreground">Cargando membresías...</p>}
+
+        {subscriptions.isError && (
+          <p role="alert" className="px-5 py-8 text-sm text-destructive">
+            No se pudieron cargar las membresías.
+          </p>
+        )}
+
+        {!subscriptions.isLoading && !subscriptions.isError && subscriptions.data?.content.length === 0 && (
+          <p className="px-5 py-8 text-sm text-muted-foreground">No hay membresías registradas.</p>
+        )}
+
         <div className="grid gap-3 p-5 sm:grid-cols-2 lg:grid-cols-3">
-          {subscriptions.data?.content.map((subscription) => (
-            <div key={subscription.id} className="rounded-xl border border-border/70 p-4">
-              <p className="font-medium">{subscription.planName}</p>
-              <p className="mt-1 text-sm text-muted-foreground">{subscription.userId}</p>
-              <span className="mt-3 inline-flex rounded-full bg-emerald-500/12 px-2.5 py-1 text-xs text-emerald-600">
-                {subscription.active ? "Activa" : "Inactiva"}
-              </span>
-            </div>
-          ))}
+          {subscriptions.data?.content.map((subscription) => {
+            const user = usersById.get(subscription.userId);
+
+            return (
+              <div key={subscription.id} className="rounded-xl border border-border/70 p-4">
+                <p className="font-medium">{subscription.planName}</p>
+
+                <p className="mt-2 text-sm font-medium">{user?.fullName ?? "Usuario no disponible"}</p>
+
+                <p className="text-sm text-muted-foreground">{user?.email ?? subscription.userId}</p>
+
+                <span
+                  className={`mt-3 inline-flex rounded-full px-2.5 py-1 text-xs ${
+                    subscription.active ? "bg-emerald-500/12 text-emerald-600" : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {subscription.active ? "Activa" : "Inactiva"}
+                </span>
+              </div>
+            );
+          })}
         </div>
+
+        <AdminPagination
+          page={subscriptions.data?.number ?? subscriptionPage}
+          totalPages={subscriptions.data?.totalPages ?? 0}
+          totalElements={subscriptions.data?.totalElements ?? 0}
+          onPageChange={setSubscriptionPage}
+        />
       </AdminSection>
     </AdminPage>
   );
