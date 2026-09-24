@@ -2,24 +2,25 @@ import { z } from "zod";
 
 const uuidSchema = (message: string) => z.string().trim().min(1, message).uuid(message);
 
-const optionalDateSchema = z
-  .string()
-  .optional()
-  .refine(
-    (value) => {
-      if (!value) return true;
+const optionalDateSchema = z.preprocess(
+  (value) => (value === "" ? undefined : value),
+  z
+    .string()
+    .refine(
+      (value) => {
+        const date = new Date(`${value}T00:00:00`);
+        const today = new Date();
 
-      const date = new Date(`${value}T00:00:00`);
-      const today = new Date();
+        today.setHours(23, 59, 59, 999);
 
-      today.setHours(23, 59, 59, 999);
-
-      return !Number.isNaN(date.getTime()) && date <= today;
-    },
-    {
-      message: "La fecha de publicación no puede ser futura",
-    }
-  );
+        return !Number.isNaN(date.getTime()) && date <= today;
+      },
+      {
+        message: "La fecha de publicación no puede ser futura",
+      }
+    )
+    .optional()
+);
 
 const nullableUuidSchema = z.preprocess(
   (value) => (value === "" ? null : value),

@@ -9,6 +9,7 @@ import type { AdminBookInput, BookSummary, Genre } from "@/lib/definitions";
 import { adminService } from "@/services/adminService";
 import { bookService } from "@/services/bookService";
 import { genreService } from "@/services/genreService";
+import { adminBookCreateSchema, adminBookUpdateSchema } from "@/schemas/admin.schema";
 
 const emptyForm: AdminBookInput = {
   isbn: "",
@@ -36,10 +37,50 @@ export default function AdminBooksPage() {
   });
   const genres = useQuery<Genre[]>({ queryKey: ["admin", "genres"], queryFn: genreService.genres });
   const mutation = useMutation({
-    mutationFn: () => (editing ? adminService.updateBook(editing.id, form) : adminService.createBook(form)),
+    mutationFn: () => {
+      if (editing) {
+        const updatePayload = {
+          title: form.title,
+          author: form.author,
+          genreId: form.genreId,
+          publisher: form.publisher,
+          publishedDate: form.publishedDate,
+          language: form.language,
+          pages: form.pages,
+          description: form.description,
+          totalCopies: form.totalCopies,
+          price: form.price,
+          coverImageUrl: form.coverImageUrl,
+          active: form.active,
+        };
+
+        const result = adminBookUpdateSchema.safeParse(updatePayload);
+
+        if (!result.success) {
+          throw new Error(result.error.issues[0]?.message ?? "Los datos del libro no son válidos");
+        }
+
+        return adminService.updateBook(editing.id, result.data);
+      }
+
+      const result = adminBookCreateSchema.safeParse(form);
+
+      if (!result.success) {
+        throw new Error(result.error.issues[0]?.message ?? "Los datos del libro no son válidos");
+      }
+
+      return adminService.createBook(result.data);
+    },
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "books"] });
-      queryClient.invalidateQueries({ queryKey: ["books"] });
+      queryClient.invalidateQueries({
+        queryKey: ["admin", "books"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["books"],
+      });
+
       setEditing(null);
       setForm(emptyForm);
     },
@@ -161,6 +202,8 @@ export default function AdminBooksPage() {
                 name="pages"
                 label="Páginas"
                 type="number"
+                min={1}
+                step={1}
                 required
                 value={String(form.pages ?? 1)}
                 onChange={update}
@@ -169,6 +212,8 @@ export default function AdminBooksPage() {
                 name="totalCopies"
                 label="Copias totales"
                 type="number"
+                min={1}
+                step={1}
                 required
                 value={String(form.totalCopies ?? 1)}
                 onChange={update}
@@ -177,7 +222,15 @@ export default function AdminBooksPage() {
             <Field name="publisher" label="Editorial" value={form.publisher ?? ""} onChange={update} />
             <Field name="language" label="Idioma" value={form.language ?? ""} onChange={update} />
 
-            <Field name="price" label="Precio" type="number" value={String(form.price ?? 0)} onChange={update} />
+            <Field
+              name="price"
+              label="Precio"
+              type="number"
+              min={0}
+              step={0.01}
+              value={String(form.price ?? 0)}
+              onChange={update}
+            />
 
             <label className="block space-y-2 text-sm">
               <span className="font-medium">Descripción</span>
