@@ -140,7 +140,7 @@ test.describe("loan flow", () => {
     await expect(
       page.getByRole("heading", {
         name: "Mis préstamos",
-      }),
+      })
     ).toBeVisible();
 
     await expect(page.getByText("Clean Code")).toBeVisible();
@@ -152,9 +152,7 @@ test.describe("loan flow", () => {
     await expect(returnButton).toBeVisible();
 
     const checkinRequestPromise = page.waitForRequest(
-      (request) =>
-        request.url().includes("/api/loans/checkin") &&
-        request.method() === "POST",
+      (request) => request.url().includes("/api/loans/checkin") && request.method() === "POST"
     );
 
     await returnButton.click();
