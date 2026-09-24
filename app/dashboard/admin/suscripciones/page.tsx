@@ -84,7 +84,21 @@ export default function AdminSubscriptionsPage() {
   };
   const edit = (plan: SubscriptionPlan) => {
     setEditing(plan);
-    setForm({ ...plan, currency: plan.currency as Currency, adminNotes: "" });
+
+    setForm({
+      planCode: plan.planCode,
+      name: plan.name,
+      description: plan.description,
+      durationDays: plan.durationDays,
+      price: plan.price,
+      currency: plan.currency as Currency,
+      maxBooksAllowed: plan.maxBooksAllowed,
+      maxDaysPerBook: plan.maxDaysPerBook,
+      displayOrder: plan.displayOrder,
+      active: plan.active,
+      featured: plan.featured,
+      badgeText: plan.badgeText,
+    });
   };
 
   return (
@@ -208,6 +222,47 @@ export default function AdminSubscriptionsPage() {
                 value={String(form.maxDaysPerBook ?? 14)}
                 onChange={update}
               />
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field
+                name="displayOrder"
+                label="Orden de visualización"
+                type="number"
+                step={1}
+                value={String(form.displayOrder ?? 0)}
+                onChange={update}
+              />
+
+              <Field name="badgeText" label="Texto del badge" value={form.badgeText ?? ""} onChange={update} />
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="flex items-center gap-3 rounded-xl border border-border/70 p-3 text-sm">
+                <input
+                  type="checkbox"
+                  checked={form.active ?? true}
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      active: event.target.checked,
+                    }))
+                  }
+                />
+                <span className="font-medium">Plan activo</span>
+              </label>
+
+              <label className="flex items-center gap-3 rounded-xl border border-border/70 p-3 text-sm">
+                <input
+                  type="checkbox"
+                  checked={form.featured ?? false}
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      featured: event.target.checked,
+                    }))
+                  }
+                />
+                <span className="font-medium">Plan destacado</span>
+              </label>
             </div>
             <label className="block space-y-2 text-sm">
               <span className="font-medium">Moneda</span>
