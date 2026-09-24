@@ -2,7 +2,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
 import type { Subscription } from "@/lib/definitions";
-import { SubscriptionService } from "@/services/SubscriptionService";
+import { SubscriptionService } from "@/services/subscriptionService";
 
 export const useSubscription = () => {
   return useQuery<Subscription | null>({

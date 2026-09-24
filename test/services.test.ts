@@ -107,7 +107,7 @@ describe("domain services", () => {
     });
 
     await expect(
-      (await import("@/services/SubscriptionService")).SubscriptionService.subscribeToPlan(
+      (await import("@/services/subscriptionService")).SubscriptionService.subscribeToPlan(
         "plan-1",
         true,
         "Suscripción anual"

@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { showToast } from "@/lib/toast-utils";
-import { SubscriptionService } from "@/services/SubscriptionService";
+import { SubscriptionService } from "@/services/subscriptionService";
 
 interface SubscribeInput {
   planId: string;

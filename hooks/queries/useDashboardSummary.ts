@@ -2,7 +2,7 @@ import { useQueries } from "@tanstack/react-query";
 
 import { loansService } from "@/services/loansService";
 import { reservationService } from "@/services/reservationService";
-import { SubscriptionService } from "@/services/SubscriptionService";
+import { SubscriptionService } from "@/services/subscriptionService";
 import { WishListService } from "@/services/wishlistService";
 
 export const useDashboardSummary = () => {

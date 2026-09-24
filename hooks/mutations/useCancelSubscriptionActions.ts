@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type { Subscription } from "@/lib/definitions";
 import { showToast } from "@/lib/toast-utils";
-import { SubscriptionService } from "@/services/SubscriptionService";
+import { SubscriptionService } from "@/services/subscriptionService";
 
 interface CancelSubscriptionInput {
   reason: string;
