@@ -155,7 +155,102 @@ export const adminFineSchema = z.object({
   notes: z.string().trim().max(1000, "Las notas no pueden superar 1000 caracteres").optional(),
 });
 
+export const adminSubscriptionPlanCreateSchema = z.object({
+  planCode: z
+    .string()
+    .trim()
+    .min(1, "El código del plan es obligatorio")
+    .max(50, "El código del plan no puede superar los 50 caracteres"),
+
+  name: z
+    .string()
+    .trim()
+    .min(1, "El nombre del plan es obligatorio")
+    .max(100, "El nombre del plan no puede superar los 100 caracteres"),
+
+  description: z.string().trim().max(255, "La descripción no puede superar los 255 caracteres").optional(),
+
+  durationDays: z
+    .number()
+    .int("La duración debe ser un número entero")
+    .positive("La duración del plan debe ser mayor a 0"),
+
+  price: z.number().int("El precio debe ser un número entero").positive("El precio del plan debe ser mayor a 0"),
+
+  currency: z.enum(["USD", "CRC", "EUR"], {
+    message: "Selecciona una moneda válida",
+  }),
+
+  maxBooksAllowed: z
+    .number()
+    .int("El máximo de libros debe ser un número entero")
+    .positive("El máximo de libros debe ser mayor a 0"),
+
+  maxDaysPerBook: z
+    .number()
+    .int("Los días por libro deben ser un número entero")
+    .positive("Los días por libro deben ser mayores a 0"),
+
+  displayOrder: z.number().int("El orden debe ser un número entero").optional(),
+
+  active: z.boolean().optional(),
+
+  featured: z.boolean().optional(),
+
+  badgeText: z.string().trim().max(50, "El texto del badge no puede superar los 50 caracteres").optional(),
+
+  adminNotes: z.string().trim().max(500, "Las notas administrativas no pueden superar los 500 caracteres").optional(),
+});
+
+export const adminSubscriptionPlanUpdateSchema = z.object({
+  name: z.string().trim().max(100, "El nombre del plan no puede superar los 100 caracteres").optional(),
+
+  description: z.string().trim().max(255, "La descripción no puede superar los 255 caracteres").optional(),
+
+  durationDays: z
+    .number()
+    .int("La duración debe ser un número entero")
+    .positive("La duración del plan debe ser mayor a 0")
+    .optional(),
+
+  price: z
+    .number()
+    .int("El precio debe ser un número entero")
+    .positive("El precio del plan debe ser mayor a 0")
+    .optional(),
+
+  currency: z
+    .enum(["USD", "CRC", "EUR"], {
+      message: "Selecciona una moneda válida",
+    })
+    .optional(),
+
+  maxBooksAllowed: z
+    .number()
+    .int("El máximo de libros debe ser un número entero")
+    .positive("El máximo de libros debe ser mayor a 0")
+    .optional(),
+
+  maxDaysPerBook: z
+    .number()
+    .int("Los días por libro deben ser un número entero")
+    .positive("Los días por libro deben ser mayores a 0")
+    .optional(),
+
+  displayOrder: z.number().int("El orden debe ser un número entero").optional(),
+
+  active: z.boolean().optional(),
+
+  featured: z.boolean().optional(),
+
+  badgeText: z.string().trim().max(50, "El texto del badge no puede superar los 50 caracteres").optional(),
+
+  adminNotes: z.string().trim().max(500, "Las notas administrativas no pueden superar los 500 caracteres").optional(),
+});
+
 export type AdminBookCreateData = z.infer<typeof adminBookCreateSchema>;
 export type AdminBookUpdateData = z.infer<typeof adminBookUpdateSchema>;
 export type AdminGenreData = z.infer<typeof adminGenreSchema>;
 export type AdminFineData = z.infer<typeof adminFineSchema>;
+export type AdminSubscriptionPlanCreateData = z.infer<typeof adminSubscriptionPlanCreateSchema>;
+export type AdminSubscriptionPlanUpdateData = z.infer<typeof adminSubscriptionPlanUpdateSchema>;

@@ -8,6 +8,7 @@ import { AdminActionDialog } from "@/components/admin/AdminActionDialog";
 import type { AdminSubscriptionPlanInput, Currency, SubscriptionPlan } from "@/lib/definitions";
 import { adminService } from "@/services/adminService";
 import { SubscriptionPlanService } from "@/services/subscriptionPlanService";
+import { adminSubscriptionPlanCreateSchema, adminSubscriptionPlanUpdateSchema } from "@/schemas/admin.schema";
 
 const initial: AdminSubscriptionPlanInput = {
   planCode: "",
@@ -38,10 +39,28 @@ export default function AdminSubscriptionsPage() {
     queryFn: () => adminService.subscriptions({ page: 0, size: 50 }),
   });
   const save = useMutation({
-    mutationFn: () =>
-      editing ? adminService.updateSubscriptionPlan(editing.id, form) : adminService.createSubscriptionPlan(form),
+    mutationFn: async () => {
+      const result = editing
+        ? adminSubscriptionPlanUpdateSchema.safeParse(form)
+        : adminSubscriptionPlanCreateSchema.safeParse(form);
+
+      if (!result.success) {
+        throw new Error(result.error.issues[0]?.message ?? "Los datos del plan no son válidos");
+      }
+
+      if (editing) {
+        await adminService.updateSubscriptionPlan(editing.id, result.data);
+        return;
+      }
+
+      await adminService.createSubscriptionPlan(result.data);
+    },
+
     onSuccess: () => {
-      client.invalidateQueries({ queryKey: ["admin", "subscription-plans"] });
+      client.invalidateQueries({
+        queryKey: ["admin", "subscription-plans"],
+      });
+
       setEditing(null);
       setForm(initial);
     },
@@ -151,6 +170,8 @@ export default function AdminSubscriptionsPage() {
                 name="durationDays"
                 label="Duración (días)"
                 type="number"
+                min={1}
+                step={1}
                 required
                 value={String(form.durationDays ?? 30)}
                 onChange={update}
@@ -159,6 +180,8 @@ export default function AdminSubscriptionsPage() {
                 name="price"
                 label="Precio"
                 type="number"
+                min={1}
+                step={1}
                 required
                 value={String(form.price ?? 1)}
                 onChange={update}
@@ -169,6 +192,8 @@ export default function AdminSubscriptionsPage() {
                 name="maxBooksAllowed"
                 label="Máximo de libros"
                 type="number"
+                min={1}
+                step={1}
                 required
                 value={String(form.maxBooksAllowed ?? 1)}
                 onChange={update}
@@ -177,6 +202,8 @@ export default function AdminSubscriptionsPage() {
                 name="maxDaysPerBook"
                 label="Días por libro"
                 type="number"
+                min={1}
+                step={1}
                 required
                 value={String(form.maxDaysPerBook ?? 14)}
                 onChange={update}
