@@ -98,7 +98,7 @@ export default function AdminBooksPage() {
     const key = name as keyof AdminBookInput;
     setForm((current) => ({
       ...current,
-      [key]: ["pages", "totalCopies", "availableCopies", "price"].includes(key) ? Number(value) : value,
+      [key]: ["pages", "totalCopies", "price"].includes(key) ? Number(value) : value,
     }));
   };
   const startEditing = async (book: BookSummary) => {
@@ -174,7 +174,14 @@ export default function AdminBooksPage() {
               mutation.mutate();
             }}
           >
-            <Field name="isbn" label="ISBN" required value={form.isbn ?? ""} onChange={update} />
+            <Field
+              name="isbn"
+              label="ISBN"
+              required
+              disabled={Boolean(editing)}
+              value={form.isbn ?? ""}
+              onChange={update}
+            />
             <Field name="title" label="Título" required value={form.title ?? ""} onChange={update} />
             <Field name="author" label="Autor" required value={form.author ?? ""} onChange={update} />
             <label className="block space-y-2 text-sm">

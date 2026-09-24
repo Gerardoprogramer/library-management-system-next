@@ -157,6 +157,7 @@ export function Field({
   onChange,
   step,
   min,
+  disabled = false,
 }: {
   name: string;
   label: string;
@@ -166,6 +167,7 @@ export function Field({
   onChange?: (name: string, value: string) => void;
   step?: string | number;
   min?: string | number;
+  disabled?: boolean;
 }) {
   return (
     <label className="block space-y-2 text-sm">
@@ -184,8 +186,9 @@ export function Field({
         value={value}
         step={step}
         min={min}
+        disabled={disabled}
         onChange={(event) => onChange?.(name, event.target.value)}
-        className="h-11 w-full rounded-xl border border-input bg-background/70 px-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+        className="h-11 w-full rounded-xl border border-input bg-background/70 px-3 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60"
       />
     </label>
   );
