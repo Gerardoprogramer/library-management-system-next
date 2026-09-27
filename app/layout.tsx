@@ -8,7 +8,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://obsidian-delta-kohl.vercel.app"),
+  metadataBase: new URL("https://library.gerardomartinez.dev/"),
 
   title: {
     template: "%s | Biblioteca Obsidian",
@@ -50,17 +50,18 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_CR",
-    url: "https://www.gerardomartinez.dev",
+    url: "https://library.gerardomartinez.dev/",
     siteName: "Biblioteca Obsidian",
     title: "Biblioteca Obsidian | Sistema de Gestión Bibliotecaria",
     description:
       "Explora el catálogo, administra préstamos y reservas, publica reseñas y gestiona tu experiencia dentro de la biblioteca.",
     images: [
       {
-        url: "/icon1.png",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Biblioteca Obsidian",
+        type: "image/jpeg",
+        alt: "Biblioteca Obsidian: una biblioteca que te acompaña, con libros y un cristal de obsidiana en tonos dorados.",
       },
     ],
   },
@@ -69,7 +70,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Biblioteca Obsidian | Sistema de Gestión Bibliotecaria",
     description: "Consulta el catálogo, reserva ejemplares y gestiona tus préstamos desde Biblioteca Obsidian.",
-    images: ["/icon1.png"],
+    images: [
+      {
+        url: "/og-image.jpg",
+        alt: "Biblioteca Obsidian: una biblioteca que te acompaña, con libros y un cristal de obsidiana en tonos dorados.",
+      },
+    ],
   },
 };
 
