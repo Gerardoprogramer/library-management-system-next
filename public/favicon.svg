@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Biblioteca Obsidian</title>
+  <rect width="64" height="64" rx="14" fill="#1C1917" />
+  <path d="M35 8 50 23 46 43 28 56 14 36 19 20Z" fill="#C99A50" />
+  <path d="m35 8-8 22-8-10Z" fill="#F4D49A" />
+  <path d="m35 8 15 15-23 7Z" fill="#DDB574" />
+  <path d="m19 20 8 10-13 6Z" fill="#A77738" />
+  <path d="m27 30 1 26-14-20Z" fill="#DDB574" />
+  <path d="m27 30 23-7-4 20-18 13Z" fill="#71502F" />
+  <path d="m27 30 19 13-18 13Z" fill="#A77738" />
+</svg>

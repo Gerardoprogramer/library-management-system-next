@@ -39,15 +39,18 @@ export const metadata: Metadata = {
   },
 
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "16x16 32x32 48x48", type: "image/x-icon" },
+      { url: "/favicon.svg", sizes: "any", type: "image/svg+xml" },
+    ],
     shortcut: "/favicon.ico",
-    apple: "/apple-icon.png",
+    apple: { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
   },
 
   openGraph: {
     type: "website",
     locale: "es_CR",
-    url: "https://obsidian-delta-kohl.vercel.app",
+    url: "https://www.gerardomartinez.dev",
     siteName: "Biblioteca Obsidian",
     title: "Biblioteca Obsidian | Sistema de Gestión Bibliotecaria",
     description:
