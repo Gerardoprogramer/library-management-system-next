@@ -8,7 +8,7 @@ The application covers the main workflows of a library platform, including catal
 
 - **Frontend:** https://github.com/Gerardoprogramer/library-management-system-next
 - **Backend:** https://github.com/Gerardoprogramer/Library-Management-System
-- **Live Demo:** https://obsidian-delta-kohl.vercel.app/
+- **Live Demo:** https://library.gerardomartinez.dev
 
 ---
 
